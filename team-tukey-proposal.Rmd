@@ -1,0 +1,26 @@
+---
+title: "Stat 420 - Final Data Analysis Project Proposal"
+author: "Team Name: Team Tukey, Summer 2020, Vijayakumar Sitha Mohan, Matthew Leung, Bhusan Bathani"
+date: ''
+output:
+  html_document: 
+    theme: readable
+    toc: yes  
+  pdf_document: default
+urlcolor: cyan
+---
+
+
+## Team Name
+
+## Team members
+
+## Tentative Title
+
+## Desciption of the dataset
+
+## Background information on the dataset
+
+## Statement of interest
+
+## Evidence of the data
