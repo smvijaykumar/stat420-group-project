@@ -407,18 +407,153 @@ summary {
 </div>
 <div id="tentative-title" class="section level3">
 <h3>Tentative Title</h3>
+<ul>
+<li>Bankruptcy Prediction using Binary Classification</li>
+</ul>
 </div>
 <div id="desciption-of-the-dataset" class="section level3">
 <h3>Desciption of the dataset</h3>
+<ul>
+<li>The dataset is about bankruptcy prediction of Polish companies. The data was collected from Emerging Markets Information Service (EMIS, [Web Link]), which is a database containing information on emerging markets around the world. The bankrupt companies were analysed in the period 2000-2012, while the still operating companies were evaluated from 2007 to 2013.</li>
+</ul>
 </div>
 <div id="background-information-on-the-dataset" class="section level3">
 <h3>Background information on the dataset</h3>
+<ul>
+<li><p>Basing on the collected data five classification cases were distinguished, that depends on the forecasting period:</p></li>
+<li><p>1stYear the data contains financial rates from 1st year of the forecasting period and corresponding class label that indicates bankruptcy status after 5 years. The data contains 7027 instances (financial statements), 271 represents bankrupted companies, 6756 firms that did not bankrupt in the forecasting period.</p></li>
+<li><p>2ndYear the data contains financial rates from 2nd year of the forecasting period and corresponding class label that indicates bankruptcy status after 4 years. The data contains 10173 instances (financial statements), 400 represents bankrupted companies, 9773 firms that did not bankrupt in the forecasting period.</p></li>
+<li><p>3rdYear the data contains financial rates from 3rd year of the forecasting period and corresponding class label that indicates bankruptcy status after 3 years. The data contains 10503 instances (financial statements), 495 represents bankrupted companies, 10008 firms that did not bankrupt in the forecasting period.</p></li>
+<li><p>4thYear the data contains financial rates from 4th year of the forecasting period and corresponding class label that indicates bankruptcy status after 2 years. The data contains 9792 instances (financial statements), 515 represents bankrupted companies, 9277 firms that did not bankrupt in the forecasting period.</p></li>
+<li><p>5thYear the data contains financial rates from 5th year of the forecasting period and corresponding class label that indicates bankruptcy status after 1 year. The data contains 5910 instances (financial statements), 410 represents bankrupted companies, 5500 firms that did not bankrupt in the forecasting period.</p></li>
+</ul>
+<p><strong>Attribute Information:</strong></p>
+<ul>
+<li>X1 net profit / total assets</li>
+<li>X2 total liabilities / total assets</li>
+<li>X3 working capital / total assets</li>
+<li>X4 current assets / short-term liabilities</li>
+<li>X5 [(cash + short-term securities + receivables - short-term liabilities) / (operating expenses - depreciation)] * 365</li>
+<li>X6 retained earnings / total assets</li>
+<li>X7 EBIT / total assets</li>
+<li>X8 book value of equity / total liabilities</li>
+<li>X9 sales / total assets</li>
+<li>X10 equity / total assets</li>
+<li>X11 (gross profit + extraordinary items + financial expenses) / total assets</li>
+<li>X12 gross profit / short-term liabilities</li>
+<li>X13 (gross profit + depreciation) / sales</li>
+<li>X14 (gross profit + interest) / total assets</li>
+<li>X15 (total liabilities * 365) / (gross profit + depreciation)</li>
+<li>X16 (gross profit + depreciation) / total liabilities</li>
+<li>X17 total assets / total liabilities</li>
+<li>X18 gross profit / total assets</li>
+<li>X19 gross profit / sales</li>
+<li>X20 (inventory * 365) / sales</li>
+<li>X21 sales (n) / sales (n-1)</li>
+<li>X22 profit on operating activities / total assets</li>
+<li>X23 net profit / sales</li>
+<li>X24 gross profit (in 3 years) / total assets</li>
+<li>X25 (equity - share capital) / total assets</li>
+<li>X26 (net profit + depreciation) / total liabilities</li>
+<li>X27 profit on operating activities / financial expenses</li>
+<li>X28 working capital / fixed assets</li>
+<li>X29 logarithm of total assets</li>
+<li>X30 (total liabilities - cash) / sales</li>
+<li>X31 (gross profit + interest) / sales</li>
+<li>X32 (current liabilities * 365) / cost of products sold</li>
+<li>X33 operating expenses / short-term liabilities</li>
+<li>X34 operating expenses / total liabilities</li>
+<li>X35 profit on sales / total assets</li>
+<li>X36 total sales / total assets</li>
+<li>X37 (current assets - inventories) / long-term liabilities</li>
+<li>X38 constant capital / total assets</li>
+<li>X39 profit on sales / sales</li>
+<li>X40 (current assets - inventory - receivables) / short-term liabilities</li>
+<li>X41 total liabilities / ((profit on operating activities + depreciation) * (12/365))</li>
+<li>X42 profit on operating activities / sales</li>
+<li>X43 rotation receivables + inventory turnover in days</li>
+<li>X44 (receivables * 365) / sales</li>
+<li>X45 net profit / inventory</li>
+<li>X46 (current assets - inventory) / short-term liabilities</li>
+<li>X47 (inventory * 365) / cost of products sold</li>
+<li>X48 EBITDA (profit on operating activities - depreciation) / total assets</li>
+<li>X49 EBITDA (profit on operating activities - depreciation) / sales</li>
+<li>X50 current assets / total liabilities</li>
+<li>X51 short-term liabilities / total assets</li>
+<li>X52 (short-term liabilities * 365) / cost of products sold)</li>
+<li>X53 equity / fixed assets</li>
+<li>X54 constant capital / fixed assets</li>
+<li>X55 working capital</li>
+<li>X56 (sales - cost of products sold) / sales</li>
+<li>X57 (current assets - inventory - short-term liabilities) / (sales - gross profit - depreciation)</li>
+<li>X58 total costs /total sales</li>
+<li>X59 long-term liabilities / equity</li>
+<li>X60 sales / inventory</li>
+<li>X61 sales / receivables</li>
+<li>X62 (short-term liabilities *365) / sales</li>
+<li>X63 sales / short-term liabilities</li>
+<li>X64 sales / fixed assets</li>
+<li>Class 0 did not get bankrupt/ 1 - got bankrupt</li>
+</ul>
 </div>
 <div id="statement-of-interest" class="section level3">
 <h3>Statement of interest</h3>
+<ul>
+<li>build a model on the basis given features and target column to predict whether a bank is going to get bankrupt for a given set of features.</li>
+</ul>
 </div>
 <div id="evidence-of-the-data" class="section level3">
 <h3>Evidence of the data</h3>
+<pre class="r"><code>head(read.csv(&quot;data/1year.csv&quot;))</code></pre>
+<pre><code>##      Attr1   Attr2   Attr3  Attr4   Attr5   Attr6    Attr7   Attr8  Attr9
+## 1  0.20055 0.37951 0.39641 2.0472  32.351 0.38825  0.24976  1.3305 1.1389
+## 2  0.20912 0.49988 0.47225 1.9447  14.786       0  0.25834 0.99601 1.6996
+## 3  0.24866 0.69592 0.26713 1.5548 -1.1523       0  0.30906 0.43695  1.309
+## 4 0.081483 0.30734 0.45879 2.4928  51.952 0.14988 0.092704  1.8661 1.0571
+## 5  0.18732 0.61323  0.2296 1.4063 -7.3128 0.18732  0.18732  0.6307 1.1559
+## 6  0.22822 0.49794 0.35969 1.7502 -47.717       0  0.28139  1.0083 1.9786
+##    Attr10   Attr11  Attr12   Attr13   Attr14 Attr15  Attr16 Attr17   Attr18
+## 1 0.50494  0.24976  0.6598 0.166600  0.24976 497.42 0.73378 2.6349  0.24976
+## 2 0.49788  0.26114  0.5168 0.158350  0.25834 677.96 0.53838 2.0005  0.25834
+## 3 0.30408  0.31258 0.64184 0.244350  0.30906 794.16 0.45961 1.4369  0.30906
+## 4 0.57353 0.092704 0.30163 0.094257 0.092704 917.01 0.39803 3.2537 0.092704
+## 5 0.38677  0.18732 0.33147 0.121820  0.18732 1133.2 0.32211 1.6307  0.18732
+## 6 0.50206  0.28645 0.58691 0.148120  0.28139 620.14 0.58858 2.0083  0.28139
+##     Attr19  Attr20 Attr21  Attr22   Attr23  Attr24  Attr25  Attr26  Attr27
+## 1 0.149420  43.370 1.2479 0.21402 0.119980 0.47706 0.50494 0.60411  1.4582
+## 2 0.152000  87.981 1.4293 0.24806 0.123040       ? 0.39542 0.43992  88.444
+## 3 0.236100  73.133 1.4283  0.3026 0.189960       ? 0.28932 0.37282  86.011
+## 4 0.071428  79.788 1.5069  0.1155 0.062782 0.17193 0.57353 0.36152 0.94076
+## 5 0.115530  57.045      ? 0.19832 0.115530 0.18732 0.38677 0.32211  1.4138
+## 6 0.142220 107.260 1.7278 0.28104 0.115350       ?  0.4997 0.48181  55.511
+##   Attr28 Attr29  Attr30   Attr31 Attr32 Attr33  Attr34  Attr35 Attr36 Attr37
+## 1 1.7615 5.9443 0.11788 0.149420  94.14 3.8772 0.56393 0.21402  1.741 593.27
+## 2 16.946 3.6884 0.26969 0.152000 122.17 2.9876  2.9876 0.20616 1.6996      ?
+## 3 1.0627 4.3749 0.41929 0.238150 176.93  2.063  1.4274 0.31565  1.309 2.3019
+## 4 1.9618 4.6511 0.14343 0.071428  91.37 3.9948 0.37581  0.1155 1.3562      ?
+## 5 1.1184 4.1424 0.27884 0.115530 147.04 2.4823  0.3234 0.19832 1.6278 11.247
+## 6 2.2359 4.3258 0.23382 0.144490 102.76 3.5519    3.42 0.27566 1.9786 22.312
+##    Attr38   Attr39   Attr40   Attr41   Attr42 Attr43  Attr44  Attr45  Attr46
+## 1 0.50591 0.128040  0.66295 0.051402 0.128040 114.42  71.050  1.0097  1.5225
+## 2 0.49788 0.121300 0.086422 0.064371 0.145950 199.49 111.510 0.51045  1.1252
+## 3 0.51537 0.241140  0.32202  0.07402 0.231170 165.51  92.381 0.94807  1.0101
+## 4 0.57353 0.088995  0.40139 0.069622 0.088995 180.77 100.980  0.2872  1.5696
+## 5 0.43489 0.122310  0.29304  0.09668 0.122310 141.62  84.574 0.73919 0.95787
+## 6 0.51361 0.139320 0.078634 0.056701 0.142040 147.84  40.578  0.3925 0.53744
+##   Attr47   Attr48   Attr49 Attr50  Attr51  Attr52 Attr53 Attr54   Attr55
+## 1 49.394   0.1853 0.110850  2.042 0.37854 0.25792 2.2437  2.248 348690.0
+## 2 100.13  0.23727 0.139610 1.9447 0.49988 0.33472 17.866 17.866   2304.6
+## 3 96.372  0.29181 0.222930 1.0758 0.48152 0.48474 1.2098 2.0504   6332.7
+## 4 84.344 0.085874 0.066165 2.4928 0.30734 0.25033 2.4524 2.4524  20545.0
+## 5 65.936  0.18811 0.116010 1.2959 0.56511 0.40285 1.8839 2.1184   3186.6
+## 6 124.63  0.26935 0.136130 1.6852 0.47944 0.28154 3.1209 3.1927   7616.8
+##     Attr56  Attr57  Attr58   Attr59 Attr60 Attr61  Attr62 Attr63 Attr64 class
+## 1 0.121960 0.39718 0.87804 0.001924  8.416 5.1372  82.658 4.4158 7.4277     0
+## 2 0.121300 0.42002 0.85300        0 4.1486 3.2732 107.350    3.4 60.987     0
+## 3 0.241140 0.81774 0.76599  0.69484 4.9909  3.951 134.270 2.7185 5.2078     0
+## 4 0.054015 0.14207 0.94598        0 4.5746 3.6147  86.435 4.2228 5.5497     0
+## 5 0.134850 0.48431 0.86515  0.12444 6.3985 4.3158 127.210 2.8692  7.898     0
+## 6 0.139320 0.45457 0.85891 0.023002 3.4028 8.9949  88.444 4.1269 12.299     0</code></pre>
 </div>
 
 
