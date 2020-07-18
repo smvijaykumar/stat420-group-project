@@ -414,291 +414,157 @@ summary {
 <div id="desciption-of-the-dataset" class="section level3">
 <h3>Desciption of the dataset</h3>
 <ul>
-<li><p>The dataset is about bankruptcy prediction of Polish companies. The data was collected from Emerging Markets Information Service (EMIS, [Web Link]), which is a database containing information on emerging markets around the world. The bankrupt companies were analysed in the period 2000-2012, while the still operating companies were evaluated from 2007 to 2013.</p></li>
-<li><p><a href="https://www.kaggle.com/bhadaneeraj/bankruptcy-detection">Bankruptcy Dataset</a></p></li>
+<li><p>Standard and Poor’s (S&amp;P) Capital IQ’s Compustat database, introduced in 1962, has been extensively used in accounting research and practice due to its ease of access and wide coverage of fundamental financial and market data</p></li>
+<li><p>Bankruptcy is a legal status of a person or other entity that cannot repay the debts it owes to creditors. In most jurisdictions, bankruptcy is imposed by a court order, often initiated by the debtor. (Wikipedia)</p></li>
+<li><p>The Bankruptcy data was collected from COMPUSTAT for the years 1980 to 2000 and has 5436 observations with 13 variables.</p></li>
+<li><p><a href="https://www.kaggle.com/ankeetshk/bankruptcy-data-cdac">Bankruptcy Dataset Source</a></p></li>
 </ul>
 </div>
 <div id="background-information-on-the-dataset" class="section level3">
 <h3>Background information on the dataset</h3>
-<ul>
-<li><p>Based on the collected data five classification cases were distinguished, that depends on the forecasting period:</p></li>
-<li><p>1stYear the data contains financial rates from 1st year of the forecasting period and corresponding class label that indicates bankruptcy status after 5 years. The data contains 7027 instances (financial statements), 271 represents bankrupted companies, 6756 firms that did not bankrupt in the forecasting period.</p></li>
-<li><p>2ndYear the data contains financial rates from 2nd year of the forecasting period and corresponding class label that indicates bankruptcy status after 4 years. The data contains 10173 instances (financial statements), 400 represents bankrupted companies, 9773 firms that did not bankrupt in the forecasting period.</p></li>
-<li><p>3rdYear the data contains financial rates from 3rd year of the forecasting period and corresponding class label that indicates bankruptcy status after 3 years. The data contains 10503 instances (financial statements), 495 represents bankrupted companies, 10008 firms that did not bankrupt in the forecasting period.</p></li>
-<li><p>4thYear the data contains financial rates from 4th year of the forecasting period and corresponding class label that indicates bankruptcy status after 2 years. The data contains 9792 instances (financial statements), 515 represents bankrupted companies, 9277 firms that did not bankrupt in the forecasting period.</p></li>
-<li><p>5thYear the data contains financial rates from 5th year of the forecasting period and corresponding class label that indicates bankruptcy status after 1 year. The data contains 5910 instances (financial statements), 410 represents bankrupted companies, 5500 firms that did not bankrupt in the forecasting period.</p></li>
-</ul>
+<p>This bankruptcy dataset contains13 variables, one of them was “DLRSN”- a categorical variable indicating default, the dependent variable of the prediction. Overall, the bankruptcy is about 14% of the entire sample.</p>
 <p><strong>Attribute Information:</strong></p>
 <table>
 <thead>
 <tr class="header">
-<th align="left">Name</th>
+<th align="left">Column_Names</th>
 <th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">X1</td>
-<td align="left">net profit / total assets</td>
+<td align="left">FYear</td>
+<td align="left">Filing Year</td>
 </tr>
 <tr class="even">
-<td align="left">X2</td>
-<td align="left">total liabilities / total assets</td>
+<td align="left">DLRSN</td>
+<td align="left">Reason for deletion</td>
 </tr>
 <tr class="odd">
-<td align="left">X3</td>
-<td align="left">working capital / total assets</td>
+<td align="left">CUSIP</td>
+<td align="left">CUSIP stands for Committee on Uniform Securities Identification Procedures. A CUSIP number identifies most financial instruments</td>
 </tr>
 <tr class="even">
-<td align="left">X4</td>
-<td align="left">current assets / short-term liabilities</td>
+<td align="left">R1(WC/TA)</td>
+<td align="left">working capital/total assets</td>
 </tr>
 <tr class="odd">
-<td align="left">X5</td>
-<td align="left">[(cash + short-term securities + receivables short-term liabilities) / (operating expenses depreciation)] * 365</td>
+<td align="left">R2(RE/TA)</td>
+<td align="left">retained earnings/total assets</td>
 </tr>
 <tr class="even">
-<td align="left">X6</td>
-<td align="left">retained earnings / total assets</td>
+<td align="left">R3(EBIT/TA)</td>
+<td align="left">earnings before interest and tax/total assets</td>
 </tr>
 <tr class="odd">
-<td align="left">X7</td>
-<td align="left">EBIT / total assets</td>
+<td align="left">R4(ME/TL)</td>
+<td align="left">market value of equity/total liability</td>
 </tr>
 <tr class="even">
-<td align="left">X8</td>
-<td align="left">book value of equity / total liabilities</td>
+<td align="left">R5(S/TA)</td>
+<td align="left">sales/total assets</td>
 </tr>
 <tr class="odd">
-<td align="left">X9</td>
-<td align="left">sales / total assets</td>
+<td align="left">R6(TL/TA)</td>
+<td align="left">total liability/total assets</td>
 </tr>
 <tr class="even">
-<td align="left">X10</td>
-<td align="left">equity / total assets</td>
+<td align="left">R7(CA/CL)</td>
+<td align="left">current assets/current liability</td>
 </tr>
 <tr class="odd">
-<td align="left">X11</td>
-<td align="left">(gross profit + extraordinary items + financial expenses) / total assets</td>
+<td align="left">R8(NI/TA)</td>
+<td align="left">net income/total assets</td>
 </tr>
 <tr class="even">
-<td align="left">X12</td>
-<td align="left">gross profit / short-term liabilities</td>
+<td align="left">R9(Bankruptcy cost)</td>
+<td align="left">Log(sales)</td>
 </tr>
 <tr class="odd">
-<td align="left">X13</td>
-<td align="left">(gross profit + depreciation) / sales</td>
-</tr>
-<tr class="even">
-<td align="left">X14</td>
-<td align="left">(gross profit + interest) / total assets</td>
-</tr>
-<tr class="odd">
-<td align="left">X15</td>
-<td align="left">(total liabilities * 365) / (gross profit + depreciation)</td>
-</tr>
-<tr class="even">
-<td align="left">X16</td>
-<td align="left">(gross profit + depreciation) / total liabilities</td>
-</tr>
-<tr class="odd">
-<td align="left">X17</td>
-<td align="left">total assets / total liabilities</td>
-</tr>
-<tr class="even">
-<td align="left">X18</td>
-<td align="left">gross profit / total assets</td>
-</tr>
-<tr class="odd">
-<td align="left">X19</td>
-<td align="left">gross profit / sales</td>
-</tr>
-<tr class="even">
-<td align="left">X20</td>
-<td align="left">(inventory * 365) / sales</td>
-</tr>
-<tr class="odd">
-<td align="left">X21</td>
-<td align="left">sales (n) / sales (n-1)</td>
-</tr>
-<tr class="even">
-<td align="left">X22</td>
-<td align="left">profit on operating activities / total assets</td>
-</tr>
-<tr class="odd">
-<td align="left">X23</td>
-<td align="left">net profit / sales</td>
-</tr>
-<tr class="even">
-<td align="left">X24</td>
-<td align="left">gross profit (in 3 years) / total assets</td>
-</tr>
-<tr class="odd">
-<td align="left">X25</td>
-<td align="left">(equity share capital) / total assets</td>
-</tr>
-<tr class="even">
-<td align="left">X26</td>
-<td align="left">(net profit + depreciation) / total liabilities</td>
-</tr>
-<tr class="odd">
-<td align="left">X27</td>
-<td align="left">profit on operating activities / financial expenses</td>
-</tr>
-<tr class="even">
-<td align="left">X28</td>
-<td align="left">working capital / fixed assets</td>
-</tr>
-<tr class="odd">
-<td align="left">X29</td>
-<td align="left">logarithm of total assets</td>
-</tr>
-<tr class="even">
-<td align="left">X30</td>
-<td align="left">(total liabilities cash) / sales</td>
-</tr>
-<tr class="odd">
-<td align="left">X31</td>
-<td align="left">(gross profit + interest) / sales</td>
-</tr>
-<tr class="even">
-<td align="left">X32</td>
-<td align="left">(current liabilities * 365) / cost of products sold</td>
-</tr>
-<tr class="odd">
-<td align="left">X33</td>
-<td align="left">operating expenses / short-term liabilities</td>
-</tr>
-<tr class="even">
-<td align="left">X34</td>
-<td align="left">operating expenses / total liabilities</td>
-</tr>
-<tr class="odd">
-<td align="left">X35</td>
-<td align="left">profit on sales / total assets</td>
-</tr>
-<tr class="even">
-<td align="left">X36</td>
-<td align="left">total sales / total assets</td>
-</tr>
-<tr class="odd">
-<td align="left">X37</td>
-<td align="left">(current assets inventories) / long-term liabilities</td>
-</tr>
-<tr class="even">
-<td align="left">X38</td>
-<td align="left">constant capital / total assets</td>
-</tr>
-<tr class="odd">
-<td align="left">X39</td>
-<td align="left">profit on sales / sales</td>
-</tr>
-<tr class="even">
-<td align="left">X40</td>
-<td align="left">(current assets inventory receivables) / short-term liabilities</td>
-</tr>
-<tr class="odd">
-<td align="left">X41</td>
-<td align="left">total liabilities / ((profit on operating activities + depreciation) * (12/365))</td>
-</tr>
-<tr class="even">
-<td align="left">X42</td>
-<td align="left">profit on operating activities / sales</td>
-</tr>
-<tr class="odd">
-<td align="left">X43</td>
-<td align="left">rotation receivables + inventory turnover in days</td>
-</tr>
-<tr class="even">
-<td align="left">X44</td>
-<td align="left">(receivables * 365) / sales</td>
-</tr>
-<tr class="odd">
-<td align="left">X45</td>
-<td align="left">net profit / inventory</td>
-</tr>
-<tr class="even">
-<td align="left">X46</td>
-<td align="left">(current assets inventory) / short-term liabilities</td>
-</tr>
-<tr class="odd">
-<td align="left">X47</td>
-<td align="left">(inventory * 365) / cost of products sold</td>
-</tr>
-<tr class="even">
-<td align="left">X48</td>
-<td align="left">EBITDA (profit on operating activities depreciation) / total assets</td>
-</tr>
-<tr class="odd">
-<td align="left">X49</td>
-<td align="left">EBITDA (profit on operating activities depreciation) / sales</td>
-</tr>
-<tr class="even">
-<td align="left">X50</td>
-<td align="left">current assets / total liabilities</td>
-</tr>
-<tr class="odd">
-<td align="left">X51</td>
-<td align="left">short-term liabilities / total assets</td>
-</tr>
-<tr class="even">
-<td align="left">X52</td>
-<td align="left">(short-term liabilities * 365) / cost of products sold)</td>
-</tr>
-<tr class="odd">
-<td align="left">X53</td>
-<td align="left">equity / fixed assets</td>
-</tr>
-<tr class="even">
-<td align="left">X54</td>
-<td align="left">constant capital / fixed assets</td>
-</tr>
-<tr class="odd">
-<td align="left">X55</td>
-<td align="left">working capital</td>
-</tr>
-<tr class="even">
-<td align="left">X56</td>
-<td align="left">(sales cost of products sold) / sales</td>
-</tr>
-<tr class="odd">
-<td align="left">X57</td>
-<td align="left">(current assets inventory short-term liabilities) / (sales gross profit depreciation)</td>
-</tr>
-<tr class="even">
-<td align="left">X58</td>
-<td align="left">total costs /total sales</td>
-</tr>
-<tr class="odd">
-<td align="left">X59</td>
-<td align="left">long-term liabilities / equity</td>
-</tr>
-<tr class="even">
-<td align="left">X60</td>
-<td align="left">sales / inventory</td>
-</tr>
-<tr class="odd">
-<td align="left">X61</td>
-<td align="left">sales / receivables</td>
-</tr>
-<tr class="even">
-<td align="left">X62</td>
-<td align="left">(short-term liabilities *365) / sales</td>
-</tr>
-<tr class="odd">
-<td align="left">X63</td>
-<td align="left">sales / short-term liabilities</td>
-</tr>
-<tr class="even">
-<td align="left">X64</td>
-<td align="left">sales / fixed assets</td>
-</tr>
-<tr class="odd">
-<td align="left">Class</td>
-<td align="left">0 did not get bankrupt/ 1 got bankrupt</td>
+<td align="left">R10(Market capitalization)</td>
+<td align="left">log(abs(price)*numbers of shares outstanding/1000)</td>
 </tr>
 </tbody>
 </table>
+<ul>
+<li><code>DLRSN</code> stands for <em>Deletion Reason</em> which will be our predictor variable. It will contain the following codes.</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Code</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">Acquisition or merger</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">Bankruptcy</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">Liquidation</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">Reverse acquisition (1983 forward)</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">No longer fits original format (1978 forward)</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">Leveraged buyout (1982 forward)</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">Other (no longer files with SEC among other possible reasons);but pricing continues</td>
+</tr>
+<tr class="even">
+<td align="right">9</td>
+<td align="left">Now a private company</td>
+</tr>
+<tr class="odd">
+<td align="right">10</td>
+<td align="left">Other (no longer files with SEC among other reasons)</td>
+</tr>
+<tr class="even">
+<td align="right">11</td>
+<td align="left">Agency governing settlement of securities’ trading inactivated the issue’s Local Settlement Code. because the issue matured;expired or was called. No successor settlement code was established.</td>
+</tr>
+<tr class="odd">
+<td align="right">12</td>
+<td align="left">Agency governing settlement of securities’ trading inactivated the issue’s Local Settlement Code. A successor settlement code was established; issue was changed for another; as in a par value change.</td>
+</tr>
+<tr class="even">
+<td align="right">13</td>
+<td align="left">Price source for the SEDOL was no longer available. Issue now identified under different SEDOL.</td>
+</tr>
+<tr class="odd">
+<td align="right">14</td>
+<td align="left">Fully paid issue was replaced or partly paid issue was replaced by a subsequent installment. Successor settlement code was established.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>## &#39;data.frame&#39;:    5436 obs. of  13 variables:
+##  $ FYEAR: int  1999 1999 1999 1994 1999 1999 1999 1999 1987 1999 ...
+##  $ DLRSN: int  0 0 0 1 0 0 0 0 1 0 ...
+##  $ CUSIP: chr  &quot;00036020&quot; &quot;00036110&quot; &quot;00037520&quot; &quot;00078110&quot; ...
+##  $ R1   : num  0.307 0.761 -0.514 -0.466 2.023 ...
+##  $ R2   : num  0.887 0.592 0.338 0.371 0.215 ...
+##  $ R3   : num  1.648 0.453 0.299 0.496 0.183 ...
+##  $ R4   : num  -0.1992 -0.3699 -0.0291 -0.3734 6.6954 ...
+##  $ R5   : num  1.093 0.186 -0.433 -0.267 -1.148 ...
+##  $ R6   : num  -0.3133 0.0396 0.83 0.9778 -1.5059 ...
+##  $ R7   : num  -0.197 0.327 -0.708 -0.611 2.876 ...
+##  $ R8   : num  1.207 0.428 0.476 0.457 0.287 ...
+##  $ R9   : num  0.282 1.107 2.179 0.152 -0.986 ...
+##  $ R10  : num  0.1589 0.7934 2.4846 0.0478 0.7911 ...</code></pre>
 </div>
 <div id="statement-of-interest" class="section level3">
 <h3>Statement of interest</h3>
@@ -709,56 +575,20 @@ summary {
 </div>
 <div id="evidence-of-the-data" class="section level3">
 <h3>Evidence of the data</h3>
-<pre class="r"><code>head(read.csv(&quot;data/1year.csv&quot;))</code></pre>
-<pre><code>##      Attr1   Attr2   Attr3  Attr4   Attr5   Attr6    Attr7   Attr8  Attr9
-## 1  0.20055 0.37951 0.39641 2.0472  32.351 0.38825  0.24976  1.3305 1.1389
-## 2  0.20912 0.49988 0.47225 1.9447  14.786       0  0.25834 0.99601 1.6996
-## 3  0.24866 0.69592 0.26713 1.5548 -1.1523       0  0.30906 0.43695  1.309
-## 4 0.081483 0.30734 0.45879 2.4928  51.952 0.14988 0.092704  1.8661 1.0571
-## 5  0.18732 0.61323  0.2296 1.4063 -7.3128 0.18732  0.18732  0.6307 1.1559
-## 6  0.22822 0.49794 0.35969 1.7502 -47.717       0  0.28139  1.0083 1.9786
-##    Attr10   Attr11  Attr12   Attr13   Attr14 Attr15  Attr16 Attr17   Attr18
-## 1 0.50494  0.24976  0.6598 0.166600  0.24976 497.42 0.73378 2.6349  0.24976
-## 2 0.49788  0.26114  0.5168 0.158350  0.25834 677.96 0.53838 2.0005  0.25834
-## 3 0.30408  0.31258 0.64184 0.244350  0.30906 794.16 0.45961 1.4369  0.30906
-## 4 0.57353 0.092704 0.30163 0.094257 0.092704 917.01 0.39803 3.2537 0.092704
-## 5 0.38677  0.18732 0.33147 0.121820  0.18732 1133.2 0.32211 1.6307  0.18732
-## 6 0.50206  0.28645 0.58691 0.148120  0.28139 620.14 0.58858 2.0083  0.28139
-##     Attr19  Attr20 Attr21  Attr22   Attr23  Attr24  Attr25  Attr26  Attr27
-## 1 0.149420  43.370 1.2479 0.21402 0.119980 0.47706 0.50494 0.60411  1.4582
-## 2 0.152000  87.981 1.4293 0.24806 0.123040       ? 0.39542 0.43992  88.444
-## 3 0.236100  73.133 1.4283  0.3026 0.189960       ? 0.28932 0.37282  86.011
-## 4 0.071428  79.788 1.5069  0.1155 0.062782 0.17193 0.57353 0.36152 0.94076
-## 5 0.115530  57.045      ? 0.19832 0.115530 0.18732 0.38677 0.32211  1.4138
-## 6 0.142220 107.260 1.7278 0.28104 0.115350       ?  0.4997 0.48181  55.511
-##   Attr28 Attr29  Attr30   Attr31 Attr32 Attr33  Attr34  Attr35 Attr36 Attr37
-## 1 1.7615 5.9443 0.11788 0.149420  94.14 3.8772 0.56393 0.21402  1.741 593.27
-## 2 16.946 3.6884 0.26969 0.152000 122.17 2.9876  2.9876 0.20616 1.6996      ?
-## 3 1.0627 4.3749 0.41929 0.238150 176.93  2.063  1.4274 0.31565  1.309 2.3019
-## 4 1.9618 4.6511 0.14343 0.071428  91.37 3.9948 0.37581  0.1155 1.3562      ?
-## 5 1.1184 4.1424 0.27884 0.115530 147.04 2.4823  0.3234 0.19832 1.6278 11.247
-## 6 2.2359 4.3258 0.23382 0.144490 102.76 3.5519    3.42 0.27566 1.9786 22.312
-##    Attr38   Attr39   Attr40   Attr41   Attr42 Attr43  Attr44  Attr45  Attr46
-## 1 0.50591 0.128040  0.66295 0.051402 0.128040 114.42  71.050  1.0097  1.5225
-## 2 0.49788 0.121300 0.086422 0.064371 0.145950 199.49 111.510 0.51045  1.1252
-## 3 0.51537 0.241140  0.32202  0.07402 0.231170 165.51  92.381 0.94807  1.0101
-## 4 0.57353 0.088995  0.40139 0.069622 0.088995 180.77 100.980  0.2872  1.5696
-## 5 0.43489 0.122310  0.29304  0.09668 0.122310 141.62  84.574 0.73919 0.95787
-## 6 0.51361 0.139320 0.078634 0.056701 0.142040 147.84  40.578  0.3925 0.53744
-##   Attr47   Attr48   Attr49 Attr50  Attr51  Attr52 Attr53 Attr54   Attr55
-## 1 49.394   0.1853 0.110850  2.042 0.37854 0.25792 2.2437  2.248 348690.0
-## 2 100.13  0.23727 0.139610 1.9447 0.49988 0.33472 17.866 17.866   2304.6
-## 3 96.372  0.29181 0.222930 1.0758 0.48152 0.48474 1.2098 2.0504   6332.7
-## 4 84.344 0.085874 0.066165 2.4928 0.30734 0.25033 2.4524 2.4524  20545.0
-## 5 65.936  0.18811 0.116010 1.2959 0.56511 0.40285 1.8839 2.1184   3186.6
-## 6 124.63  0.26935 0.136130 1.6852 0.47944 0.28154 3.1209 3.1927   7616.8
-##     Attr56  Attr57  Attr58   Attr59 Attr60 Attr61  Attr62 Attr63 Attr64 class
-## 1 0.121960 0.39718 0.87804 0.001924  8.416 5.1372  82.658 4.4158 7.4277     0
-## 2 0.121300 0.42002 0.85300        0 4.1486 3.2732 107.350    3.4 60.987     0
-## 3 0.241140 0.81774 0.76599  0.69484 4.9909  3.951 134.270 2.7185 5.2078     0
-## 4 0.054015 0.14207 0.94598        0 4.5746 3.6147  86.435 4.2228 5.5497     0
-## 5 0.134850 0.48431 0.86515  0.12444 6.3985 4.3158 127.210 2.8692  7.898     0
-## 6 0.139320 0.45457 0.85891 0.023002 3.4028 8.9949  88.444 4.1269 12.299     0</code></pre>
+<pre><code>##   FYEAR DLRSN    CUSIP         R1        R2        R3          R4         R5
+## 1  1999     0 00036020  0.3071395 0.8870057 1.6476808 -0.19915760  1.0929640
+## 2  1999     0 00036110  0.7607365 0.5924934 0.4530028 -0.36989014  0.1861539
+## 3  1999     0 00037520 -0.5135961 0.3376148 0.2990145 -0.02907996 -0.4326047
+## 4  1994     1 00078110 -0.4661293 0.3707467 0.4960667 -0.37342897 -0.2674240
+## 5  1999     0 00079X10  2.0234223 0.2148764 0.1825948  6.69536040 -1.1483381
+## 6  1999     0 00086T10  0.9074985 0.3868797 0.4778914 -0.34715872  1.4079893
+##            R6          R7        R8         R9         R10
+## 1 -0.31328867 -0.19679332 1.2067628  0.2824709  0.15889625
+## 2  0.03961907  0.32749732 0.4284181  1.1069652  0.79344276
+## 3  0.82999324 -0.70778613 0.4761533  2.1791755  2.48458450
+## 4  0.97779888 -0.61097507 0.4568098  0.1519511  0.04778851
+## 5 -1.50588927  2.87647687 0.2873749 -0.9864421  0.79107673
+## 6 -0.48390230  0.07025944 0.5278110  0.5024659 -0.16464802</code></pre>
 </div>
 
 
