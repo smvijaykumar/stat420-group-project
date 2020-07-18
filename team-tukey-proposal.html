@@ -414,13 +414,14 @@ summary {
 <div id="desciption-of-the-dataset" class="section level3">
 <h3>Desciption of the dataset</h3>
 <ul>
-<li>The dataset is about bankruptcy prediction of Polish companies. The data was collected from Emerging Markets Information Service (EMIS, [Web Link]), which is a database containing information on emerging markets around the world. The bankrupt companies were analysed in the period 2000-2012, while the still operating companies were evaluated from 2007 to 2013.</li>
+<li><p>The dataset is about bankruptcy prediction of Polish companies. The data was collected from Emerging Markets Information Service (EMIS, [Web Link]), which is a database containing information on emerging markets around the world. The bankrupt companies were analysed in the period 2000-2012, while the still operating companies were evaluated from 2007 to 2013.</p></li>
+<li><p><a href="https://www.kaggle.com/bhadaneeraj/bankruptcy-detection">Bankruptcy Dataset</a></p></li>
 </ul>
 </div>
 <div id="background-information-on-the-dataset" class="section level3">
 <h3>Background information on the dataset</h3>
 <ul>
-<li><p>Basing on the collected data five classification cases were distinguished, that depends on the forecasting period:</p></li>
+<li><p>Based on the collected data five classification cases were distinguished, that depends on the forecasting period:</p></li>
 <li><p>1stYear the data contains financial rates from 1st year of the forecasting period and corresponding class label that indicates bankruptcy status after 5 years. The data contains 7027 instances (financial statements), 271 represents bankrupted companies, 6756 firms that did not bankrupt in the forecasting period.</p></li>
 <li><p>2ndYear the data contains financial rates from 2nd year of the forecasting period and corresponding class label that indicates bankruptcy status after 4 years. The data contains 10173 instances (financial statements), 400 represents bankrupted companies, 9773 firms that did not bankrupt in the forecasting period.</p></li>
 <li><p>3rdYear the data contains financial rates from 3rd year of the forecasting period and corresponding class label that indicates bankruptcy status after 3 years. The data contains 10503 instances (financial statements), 495 represents bankrupted companies, 10008 firms that did not bankrupt in the forecasting period.</p></li>
@@ -428,78 +429,282 @@ summary {
 <li><p>5thYear the data contains financial rates from 5th year of the forecasting period and corresponding class label that indicates bankruptcy status after 1 year. The data contains 5910 instances (financial statements), 410 represents bankrupted companies, 5500 firms that did not bankrupt in the forecasting period.</p></li>
 </ul>
 <p><strong>Attribute Information:</strong></p>
-<ul>
-<li>X1 net profit / total assets</li>
-<li>X2 total liabilities / total assets</li>
-<li>X3 working capital / total assets</li>
-<li>X4 current assets / short-term liabilities</li>
-<li>X5 [(cash + short-term securities + receivables - short-term liabilities) / (operating expenses - depreciation)] * 365</li>
-<li>X6 retained earnings / total assets</li>
-<li>X7 EBIT / total assets</li>
-<li>X8 book value of equity / total liabilities</li>
-<li>X9 sales / total assets</li>
-<li>X10 equity / total assets</li>
-<li>X11 (gross profit + extraordinary items + financial expenses) / total assets</li>
-<li>X12 gross profit / short-term liabilities</li>
-<li>X13 (gross profit + depreciation) / sales</li>
-<li>X14 (gross profit + interest) / total assets</li>
-<li>X15 (total liabilities * 365) / (gross profit + depreciation)</li>
-<li>X16 (gross profit + depreciation) / total liabilities</li>
-<li>X17 total assets / total liabilities</li>
-<li>X18 gross profit / total assets</li>
-<li>X19 gross profit / sales</li>
-<li>X20 (inventory * 365) / sales</li>
-<li>X21 sales (n) / sales (n-1)</li>
-<li>X22 profit on operating activities / total assets</li>
-<li>X23 net profit / sales</li>
-<li>X24 gross profit (in 3 years) / total assets</li>
-<li>X25 (equity - share capital) / total assets</li>
-<li>X26 (net profit + depreciation) / total liabilities</li>
-<li>X27 profit on operating activities / financial expenses</li>
-<li>X28 working capital / fixed assets</li>
-<li>X29 logarithm of total assets</li>
-<li>X30 (total liabilities - cash) / sales</li>
-<li>X31 (gross profit + interest) / sales</li>
-<li>X32 (current liabilities * 365) / cost of products sold</li>
-<li>X33 operating expenses / short-term liabilities</li>
-<li>X34 operating expenses / total liabilities</li>
-<li>X35 profit on sales / total assets</li>
-<li>X36 total sales / total assets</li>
-<li>X37 (current assets - inventories) / long-term liabilities</li>
-<li>X38 constant capital / total assets</li>
-<li>X39 profit on sales / sales</li>
-<li>X40 (current assets - inventory - receivables) / short-term liabilities</li>
-<li>X41 total liabilities / ((profit on operating activities + depreciation) * (12/365))</li>
-<li>X42 profit on operating activities / sales</li>
-<li>X43 rotation receivables + inventory turnover in days</li>
-<li>X44 (receivables * 365) / sales</li>
-<li>X45 net profit / inventory</li>
-<li>X46 (current assets - inventory) / short-term liabilities</li>
-<li>X47 (inventory * 365) / cost of products sold</li>
-<li>X48 EBITDA (profit on operating activities - depreciation) / total assets</li>
-<li>X49 EBITDA (profit on operating activities - depreciation) / sales</li>
-<li>X50 current assets / total liabilities</li>
-<li>X51 short-term liabilities / total assets</li>
-<li>X52 (short-term liabilities * 365) / cost of products sold)</li>
-<li>X53 equity / fixed assets</li>
-<li>X54 constant capital / fixed assets</li>
-<li>X55 working capital</li>
-<li>X56 (sales - cost of products sold) / sales</li>
-<li>X57 (current assets - inventory - short-term liabilities) / (sales - gross profit - depreciation)</li>
-<li>X58 total costs /total sales</li>
-<li>X59 long-term liabilities / equity</li>
-<li>X60 sales / inventory</li>
-<li>X61 sales / receivables</li>
-<li>X62 (short-term liabilities *365) / sales</li>
-<li>X63 sales / short-term liabilities</li>
-<li>X64 sales / fixed assets</li>
-<li>Class 0 did not get bankrupt/ 1 - got bankrupt</li>
-</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">X1</td>
+<td align="left">net profit / total assets</td>
+</tr>
+<tr class="even">
+<td align="left">X2</td>
+<td align="left">total liabilities / total assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X3</td>
+<td align="left">working capital / total assets</td>
+</tr>
+<tr class="even">
+<td align="left">X4</td>
+<td align="left">current assets / short-term liabilities</td>
+</tr>
+<tr class="odd">
+<td align="left">X5</td>
+<td align="left">[(cash + short-term securities + receivables short-term liabilities) / (operating expenses depreciation)] * 365</td>
+</tr>
+<tr class="even">
+<td align="left">X6</td>
+<td align="left">retained earnings / total assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X7</td>
+<td align="left">EBIT / total assets</td>
+</tr>
+<tr class="even">
+<td align="left">X8</td>
+<td align="left">book value of equity / total liabilities</td>
+</tr>
+<tr class="odd">
+<td align="left">X9</td>
+<td align="left">sales / total assets</td>
+</tr>
+<tr class="even">
+<td align="left">X10</td>
+<td align="left">equity / total assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X11</td>
+<td align="left">(gross profit + extraordinary items + financial expenses) / total assets</td>
+</tr>
+<tr class="even">
+<td align="left">X12</td>
+<td align="left">gross profit / short-term liabilities</td>
+</tr>
+<tr class="odd">
+<td align="left">X13</td>
+<td align="left">(gross profit + depreciation) / sales</td>
+</tr>
+<tr class="even">
+<td align="left">X14</td>
+<td align="left">(gross profit + interest) / total assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X15</td>
+<td align="left">(total liabilities * 365) / (gross profit + depreciation)</td>
+</tr>
+<tr class="even">
+<td align="left">X16</td>
+<td align="left">(gross profit + depreciation) / total liabilities</td>
+</tr>
+<tr class="odd">
+<td align="left">X17</td>
+<td align="left">total assets / total liabilities</td>
+</tr>
+<tr class="even">
+<td align="left">X18</td>
+<td align="left">gross profit / total assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X19</td>
+<td align="left">gross profit / sales</td>
+</tr>
+<tr class="even">
+<td align="left">X20</td>
+<td align="left">(inventory * 365) / sales</td>
+</tr>
+<tr class="odd">
+<td align="left">X21</td>
+<td align="left">sales (n) / sales (n-1)</td>
+</tr>
+<tr class="even">
+<td align="left">X22</td>
+<td align="left">profit on operating activities / total assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X23</td>
+<td align="left">net profit / sales</td>
+</tr>
+<tr class="even">
+<td align="left">X24</td>
+<td align="left">gross profit (in 3 years) / total assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X25</td>
+<td align="left">(equity share capital) / total assets</td>
+</tr>
+<tr class="even">
+<td align="left">X26</td>
+<td align="left">(net profit + depreciation) / total liabilities</td>
+</tr>
+<tr class="odd">
+<td align="left">X27</td>
+<td align="left">profit on operating activities / financial expenses</td>
+</tr>
+<tr class="even">
+<td align="left">X28</td>
+<td align="left">working capital / fixed assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X29</td>
+<td align="left">logarithm of total assets</td>
+</tr>
+<tr class="even">
+<td align="left">X30</td>
+<td align="left">(total liabilities cash) / sales</td>
+</tr>
+<tr class="odd">
+<td align="left">X31</td>
+<td align="left">(gross profit + interest) / sales</td>
+</tr>
+<tr class="even">
+<td align="left">X32</td>
+<td align="left">(current liabilities * 365) / cost of products sold</td>
+</tr>
+<tr class="odd">
+<td align="left">X33</td>
+<td align="left">operating expenses / short-term liabilities</td>
+</tr>
+<tr class="even">
+<td align="left">X34</td>
+<td align="left">operating expenses / total liabilities</td>
+</tr>
+<tr class="odd">
+<td align="left">X35</td>
+<td align="left">profit on sales / total assets</td>
+</tr>
+<tr class="even">
+<td align="left">X36</td>
+<td align="left">total sales / total assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X37</td>
+<td align="left">(current assets inventories) / long-term liabilities</td>
+</tr>
+<tr class="even">
+<td align="left">X38</td>
+<td align="left">constant capital / total assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X39</td>
+<td align="left">profit on sales / sales</td>
+</tr>
+<tr class="even">
+<td align="left">X40</td>
+<td align="left">(current assets inventory receivables) / short-term liabilities</td>
+</tr>
+<tr class="odd">
+<td align="left">X41</td>
+<td align="left">total liabilities / ((profit on operating activities + depreciation) * (12/365))</td>
+</tr>
+<tr class="even">
+<td align="left">X42</td>
+<td align="left">profit on operating activities / sales</td>
+</tr>
+<tr class="odd">
+<td align="left">X43</td>
+<td align="left">rotation receivables + inventory turnover in days</td>
+</tr>
+<tr class="even">
+<td align="left">X44</td>
+<td align="left">(receivables * 365) / sales</td>
+</tr>
+<tr class="odd">
+<td align="left">X45</td>
+<td align="left">net profit / inventory</td>
+</tr>
+<tr class="even">
+<td align="left">X46</td>
+<td align="left">(current assets inventory) / short-term liabilities</td>
+</tr>
+<tr class="odd">
+<td align="left">X47</td>
+<td align="left">(inventory * 365) / cost of products sold</td>
+</tr>
+<tr class="even">
+<td align="left">X48</td>
+<td align="left">EBITDA (profit on operating activities depreciation) / total assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X49</td>
+<td align="left">EBITDA (profit on operating activities depreciation) / sales</td>
+</tr>
+<tr class="even">
+<td align="left">X50</td>
+<td align="left">current assets / total liabilities</td>
+</tr>
+<tr class="odd">
+<td align="left">X51</td>
+<td align="left">short-term liabilities / total assets</td>
+</tr>
+<tr class="even">
+<td align="left">X52</td>
+<td align="left">(short-term liabilities * 365) / cost of products sold)</td>
+</tr>
+<tr class="odd">
+<td align="left">X53</td>
+<td align="left">equity / fixed assets</td>
+</tr>
+<tr class="even">
+<td align="left">X54</td>
+<td align="left">constant capital / fixed assets</td>
+</tr>
+<tr class="odd">
+<td align="left">X55</td>
+<td align="left">working capital</td>
+</tr>
+<tr class="even">
+<td align="left">X56</td>
+<td align="left">(sales cost of products sold) / sales</td>
+</tr>
+<tr class="odd">
+<td align="left">X57</td>
+<td align="left">(current assets inventory short-term liabilities) / (sales gross profit depreciation)</td>
+</tr>
+<tr class="even">
+<td align="left">X58</td>
+<td align="left">total costs /total sales</td>
+</tr>
+<tr class="odd">
+<td align="left">X59</td>
+<td align="left">long-term liabilities / equity</td>
+</tr>
+<tr class="even">
+<td align="left">X60</td>
+<td align="left">sales / inventory</td>
+</tr>
+<tr class="odd">
+<td align="left">X61</td>
+<td align="left">sales / receivables</td>
+</tr>
+<tr class="even">
+<td align="left">X62</td>
+<td align="left">(short-term liabilities *365) / sales</td>
+</tr>
+<tr class="odd">
+<td align="left">X63</td>
+<td align="left">sales / short-term liabilities</td>
+</tr>
+<tr class="even">
+<td align="left">X64</td>
+<td align="left">sales / fixed assets</td>
+</tr>
+<tr class="odd">
+<td align="left">Class</td>
+<td align="left">0 did not get bankrupt/ 1 got bankrupt</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="statement-of-interest" class="section level3">
 <h3>Statement of interest</h3>
 <ul>
 <li>build a model on the basis given features and target column to predict whether a bank is going to get bankrupt for a given set of features.</li>
+<li>Compare the result with different models and provide rationale behind the selection of the best model statistically and visually.</li>
 </ul>
 </div>
 <div id="evidence-of-the-data" class="section level3">
