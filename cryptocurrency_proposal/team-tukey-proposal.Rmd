@@ -1,0 +1,86 @@
+---
+title: "Stat 420 - Final Data Analysis Project Proposal"
+author: "Team Name: Team Tukey, Summer 2020, Vijayakumar Sitha Mohan, Matthew Leung, Bhusan Bathani"
+date: ''
+output:
+  html_document: 
+    theme: readable
+    toc: yes  
+  pdf_document: default
+urlcolor: cyan
+---
+
+
+### Team Name
+<span style="color:Blue">
+ **Team Tukey** 
+</span>
+
+### Team members
+<span style="color:Blue">
+
+- **Vijayakumar Sitha Mohan**
+
+- **Matthew Leung**
+
+- **Bhusan Bathani**
+
+</span>
+
+### Tentative Title
+<span style="color:Blue">
+**Cryptocurrency market price analysis **
+</span>
+
+
+```{r echo=FALSE}
+library("readr")
+data = read.csv(".\\crypto-markets.csv")
+```
+
+### Desciption of the dataset
+-  Dataset contains the all historic open, high, low, close, trading volume and market cap info of all 1584 types of different cryptocurrencies data recorded between 04/28/2017 and 05/21/2018. It contains `r nrow(data)` records.
+
+- [Cryptocurrency Dataset Source](https://www.kaggle.com/jessevent/all-crypto-currencies)
+
+
+### Background information on the dataset
+Cryptocurrency dataset contains total 13 varaibles as below. It contains `r length(unique(data$symbol))` cryptocurrenices data.
+
+```{r echo=FALSE}
+result = data.frame(
+  Description = c("Exchange of the cyryptocurrency ","Symbol of cryptocurrency","Full name of cryptocurrency","date on which price and other information recorded.","rank of cryptocurrency on that day based on total market value for that currency on that day","price at the start of that date in US $","highest price recorded on a given date in US $","lowest price recorded on a given date in US $","price at the end of that date in US $","how much of financial asset has been traded in a given period of time","Also known as market capitalization, is obtained by multiplying the circulating supply of coins by the current coin price. It is one way to rank the relative size of a cryptocurrency.","number of bids closed vs number of bids requested on that date","average price spread across exchanges on that date"),
+  row.names = c("Slug","symbol","name","date","ranknow","open","high","low","close","volume","Marketvalue","close_ratio","spread")
+)
+
+knitr::kable(result,format="markdown")
+```
+
+
+**Attribute Information:**
+
+
+- spread, close_ratio and volume affects the market volatility and define the high, low and close price of that currency on that day.
+- Close price defines the market value of the respected cryptocurrency at the end of the date wich defines the rank of the currency on that date.
+- So here we have spread, close_ratio and volume as predictors for high, low and close price.
+- Market value and ranknow can be a response variable of close price.
+
+
+
+### Statement of interest
+
+- Analyze the all cryptocurrency market over the period of time to understand which currency remains consistent over the time and good vehicle to invest long period of time. 
+
+- Take top 5 currencies which remains on top over a longer period of time and identify the parameters which affects the price , market value and their rank.
+
+- Identify the top 5 currencies whose volatility index is high and volatile over the specified time range  than others.
+- Analyze what is the impact of price spread and close_ratio on top 5 consistent currency and top 5 highly volatile currencies.
+- Identify the stock trend by calculating the moving average of the stock.Moving averages smooth a series and helps identify trends. The larger n is, the less responsive a moving average process is to short-term fluctuations in the series. The idea is that moving average processes help identify trends from “noise”.Exponentially Weighted Moving Average is a statistic for monitoring the process that averages the data in a way that gives less and less weight to data as they are further removed in time
+
+- [Reference] (https://www.kaggle.com/taniaj/cryptocurrency-market-analysis?scriptVersionId=2427426#Cryptocurrency-Market-Analysis)
+
+### Evidence of the data
+```{r echo=FALSE}
+head(data[which(data$volume>0),])
+```
+
