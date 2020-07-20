@@ -19,7 +19,7 @@ urlcolor: cyan
 
 - **Vijayakumar Sitha Mohan**
 - **Matthew Leung (wmleung2)**
-- **Bhusan Bathani**
+- **Bhusan Bathani (bbath2)**
 
 ### Tentative Title
 
