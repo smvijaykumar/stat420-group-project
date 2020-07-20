@@ -1,14 +1,22 @@
-Column_Names, Description
-FYear,Filing Year
-DLRSN,Reason for deletion
-CUSIP,CUSIP stands for Committee on Uniform Securities Identification Procedures. A CUSIP number identifies most financial instruments
-R1(WC/TA), working capital/total assets 
-R2(RE/TA), retained earnings/total assets 
-R3(EBIT/TA), earnings before interest and tax/total assets
-R4(ME/TL), market value of equity/total liability 
-R5(S/TA), sales/total assets 
-R6(TL/TA), total liability/total assets 
-R7(CA/CL), current assets/current liability 
-R8(NI/TA), net income/total assets 
-R9(Bankruptcy cost), Log(sales) 
-R10(Market capitalization), log(abs(price)*numbers of shares outstanding/1000)
+Column Name,Type,Description
+age,Numeric,Client Age
+job,Categorical,Type of Job
+marital,Categorical,Client’s marital status
+education,Categorical,Client’s education
+default,Categorical,has credit in default?
+housing,Categorical,has housing loan?
+loan,Categorical,has personal loadn?
+contact,string,contact communication type
+day,Categorical,Day of last contact with client
+month,Categorical,Month of last contact with client
+duration,Numeric,"last contact duration, in seconds"
+campaign,Numeric,number of contacts performed during this campaign and for this client
+pdays,Numeric,number of days that passed by after the client was last contacted from a previous campaign
+previous,Numeric,Number of client contacts performed before this campaign
+poutcome,Categorical,outcome of the previous marketing campaign
+emp.var.rate ,Numeric,Quarterly employment variation rate 
+cons.price.idx,Numeric,Monthly consumer price index
+cons.conf.idx,Numeric,Monthly consumer confidence index 
+euribor3m,Numeric,Daily euribor 3-month rate
+nr.employed,Numeric,Quarterly number of employees 
+Term Deposit,Binary,has the client subscribed a term deposit

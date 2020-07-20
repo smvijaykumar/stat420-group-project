@@ -51,8 +51,7 @@ library(DT)
 
 ### Getting the sense of the data
 ```{r echo=TRUE, message=FALSE,warning=FALSE,fig.width=10 }
-setwd("~/Study/MS-Bana/DM 2/Case Study 1")
-bankruptcy<-fread('bankruptcy.csv')
+bankruptcy<-fread('data/bankruptcy.csv')
 colSums(is.na(bankruptcy))
 str(bankruptcy)
 datatable(head(bankruptcy))
@@ -158,18 +157,19 @@ full.log.probit<-glm(data = train,DLRSN~.,family = binomial(link=probit))
 
 ```
 We get error because of the fact that all values of DLRSN are 0 for the year 1999. We need to remove YEAR.
+
 ```{r echo=TRUE, message=FALSE,warning=FALSE,fig.width=10 }
-full.log.probit<-glm(data = train[,-'FYEAR'],DLRSN~.,family = binomial(link=probit))
+full.log.probit<-glm(data = train, DLRSN ~ ., family = binomial(link=probit))
 summary(full.log.probit)
 full.log.probit.prediction<-predict(full.log.probit,type = "response")
-roc.plot(x = train$DLRSN == "1", pred = full.log.probit.prediction,thresholds = thresh)$roc.vol
+roc.plot(x = train$DLRSN == 1, pred = full.log.probit.prediction,thresholds = thresh)$roc.vol
 ```
 We can see that r4 and r5 are not significant. 
 
 **Lasso Variable selection-** We need to select variables that are most important
 ```{r echo=TRUE, message=FALSE,warning=FALSE,fig.width=10 }
 ## We need to standardize all the variables before we can go for LASSO variable selection
-X<-scale(train[,-c('DLRSN','FYEAR')])
+X<-scale(subset(train, select=-c(DLRSN,FYEAR)))
 X<-as.matrix(X)
 Y<- as.matrix(train[,'DLRSN'])
 lasso.fit<- glmnet(x=X, y=Y, family = "binomial", alpha = 1)
@@ -199,7 +199,7 @@ roc.plot(x = train$DLRSN == "1", pred = pred.lasso,thresholds = thresh)$roc.vol
 
 **Classification Tree-** Now we try to fill the classification tree for the data.
 ```{r echo=TRUE, message=FALSE,warning=FALSE,fig.width=10 }
-full.rpart<-rpart(data = train[,-'FYEAR'],DLRSN~.,method = 'class')
+full.rpart<-rpart(data = subset(train,select = -c(FYEAR)),DLRSN~.,method = 'class')
 plot(full.rpart)
 text(full.rpart)
 plotcp(full.rpart)
@@ -209,7 +209,7 @@ roc.plot(x = train$DLRSN == "1", pred = rpart.prediction[,2],thresholds = thresh
 ```
 **Random Forest**
 ```{r echo=TRUE, message=FALSE,warning=FALSE,fig.width=10 }
-full.randomForest<-randomForest(data=train[,-'FYEAR'],DLRSN~.,ntree=1000)
+full.randomForest<-randomForest(data=subset(train,select = -c(FYEAR)),DLRSN~.,ntree=1000)
 plot(full.randomForest)
 rf.predicted<-predict(full.randomForest,type = 'prob')
 roc.plot(x = train$DLRSN == "1", pred = rf.predicted[,2],thresholds = thresh)$roc.vol
@@ -525,6 +525,7 @@ cost1(test$DLRSN,predicted)
 Note that the accuracy may not be high for the test set, however, the cost is lowest. 
 
 If we were to go for accuracy, we can define new cost function as-
+
 ```{r echo=TRUE, message=FALSE,warning=FALSE,fig.width=10 }
 cost3 <- function(actual, predicted) {
 m<-mean(actual==predicted)

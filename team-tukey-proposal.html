@@ -408,187 +408,213 @@ summary {
 <div id="tentative-title" class="section level3">
 <h3>Tentative Title</h3>
 <ul>
-<li>Bankruptcy Prediction using Binary Classification</li>
+<li><strong>Bank Marketing-Term Deposit Subscription Prediction using Binary Classification in R</strong></li>
 </ul>
 </div>
 <div id="desciption-of-the-dataset" class="section level3">
 <h3>Desciption of the dataset</h3>
 <ul>
-<li><p>Standard and Poor’s (S&amp;P) Capital IQ’s Compustat database, introduced in 1962, has been extensively used in accounting research and practice due to its ease of access and wide coverage of fundamental financial and market data</p></li>
-<li><p>Bankruptcy is a legal status of a person or other entity that cannot repay the debts it owes to creditors. In most jurisdictions, bankruptcy is imposed by a court order, often initiated by the debtor. (Wikipedia)</p></li>
-<li><p>The Bankruptcy data was collected from COMPUSTAT for the years 1980 to 2000 and has 5436 observations with 13 variables.</p></li>
-<li><p><a href="https://www.kaggle.com/ankeetshk/bankruptcy-data-cdac">Bankruptcy Dataset Source</a></p></li>
+<li>The data is related with direct marketing campaigns of a Portuguese banking institution.</li>
+<li>The Bank marketing dataset has 41188 examples with 20 inputs and 1 output variable.</li>
+<li>It has numerical as well as categorical attributes and response attribute y denotes client subscribed to term deposit or not (yes or no).</li>
+<li>The goal is to build models that can predict if client will subscribe to term deposit or not.</li>
+<li><a href="http://archive.ics.uci.edu/ml/datasets/Bank+Marketing">Bank Marketing Dataset Source</a></li>
 </ul>
+<pre><code>## &#39;data.frame&#39;:    41188 obs. of  21 variables:
+##  $ age           : int  56 57 37 40 56 45 59 41 24 25 ...
+##  $ job           : chr  &quot;housemaid&quot; &quot;services&quot; &quot;services&quot; &quot;admin.&quot; ...
+##  $ marital       : chr  &quot;married&quot; &quot;married&quot; &quot;married&quot; &quot;married&quot; ...
+##  $ education     : chr  &quot;basic.4y&quot; &quot;high.school&quot; &quot;high.school&quot; &quot;basic.6y&quot; ...
+##  $ default       : chr  &quot;no&quot; &quot;unknown&quot; &quot;no&quot; &quot;no&quot; ...
+##  $ housing       : chr  &quot;no&quot; &quot;no&quot; &quot;yes&quot; &quot;no&quot; ...
+##  $ loan          : chr  &quot;no&quot; &quot;no&quot; &quot;no&quot; &quot;no&quot; ...
+##  $ contact       : chr  &quot;telephone&quot; &quot;telephone&quot; &quot;telephone&quot; &quot;telephone&quot; ...
+##  $ month         : chr  &quot;may&quot; &quot;may&quot; &quot;may&quot; &quot;may&quot; ...
+##  $ day_of_week   : chr  &quot;mon&quot; &quot;mon&quot; &quot;mon&quot; &quot;mon&quot; ...
+##  $ duration      : int  261 149 226 151 307 198 139 217 380 50 ...
+##  $ campaign      : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ pdays         : int  999 999 999 999 999 999 999 999 999 999 ...
+##  $ previous      : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ poutcome      : chr  &quot;nonexistent&quot; &quot;nonexistent&quot; &quot;nonexistent&quot; &quot;nonexistent&quot; ...
+##  $ emp.var.rate  : num  1.1 1.1 1.1 1.1 1.1 1.1 1.1 1.1 1.1 1.1 ...
+##  $ cons.price.idx: num  94 94 94 94 94 ...
+##  $ cons.conf.idx : num  -36.4 -36.4 -36.4 -36.4 -36.4 -36.4 -36.4 -36.4 -36.4 -36.4 ...
+##  $ euribor3m     : num  4.86 4.86 4.86 4.86 4.86 ...
+##  $ nr.employed   : num  5191 5191 5191 5191 5191 ...
+##  $ y             : chr  &quot;no&quot; &quot;no&quot; &quot;no&quot; &quot;no&quot; ...</code></pre>
 </div>
 <div id="background-information-on-the-dataset" class="section level3">
 <h3>Background information on the dataset</h3>
-<p>This bankruptcy dataset contains13 variables, one of them was “DLRSN”- a categorical variable indicating default, the dependent variable of the prediction. Overall, the bankruptcy is about 14% of the entire sample.</p>
+<ul>
+<li>The Bank-Marketing dataset is downloaded from UCI Machine Learning Repository and the same is available at <a href="http://archive.ics.uci.edu/ml/datasets/Bank+Marketing" class="uri">http://archive.ics.uci.edu/ml/datasets/Bank+Marketing</a>.</li>
+<li>There were 4 datasets in it from which bank-additional-full.csv is used that has all examples (41188) and 20 inputs ordered by date (from May 2008 to November 2010). There are 20 input variables and 1 output variable (desired target).</li>
+<li>The dataset has customer data, socio-economic data, telemarketing data and some other data. Some attributes are numerical, and some are categorical.</li>
+<li>The dataset was loaded in R Studio and checked for any missing values using is.na function and found that it didn’t have any missing values. So, we have a clean dataset.</li>
+</ul>
 <p><strong>Attribute Information:</strong></p>
 <table>
 <thead>
 <tr class="header">
-<th align="left">Column_Names</th>
+<th align="left">Column.Name</th>
+<th align="left">Type</th>
 <th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">FYear</td>
-<td align="left">Filing Year</td>
+<td align="left">age</td>
+<td align="left">Numeric</td>
+<td align="left">Client Age</td>
 </tr>
 <tr class="even">
-<td align="left">DLRSN</td>
-<td align="left">Reason for deletion</td>
+<td align="left">job</td>
+<td align="left">Categorical</td>
+<td align="left">Type of Job</td>
 </tr>
 <tr class="odd">
-<td align="left">CUSIP</td>
-<td align="left">CUSIP stands for Committee on Uniform Securities Identification Procedures. A CUSIP number identifies most financial instruments</td>
+<td align="left">marital</td>
+<td align="left">Categorical</td>
+<td align="left">Client’s marital status</td>
 </tr>
 <tr class="even">
-<td align="left">R1(WC/TA)</td>
-<td align="left">working capital/total assets</td>
+<td align="left">education</td>
+<td align="left">Categorical</td>
+<td align="left">Client’s education</td>
 </tr>
 <tr class="odd">
-<td align="left">R2(RE/TA)</td>
-<td align="left">retained earnings/total assets</td>
+<td align="left">default</td>
+<td align="left">Categorical</td>
+<td align="left">has credit in default?</td>
 </tr>
 <tr class="even">
-<td align="left">R3(EBIT/TA)</td>
-<td align="left">earnings before interest and tax/total assets</td>
+<td align="left">housing</td>
+<td align="left">Categorical</td>
+<td align="left">has housing loan?</td>
 </tr>
 <tr class="odd">
-<td align="left">R4(ME/TL)</td>
-<td align="left">market value of equity/total liability</td>
+<td align="left">loan</td>
+<td align="left">Categorical</td>
+<td align="left">has personal loadn?</td>
 </tr>
 <tr class="even">
-<td align="left">R5(S/TA)</td>
-<td align="left">sales/total assets</td>
+<td align="left">contact</td>
+<td align="left">string</td>
+<td align="left">contact communication type</td>
 </tr>
 <tr class="odd">
-<td align="left">R6(TL/TA)</td>
-<td align="left">total liability/total assets</td>
+<td align="left">day</td>
+<td align="left">Categorical</td>
+<td align="left">Day of last contact with client</td>
 </tr>
 <tr class="even">
-<td align="left">R7(CA/CL)</td>
-<td align="left">current assets/current liability</td>
+<td align="left">month</td>
+<td align="left">Categorical</td>
+<td align="left">Month of last contact with client</td>
 </tr>
 <tr class="odd">
-<td align="left">R8(NI/TA)</td>
-<td align="left">net income/total assets</td>
+<td align="left">duration</td>
+<td align="left">Numeric</td>
+<td align="left">last contact duration, in seconds</td>
 </tr>
 <tr class="even">
-<td align="left">R9(Bankruptcy cost)</td>
-<td align="left">Log(sales)</td>
+<td align="left">campaign</td>
+<td align="left">Numeric</td>
+<td align="left">number of contacts performed during this campaign and for this client</td>
 </tr>
 <tr class="odd">
-<td align="left">R10(Market capitalization)</td>
-<td align="left">log(abs(price)*numbers of shares outstanding/1000)</td>
+<td align="left">pdays</td>
+<td align="left">Numeric</td>
+<td align="left">number of days that passed by after the client was last contacted from a previous campaign</td>
+</tr>
+<tr class="even">
+<td align="left">previous</td>
+<td align="left">Numeric</td>
+<td align="left">Number of client contacts performed before this campaign</td>
+</tr>
+<tr class="odd">
+<td align="left">poutcome</td>
+<td align="left">Categorical</td>
+<td align="left">outcome of the previous marketing campaign</td>
+</tr>
+<tr class="even">
+<td align="left">emp.var.rate</td>
+<td align="left">Numeric</td>
+<td align="left">Quarterly employment variation rate</td>
+</tr>
+<tr class="odd">
+<td align="left">cons.price.idx</td>
+<td align="left">Numeric</td>
+<td align="left">Monthly consumer price index</td>
+</tr>
+<tr class="even">
+<td align="left">cons.conf.idx</td>
+<td align="left">Numeric</td>
+<td align="left">Monthly consumer confidence index</td>
+</tr>
+<tr class="odd">
+<td align="left">euribor3m</td>
+<td align="left">Numeric</td>
+<td align="left">Daily euribor 3-month rate</td>
+</tr>
+<tr class="even">
+<td align="left">nr.employed</td>
+<td align="left">Numeric</td>
+<td align="left">Quarterly number of employees</td>
+</tr>
+<tr class="odd">
+<td align="left">Term Deposit</td>
+<td align="left">Binary</td>
+<td align="left">has the client subscribed a term deposit</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li><code>DLRSN</code> stands for <em>Deletion Reason</em> which will be our predictor variable. It will contain the following codes.</li>
+<li><p>Output variable (desired target) is <strong>Term Deposit</strong> which is categorical binary variable.</p>
+<ul>
+<li><p>y - if the client subscribed a term deposit</p></li>
+<li><p>n - if the client doesn’t subscribe a term deposit</p></li>
+</ul></li>
 </ul>
-<table>
-<thead>
-<tr class="header">
-<th align="right">Code</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">1</td>
-<td align="left">Acquisition or merger</td>
-</tr>
-<tr class="even">
-<td align="right">2</td>
-<td align="left">Bankruptcy</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="left">Liquidation</td>
-</tr>
-<tr class="even">
-<td align="right">4</td>
-<td align="left">Reverse acquisition (1983 forward)</td>
-</tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="left">No longer fits original format (1978 forward)</td>
-</tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="left">Leveraged buyout (1982 forward)</td>
-</tr>
-<tr class="odd">
-<td align="right">7</td>
-<td align="left">Other (no longer files with SEC among other possible reasons);but pricing continues</td>
-</tr>
-<tr class="even">
-<td align="right">9</td>
-<td align="left">Now a private company</td>
-</tr>
-<tr class="odd">
-<td align="right">10</td>
-<td align="left">Other (no longer files with SEC among other reasons)</td>
-</tr>
-<tr class="even">
-<td align="right">11</td>
-<td align="left">Agency governing settlement of securities’ trading inactivated the issue’s Local Settlement Code. because the issue matured;expired or was called. No successor settlement code was established.</td>
-</tr>
-<tr class="odd">
-<td align="right">12</td>
-<td align="left">Agency governing settlement of securities’ trading inactivated the issue’s Local Settlement Code. A successor settlement code was established; issue was changed for another; as in a par value change.</td>
-</tr>
-<tr class="even">
-<td align="right">13</td>
-<td align="left">Price source for the SEDOL was no longer available. Issue now identified under different SEDOL.</td>
-</tr>
-<tr class="odd">
-<td align="right">14</td>
-<td align="left">Fully paid issue was replaced or partly paid issue was replaced by a subsequent installment. Successor settlement code was established.</td>
-</tr>
-</tbody>
-</table>
-<pre><code>## &#39;data.frame&#39;:    5436 obs. of  13 variables:
-##  $ FYEAR: int  1999 1999 1999 1994 1999 1999 1999 1999 1987 1999 ...
-##  $ DLRSN: int  0 0 0 1 0 0 0 0 1 0 ...
-##  $ CUSIP: chr  &quot;00036020&quot; &quot;00036110&quot; &quot;00037520&quot; &quot;00078110&quot; ...
-##  $ R1   : num  0.307 0.761 -0.514 -0.466 2.023 ...
-##  $ R2   : num  0.887 0.592 0.338 0.371 0.215 ...
-##  $ R3   : num  1.648 0.453 0.299 0.496 0.183 ...
-##  $ R4   : num  -0.1992 -0.3699 -0.0291 -0.3734 6.6954 ...
-##  $ R5   : num  1.093 0.186 -0.433 -0.267 -1.148 ...
-##  $ R6   : num  -0.3133 0.0396 0.83 0.9778 -1.5059 ...
-##  $ R7   : num  -0.197 0.327 -0.708 -0.611 2.876 ...
-##  $ R8   : num  1.207 0.428 0.476 0.457 0.287 ...
-##  $ R9   : num  0.282 1.107 2.179 0.152 -0.986 ...
-##  $ R10  : num  0.1589 0.7934 2.4846 0.0478 0.7911 ...</code></pre>
 </div>
 <div id="statement-of-interest" class="section level3">
 <h3>Statement of interest</h3>
 <ul>
-<li>build a model on the basis given features and target column to predict whether a bank is going to get bankrupt for a given set of features.</li>
-<li>Compare the result with different models and provide rationale behind the selection of the best model statistically and visually.</li>
+<li>The goal is to build a model on the basis given features and target column to predict whether the client will subscribe a term deposit (variable y).</li>
+<li>Explore the dataset and provide data visually using plots.</li>
+<li>Cleanse and Standardize the data as needed</li>
+<li>Capture the metrics from the different models</li>
+<li>Finally choose the best model based on the collected metrics and provide the rationale behind the selection.</li>
 </ul>
 </div>
 <div id="evidence-of-the-data" class="section level3">
 <h3>Evidence of the data</h3>
-<pre><code>##   FYEAR DLRSN    CUSIP         R1        R2        R3          R4         R5
-## 1  1999     0 00036020  0.3071395 0.8870057 1.6476808 -0.19915760  1.0929640
-## 2  1999     0 00036110  0.7607365 0.5924934 0.4530028 -0.36989014  0.1861539
-## 3  1999     0 00037520 -0.5135961 0.3376148 0.2990145 -0.02907996 -0.4326047
-## 4  1994     1 00078110 -0.4661293 0.3707467 0.4960667 -0.37342897 -0.2674240
-## 5  1999     0 00079X10  2.0234223 0.2148764 0.1825948  6.69536040 -1.1483381
-## 6  1999     0 00086T10  0.9074985 0.3868797 0.4778914 -0.34715872  1.4079893
-##            R6          R7        R8         R9         R10
-## 1 -0.31328867 -0.19679332 1.2067628  0.2824709  0.15889625
-## 2  0.03961907  0.32749732 0.4284181  1.1069652  0.79344276
-## 3  0.82999324 -0.70778613 0.4761533  2.1791755  2.48458450
-## 4  0.97779888 -0.61097507 0.4568098  0.1519511  0.04778851
-## 5 -1.50588927  2.87647687 0.2873749 -0.9864421  0.79107673
-## 6 -0.48390230  0.07025944 0.5278110  0.5024659 -0.16464802</code></pre>
+<pre><code>##   age       job marital   education default housing loan   contact month
+## 1  56 housemaid married    basic.4y      no      no   no telephone   may
+## 2  57  services married high.school unknown      no   no telephone   may
+## 3  37  services married high.school      no     yes   no telephone   may
+## 4  40    admin. married    basic.6y      no      no   no telephone   may
+## 5  56  services married high.school      no      no  yes telephone   may
+## 6  45  services married    basic.9y unknown      no   no telephone   may
+##   day_of_week duration campaign pdays previous    poutcome emp.var.rate
+## 1         mon      261        1   999        0 nonexistent          1.1
+## 2         mon      149        1   999        0 nonexistent          1.1
+## 3         mon      226        1   999        0 nonexistent          1.1
+## 4         mon      151        1   999        0 nonexistent          1.1
+## 5         mon      307        1   999        0 nonexistent          1.1
+## 6         mon      198        1   999        0 nonexistent          1.1
+##   cons.price.idx cons.conf.idx euribor3m nr.employed  y
+## 1         93.994         -36.4     4.857        5191 no
+## 2         93.994         -36.4     4.857        5191 no
+## 3         93.994         -36.4     4.857        5191 no
+## 4         93.994         -36.4     4.857        5191 no
+## 5         93.994         -36.4     4.857        5191 no
+## 6         93.994         -36.4     4.857        5191 no</code></pre>
+<div id="references" class="section level5">
+<h5>References:</h5>
+<ul>
+<li>[Moro et al., 2014] S. Moro, P. Cortez and P. Rita. A Data-Driven Approach to Predict the Success of Bank Telemarketing. Decision Support Systems, Elsevier, 62:22-31, June 2014</li>
+</ul>
+</div>
 </div>
 
 

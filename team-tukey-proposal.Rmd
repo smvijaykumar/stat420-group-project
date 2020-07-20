@@ -23,22 +23,31 @@ urlcolor: cyan
 
 ### Tentative Title
 
-- Bankruptcy Prediction using Binary Classification
+- **Bank Marketing-Term Deposit Subscription Prediction using Binary Classification in R**
 
 ### Desciption of the dataset
-- Standard and Poor’s (S&P) Capital IQ’s Compustat database, introduced in 1962, has been
-extensively used in accounting research and practice due to its ease of access and wide coverage of fundamental financial and market data
 
-- Bankruptcy is a legal status of a person or other entity that cannot repay the debts it owes to creditors. In most jurisdictions, bankruptcy is imposed by a court order, often initiated by the debtor. (Wikipedia)
+- The data is related with direct marketing campaigns of a Portuguese banking institution. 
+- The Bank marketing dataset has 41188 examples with 20 inputs and 1 output variable. 
+- It has numerical as well as categorical attributes and
+response attribute y denotes client subscribed to term deposit or not (yes or no). 
+- The goal is to build models that can predict if client will subscribe to term deposit or not. 
+- [Bank Marketing Dataset Source](http://archive.ics.uci.edu/ml/datasets/Bank+Marketing)
 
-- The Bankruptcy data was collected from COMPUSTAT for the years 1980 to 2000 and has 5436 observations with 13 variables.
-
-- [Bankruptcy Dataset Source](https://www.kaggle.com/ankeetshk/bankruptcy-data-cdac)
-
+```{r echo=FALSE}
+bank_df = read.csv("data/bank-additional-full.csv")
+str(bank_df)
+```
 
 ### Background information on the dataset
 
-This bankruptcy dataset contains13 variables, one of them was “DLRSN”- a categorical variable indicating default, the dependent variable of the prediction. Overall, the bankruptcy is about 14% of the entire sample.
+- The Bank-Marketing dataset is downloaded from UCI Machine Learning Repository and the same is available at http://archive.ics.uci.edu/ml/datasets/Bank+Marketing.
+- There were 4 datasets in it from which bank-additional-full.csv is used that has all examples (41188) and
+20 inputs ordered by date (from May 2008 to November 2010). There are 20 input variables and 1 output
+variable (desired target). 
+- The dataset has  customer data, socio-economic data, telemarketing data and some other data. Some attributes are numerical, and some are categorical. 
+- The dataset was loaded in R Studio and checked for any missing values using is.na function and found that it didn’t have any missing values. So, we have a clean dataset.
+
 
 **Attribute Information:**
 
@@ -48,27 +57,28 @@ columns = read.csv("data/col_names.csv")
 kable(columns)
 ```
 
-- `DLRSN` stands for *Deletion Reason* which will be our predictor variable. It will contain the following codes.
+- Output variable (desired target) is **Term Deposit** which is categorical binary variable.
 
-```{r echo=FALSE}
-codes = read.csv("data/dlrsn_codes.csv")
-kable(codes)
-```
+  + y - if the client subscribed a term deposit
+  
+  + n - if the client doesn't subscribe a term deposit
 
-
-```{r echo=FALSE}
-bankruptcy_df = read.csv("data/bankruptcy.csv")
-str(bankruptcy_df)
-```
 
 
 ### Statement of interest
 
-- build a model on the basis given features and target column to predict whether a bank is going to get bankrupt for a given set of features.
-- Compare the result with different models and provide rationale behind the selection of the best model statistically and visually.
+- The goal is to build a model on the basis given features and target column to predict whether the client will subscribe a term deposit (variable y).
+- Explore the dataset and provide data visually using plots.
+- Cleanse and Standardize the data as needed
+- Capture the metrics from the different models
+- Finally choose the best model based on the collected metrics and provide the rationale behind the selection.
+
 
 ### Evidence of the data
 ```{r echo=FALSE}
-head(bankruptcy_df)
+head(bank_df)
 ```
 
+##### References:
+- [Moro et al., 2014] S. Moro, P. Cortez and P. Rita. A Data-Driven Approach to Predict the Success of Bank
+Telemarketing. Decision Support Systems, Elsevier, 62:22-31, June 2014
