@@ -1,0 +1,280 @@
+---
+title: 'Bank Marketing Data Analysis - Project Report'
+author: "STAT 420, Summer 2020, Bhushan Bhathani, Matthew Leung, Vijayakumar Sitha Mohan,"
+date: ''
+output:
+  html_document: 
+    theme: readable
+    toc: yes  
+  pdf_document: default
+urlcolor: cyan
+---
+
+***
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+library(knitr)      # web widget
+library(tidyverse)  # data manipulation
+library(data.table) # fast file reading
+library(caret)      # rocr analysis
+library(ROCR)       # rocr analysis
+library(kableExtra) # nice table html formating 
+library(gridExtra)  # arranging ggplot in grid
+library(rpart)      # decision tree
+library(rpart.plot) # decision tree plotting
+library(caTools)    # split
+library(lmtest)
+library(randomForest)
+library(ada)
+```
+
+
+## Introduction
+- What is this data? Where did it come from? What are the variables? Why is it interesting to you?
+- Why are you creating a model for this data? What is the goal of this model?
+
+## Methods
+
+```{r echo=FALSE}
+bank_df1 = read.csv("data/bank-additional-full.csv")
+```
+
+### Understanding Data
+#### Data Validation
+#### Data Curation  (cleaning , missing data, duplicate)
+```{r}
+bank_df = bank_df1 %>% distinct
+#bank_df = bank_df %>% filter(housing == "yes" & housing == "no")
+
+bank_df$y = ifelse(bank_df$y=='yes',1,0)
+bank_df$y = as.factor(bank_df$y)
+bank_df$job = as.factor(bank_df$job)
+bank_df$education = as.factor(bank_df$education)
+bank_df$marital = as.factor(bank_df$marital)
+bank_df$default = as.factor(bank_df$default)
+bank_df$housing = as.factor(bank_df$housing)
+bank_df$loan = as.factor(bank_df$loan)
+bank_df$contact = as.factor(bank_df$contact)
+bank_df$month = as.factor(bank_df$month)
+bank_df$poutcome = as.factor(bank_df$poutcome)
+```
+
+```{r}
+levels(bank_df$job)
+levels(bank_df$marital)
+levels(bank_df$education)
+levels(bank_df$default)
+levels(bank_df$housing)
+levels(bank_df$loan)
+levels(bank_df$contact)
+levels(bank_df$month)
+levels(bank_df$poutcome)
+View(bank_df)
+```
+
+#### Data Analysis  (attribute wise distribution, subscription plot analysis)
+#### Class Imbalance Problem analysis
+#### Train/Test data split (stratified cv)
+
+- Stratification is the process of rearranging the data so as to ensure that each fold is a good representative of the whole. For example, in a binary classification problem where each class comprises of 50% of the data, it is best to arrange the data such that in every fold, each class comprises of about half the instances.
+
+```{r}
+folds <- createFolds(bank_df$y, k = 10, list = FALSE)
+```
+
+```{r}
+split<-createDataPartition(bank_df$y,p=0.6,list = FALSE)
+train<-bank_df[split,]
+test<-bank_df[-split,]
+split<-createDataPartition(test$y,p=0.5,list=FALSE)
+test1<-test[split,]
+test2<-test[-split,]
+dim(train)
+```
+
+
+## Model Builing
+### Model 1: Logistic Regression
+####  model using all predictors
+####  Attribute selection using backward/forward/subset selection
+####  Calculate missclassification Rate (confusion matrix)
+####  Plot ROC curve (TPR vs FPR), AIC plot, RMSE, adjr2
+####  Pick best using AIC,BIC, RSS, RMSE, and anova Test
+####  Report Accuracy
+
+### Model 1: Random Forest
+####  model using all predictors
+```{r}
+model_rf<-randomForest(y ~ .  , data=train, mtry=3)
+```
+
+```{r}
+model_rf
+```
+
+```{r}
+varImpPlot(model_rf)
+```
+
+####  Attribute selection using backward/forward/subset selection
+####  Calculate missclassification Rate (confusion matrix)
+```{r}
+pred_train<-predict(model_rf,train)
+confusionMatrix(train$y,pred_train)
+
+pred_test1<-predict(model_rf,test1)
+confusionMatrix(test1$y,pred_test1)
+
+pred_test2<-predict(model_rf,test2)
+confusionMatrix(test2$y,pred_test2)
+```
+
+####  Plot ROC curve (TPR vs FPR)
+```{r}
+par(mfrow = c(1,3))
+pr_train = prediction(as.numeric(pred_train),train$y)
+prf_train = performance(pr_train, measure = "tpr", x.measure = "fpr")
+plot(prf_train)
+
+pr_test1 = prediction(as.numeric(pred_test1),test1$y)
+prf_test1 = performance(pr_test1, measure = "tpr",x.measure = "fpr")
+plot(prf_test1)
+
+pr_test2 = prediction(as.numeric(pred_test2),test2$y)
+prf_test2 = performance(pr_test2, measure = "tpr",x.measure = "fpr")
+plot(prf_test2)
+
+auc_train = performance(pr_train, measure = "auc")
+auc_test1 = performance(pr_test1, measure = "auc")
+auc_test2 = performance(pr_test2, measure = "auc")
+
+
+```
+
+####  Tuning Random Forest Model
+```{r}
+oob = trainControl(method = "oob")
+cv_5 = trainControl(method = "cv", number = 5)
+
+rf_mtry = ceiling(sqrt(21))
+rf_grid =  expand.grid(mtry = 1:rf_mtry)
+set.seed(1)
+bank_rf_tune = train(y ~ . , data = train,
+                     method = "rf",
+                     trControl = oob,
+                     verbose = FALSE,
+                     tuneGrid = rf_grid)
+bank_rf_tune
+```
+
+####  Report Accuracy
+
+```{r}
+
+model_rf_best<-randomForest(y ~ .  , data=train, mtry=bank_rf_tune$bestTune$mtry[[1]])
+
+```
+
+```{r}
+pred_train<-predict(model_rf_best,train)
+pred_test1<-predict(model_rf_best,test1)
+pred_test2<-predict(model_rf_best,test2)
+train_cm = confusionMatrix(train$y,pred_train)
+test2_cm = confusionMatrix(test2$y,pred_test2)
+test1_cm = confusionMatrix(test1$y,pred_test1)
+
+metrics = cbind(train_cm$byClass, test1_cm$byClass,test2_cm$byClass)
+acc = cbind(train_cm$overall["Accuracy"],test1_cm$overall["Accuracy"], test2_cm$overall["Accuracy"])
+auc = cbind(auc_train@y.values,auc_test1@y.values,auc_test2@y.values)
+rownames(auc) = c("Area Under Curve")
+result = rbind(acc,auc,metrics)
+
+colnames(result) = c("Train","Test1","Test2")
+kable(result)
+```
+
+
+### Model 1: ADAPTIVE BOOSTING
+```{r message=FALSE, warning=FALSE}
+library(ada)
+model_ada = ada(y ~ ., data=train,loss='exponential', type='discrete',iter=100)
+model_ada
+
+```
+
+```{r}
+plot(model_ada)
+```
+
+
+```{r}
+pred_train = predict(model_ada, train)
+train_cm = confusionMatrix(train$y,as.factor(pred_train))
+pred_test1 = predict(model_ada, test1)
+test1_cm=confusionMatrix(test1$y,as.factor(pred_test1))
+pred_test2 = predict(model_ada, test2)
+test2_cm=confusionMatrix(test2$y,as.factor(pred_test2))
+
+par(mfrow = c(1,3))
+pr_train = prediction(as.numeric(pred_train),train$y)
+prf_train = performance(pr_train, measure = "tpr", x.measure = "fpr")
+plot(prf_train)
+
+pr_test1 = prediction(as.numeric(pred_test1),test1$y)
+prf_test1 = performance(pr_test1, measure = "tpr",x.measure = "fpr")
+plot(prf_test1)
+
+pr_test2 = prediction(as.numeric(pred_test2),test2$y)
+prf_test2 = performance(pr_test2, measure = "tpr",x.measure = "fpr")
+plot(prf_test2)
+
+auc_train = performance(pr_train, measure = "auc")
+auc_test1 = performance(pr_test1, measure = "auc")
+auc_test2 = performance(pr_test2, measure = "auc")
+
+
+```
+
+
+```{r}
+
+
+metrics = cbind(train_cm$byClass, test1_cm$byClass,test2_cm$byClass)
+acc = cbind(train_cm$overall["Accuracy"],test1_cm$overall["Accuracy"], test2_cm$overall["Accuracy"])
+auc = cbind(auc_train@y.values,auc_test1@y.values,auc_test2@y.values)
+rownames(auc) = c("Area Under Curve")
+result = rbind(acc,auc,metrics)
+
+colnames(result) = c("Train","Test1","Test2")
+kable(result)
+```
+
+
+
+####  model using all predictors
+####  Attribute selection using backward/forward/subset selection
+####  Calculate missclassification Rate (confusion matrix)
+####  Plot ROC curve (TPR vs FPR), AIC plot, RMSE, adjr2
+####  Pick best using AIC,BIC and anova Test
+####  Report Accuracy
+
+
+
+## Results
+
+### Compare Models (Test and Train Accuracy)
+
+
+
+## Discussion
+- Misclassification rate
+- Thresold
+- Select best among 3 and why?
+## Appendix
+
+UCI - citation
