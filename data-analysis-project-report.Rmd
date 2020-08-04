@@ -120,6 +120,16 @@ prop.table(table(test2$y))
 ## Model Builing
 ### Model 1: Logistic Regression
 ####  model using all predictors
+```{r}
+bank_lr = glm(y ~ ., data = train, family = "binomial")
+summary(bank_lr)
+```
+
+```{r}
+bank_lr_aic = step(bank_lr, direction = "backward", trace = 0)
+bank_lr_aic
+```
+
 ####  Attribute selection using backward/forward/subset selection
 ####  Calculate missclassification Rate (confusion matrix)
 ####  Plot ROC curve (TPR vs FPR), AIC plot, RMSE, adjr2
@@ -291,6 +301,13 @@ kable(result)
 
 
 ## Discussion
+
+- Precision: What percentage of tuples labeled as positively is actually positive?
+
+- Recall: What percentage of positve tuples are labeled as positive?
+
+- AUC: The area under the curve is a measure of the accuracy of the model
+
 - Misclassification rate
 - Thresold
 - Select best among 3 and why?
