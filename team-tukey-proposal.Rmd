@@ -18,8 +18,8 @@ urlcolor: cyan
 ### Team members
 
 - **Vijayakumar Sitha Mohan**
-- **Matthew Leung**
-- **Bhusan Bathani**
+- **Matthew Leung (wmleung2)**
+- **Bhusan Bathani (bbath2)**
 
 ### Tentative Title
 
