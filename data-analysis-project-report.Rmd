@@ -39,6 +39,16 @@ library(e1071)      # caret depends on this
 - What is this data? Where did it come from? What are the variables? Why is it interesting to you?
 - Why are you creating a model for this data? What is the goal of this model?
 
+Our team selected a dataset of direct banking marketing of a Portuguese bank. The goal is to predict if the client subscribe to the bank term deposit. The dataset has client personal attributes, marketing campaign attributes, social and economic context attributes. The response variable (y) is binomial with value either 1 (subscribe) or 0 (not subscribe).
+
+Our team is interested in various classification techniques. We selected this dataset becasue it is a clean dataset for classification. It has been top ten most popular from the data repository that we download from. We can focus on analysing classification techniques rather then cleaning data. The URL to the dataset is http://archive.ics.uci.edu/ml/datasets/Bank+Marketing.
+
+We pick the following three classification techniques for this project:
+- Logistic Regression (It is covered in this course STAT420)
+- Random Forest (Very popular technique in Ensemble learning)
+- Adaptive Boosting
+
+
 ## Methods
 
 ```{r echo=FALSE}
@@ -137,7 +147,7 @@ bank_lr_aic
 ####  Pick best using AIC,BIC, RSS, RMSE, and anova Test
 ####  Report Accuracy
 
-### Model 1: Random Forest
+### Model 2: Random Forest
 ####  model using all predictors
 ```{r}
 model_rf<-randomForest(y ~ .  , data=train, mtry=3)
@@ -229,7 +239,7 @@ kable(result)
 ```
 
 
-### Model 1: ADAPTIVE BOOSTING
+### Model 3: ADAPTIVE BOOSTING
 ```{r message=FALSE, warning=FALSE}
 library(ada)
 model_ada = ada(y ~ ., data=train,loss='exponential', type='discrete',iter=100)
