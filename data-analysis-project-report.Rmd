@@ -46,6 +46,11 @@ bank_df1 = read.csv("data/bank-additional-full.csv")
 
 ### Understanding Data
 #### Data Validation
+```{r}
+any(is.na(bank_df))
+sum(is.na(bank_df))
+```
+
 #### Data Curation  (cleaning , missing data, duplicate)
 ```{r}
 bank_df = bank_df1 %>% distinct
@@ -78,14 +83,22 @@ View(bank_df)
 ```
 
 #### Data Analysis  (attribute wise distribution, subscription plot analysis)
+```{r}
+par(mfrow=c(2,2))
+for(i in 1:length(bank_df)){
+  barplot(prop.table(table(bank_df[,i])) , 
+           xlab=names(bank_df[i]), ylab= "Frequency (%)" , col = rainbow(3))
+  }
+```
+
+
 #### Class Imbalance Problem analysis
+```{r}
+prop.table(table(bank_df$y))
+```
 #### Train/Test data split (stratified cv)
 
 - Stratification is the process of rearranging the data so as to ensure that each fold is a good representative of the whole. For example, in a binary classification problem where each class comprises of 50% of the data, it is best to arrange the data such that in every fold, each class comprises of about half the instances.
-
-```{r}
-folds <- createFolds(bank_df$y, k = 10, list = FALSE)
-```
 
 ```{r}
 split<-createDataPartition(bank_df$y,p=0.6,list = FALSE)
@@ -94,7 +107,13 @@ test<-bank_df[-split,]
 split<-createDataPartition(test$y,p=0.5,list=FALSE)
 test1<-test[split,]
 test2<-test[-split,]
-dim(train)
+
+```
+
+```{r}
+prop.table(table(train$y))
+prop.table(table(test1$y))
+prop.table(table(test2$y))
 ```
 
 
