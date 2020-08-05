@@ -349,12 +349,12 @@ knitr::kable(result,format="markdown")
 
 ```{r}
 
-bank_lr_aic_twoway = glm(y ~ (job + education + default + contact + month + 
-    day_of_week + duration + campaign + pdays + poutcome + emp.var.rate + 
-    cons.price.idx + cons.conf.idx + euribor3m + nr.employed)^2, 
-    family = binomial(link="logit"), data = bank_df)
+#bank_lr_aic_twoway = glm(y ~ (job + education + default + contact + month + 
+ #   day_of_week + duration + campaign + pdays + poutcome + emp.var.rate + 
+ #   cons.price.idx + cons.conf.idx + euribor3m + nr.employed)^2, 
+ #   family = binomial(link="logit"), data = bank_df)
 
-anova(bank_lr_aic_twoway,bank_lr_aic,test="LRT")
+#anova(bank_lr_aic_twoway,bank_lr_aic,test="LRT")
 
 ```
 
@@ -362,7 +362,7 @@ anova(bank_lr_aic_twoway,bank_lr_aic,test="LRT")
 
 
 
-
+<span style="color:Blue">
 ** With Saying that, whether customer will do the term deposit or not does not depends on Age, Education and Marital status but more on below parameters.**
 </span>
 
