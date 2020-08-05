@@ -70,7 +70,8 @@ variable (desired target).
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 columns = read.csv("data/col_names.csv")
-knitr::kable(columns)
+kable(columns) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 - Output variable (desired target) is **Term Deposit** which is categorical binary variable.
@@ -426,7 +427,8 @@ rownames(auc) = c("Area Under Curve")
 result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
-kable(result)
+kable(result) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 
@@ -532,7 +534,8 @@ rownames(auc) = c("Area Under Curve")
 result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
-kable(result)
+kable(result) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 - Plot TPR vs FPR (SMOTED TRAIN vs TEST)
@@ -566,7 +569,8 @@ rownames(auc) = c("Area Under Curve")
 result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
-kable(result)
+kable(result) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 ```
 
@@ -602,7 +606,8 @@ rownames(auc) = c("Area Under Curve")
 result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
-kable(result)
+kable(result) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 
@@ -614,6 +619,19 @@ kable(result)
 
 ## Discussion
 
+In general, we can apply the below criterions to evaluate and select the model. Let's analyze the model which we worked on in this study.
+
+Accuracy vs Sensitivity: 
+
+Speed:
+
+Robustness:
+
+Scalability: 
+
+Interpretability:
+
+
 - Precision: What percentage of tuples labeled as positively is actually positive?
 
 - Recall: What percentage of positve tuples are labeled as positive?
@@ -623,6 +641,20 @@ kable(result)
 - Misclassification rate
 - Thresold
 - Select best among 3 and why?
+
+## Conclusion
+
+- In this study, we have applied regression and advanced machine learning techniques on bank marketing data and explored the distribution of data, data curation and modeling techniques. The below are few key highlights.
+
+- Multiple Classification and Regression Algorithms have been evaluated.
+- Garbage in - Garbage out so we analyzed the data and curated data to further analysis.
+- Oversampling/undersampling has been implemented for class imbalanced data.
+- Cross Validation was used for parameter selection with logistic regression.
+- Random Forest used with default and best split and tree depth hyper parameters tuned to produce better result.
+- Adaptive Boosting is the best model for balanced sensitivities and interpretation of feature importance.
+- Our study shows that simple and advanced machine learning techniques can add value to further a marketing campaign.
+ 
+
 
 ## Appendix
 
