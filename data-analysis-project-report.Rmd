@@ -39,7 +39,6 @@ library(ROSE)
 library(DMwR)
 ```
 
-
 ## Introduction
 
 Our team selected a dataset of direct banking marketing of a Portuguese bank. The goal is to predict if the client subscribe to the bank term deposit. The dataset has client personal attributes, marketing campaign attributes, social and economic context attributes. The response variable (y) is binomial with value either 1 (subscribe) or 0 (not subscribe).
@@ -213,6 +212,64 @@ specificity
 
 ```
 
+<span style="color:Blue">Based on Anova test, null hypothesis is failed to reject so smaller aic model is the better model. Let's check $R^2$ ,RSS and 5 fold missclassification rate to see which is a better model. </span>
+
+
+```{r warning=FALSE}
+
+
+r2_bank_lr = with(summary(bank_lr), 1 - (deviance/null.deviance))
+r2_bank_lr_aic = with(summary(bank_lr_aic), 1 - (deviance/null.deviance))
+rss_bank_lr=sum(resid(bank_lr)^2)
+rss_bank_lr_aic=sum(resid(bank_lr_aic)^2)
+mcRate_bank_lr = cv.glm(train,bank_lr,K=5)$delta[1]
+mcRate_bank_lr_aic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
+
+
+
+result = data.frame(
+  R2=c(r2_bank_lr,r2_bank_lr_aic),
+  RSS=c(rss_bank_lr,rss_bank_lr_aic),
+  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic),
+  row.names = c("Full Model","Model Selected with AIC/BIC")
+)
+
+
+knitr::kable(result,format="markdown")
+
+```
+<span style="color:Blue"> There is no major difference between both model's $R^2$ , RSS and Misclassification Rate. So full model is overfittig and Model searched with AIC/BIC forward search fits well with the result.** With Saying that, whether customer will do the term deposit or not does not depends on Age, Education and Marital status but more on below parameters.**
+
+1) Job type of the customer
+2) Customer's credit history  - default
+2) Any other debt/loan information - housing/personal loan.
+3) How frequent and when the customer was contacted by marketing team? - month, days of week, duration, pdays, previous
+4) output of the last campain - poutcome
+5) Market indicators - emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m
+
+Let's run this model on test data to identify misclassification rate, false positives and negatives on Test data.
+
+</span>
+
+```{r}
+predict_bank_lr_aic = ifelse(predict(bank_lr_aic, test, type = "response")> 0.5,1,0)
+misClassificationRate = mean(predict_bank_lr_aic!=test$y)
+misClassificationRate
+
+make_conf_mat = function(predicted, actual) {
+  table(predicted = predicted, actual = actual)
+}
+
+confusion_matrix = table(predicted = predict_bank_lr_aic, actual = test$y)
+sensitivity = confusion_matrix[2,2]/confusion_matrix[,2]
+specificity = confusion_matrix[1,1]/confusion_matrix[,1]
+
+confusion_matrix
+sensitivity
+specificity
+
+```
+
 <span style="color:Blue"> With cutoff of 0.5 probability , we see 365 false positives and 1069 false positives among 16000 observations which is less than 10%. We can try to identify cut off where this number goes down.</span>
 
 
@@ -222,7 +279,6 @@ specificity
 ####  Plot ROC curve (TPR vs FPR), AIC plot, RMSE, adjr2
 ####  Pick best using AIC,BIC, RSS, RMSE, and anova Test
 ####  Report Accuracy
-
 
 ### Model 2: Random Forest
 ####  model using all predictors
