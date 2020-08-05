@@ -37,6 +37,7 @@ library(e1071)      # caret depends on this
 library(ada)
 library(ROSE)
 library(DMwR)
+library(latticeExtra)
 ```
 
 ## Introduction
@@ -58,17 +59,40 @@ bank_df1 = read.csv("data/bank-additional-full.csv")
 ```
 
 ### Understanding Data
+
+- The Bank-Marketing dataset is downloaded from UCI Machine Learning Repository and the same is available at http://archive.ics.uci.edu/ml/datasets/Bank+Marketing.
+- There were 4 datasets in it from which bank-additional-full.csv is used that has all examples (41188) and
+20 inputs ordered by date (from May 2008 to November 2010). There are 20 input variables and 1 output
+variable (desired target). 
+- The dataset has  customer data, socio-economic data, telemarketing data and some other data. Some attributes are numerical, and some are categorical. 
+
+**Attribute Information:**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+columns = read.csv("data/col_names.csv")
+knitr::kable(columns)
+```
+
+- Output variable (desired target) is **Term Deposit** which is categorical binary variable.
+
 #### Data Validation
+
+**Checking for Missing value**
 ```{r}
 any(is.na(bank_df1))
 sum(is.na(bank_df1))
 ```
 
 #### Data Curation  (cleaning , missing data, duplicate)
+
+**Remove Duplicates**
+
 ```{r}
 bank_df = bank_df1 %>% distinct
-#bank_df = bank_df %>% filter(housing == "yes" & housing == "no")
+```
 
+**Recode categorical attributes as factor variables**
+```{r}
 bank_df$y = ifelse(bank_df$y=='yes',1,0)
 bank_df$y = as.factor(bank_df$y)
 bank_df$job = as.factor(bank_df$job)
@@ -83,6 +107,8 @@ bank_df$poutcome = as.factor(bank_df$poutcome)
 bank_df$day_of_week = as.factor(bank_df$day_of_week)
 ```
 
+**Verify Levels of Categorical attributes**
+
 ```{r}
 levels(bank_df$job)
 levels(bank_df$marital)
@@ -95,41 +121,82 @@ levels(bank_df$month)
 levels(bank_df$poutcome)
 ```
 
-#### Data Analysis  (attribute wise distribution, subscription plot analysis)
+#### Data Analysis
+
+## ----pairs, fig.width=6.075, fig.height=6.075, fig.cap="Scatterplot lower triangular matrix and correlation upper triangular matrix for all the quantitative features presented in the Bank Marketing Dataset (BMD)."----
+
 ```{r}
-par(mfrow=c(2,2))
-for(i in 1:length(bank_df)){
+pairs_df = subset(bank_df, select = c(1:8, 13:20))
+pairs(pairs_df, pch = 19, gap = .25, xaxt = "n", yaxt = "n"
+      , col = c("#0080FF", "#F3953E")[bank_df$y]
+      , label.pos = .5, oma = c(1, 1, 1, 1))
+```
+
+
+**Attribute wise Frequency Distribution**
+
+```{r}
+for(i in 1:21){
   barplot(prop.table(table(bank_df[,i])) , 
-           xlab=names(bank_df[i]), ylab= "Frequency (%)" , col = rainbow(3))
+           xlab=names(bank_df[i]), ylab= "Frequency (%)" , col = rainbow(3), horiz = FALSE)
   }
 ```
 
 
 #### Class Imbalance Problem analysis
+
+- We say that the dataset have the class imbalance problem, where the main class of interest
+is rare. That is, the data set distribution reflects a significant majority of the
+negative class and a minority positive class. Below table investigation shows that. we have `88.8%` negative classes and `11.2%` positive classes.
+
 ```{r}
 prop.table(table(bank_df$y))
 ```
-#### Train/Test data split (stratified cv)
 
-- Stratification is the process of rearranging the data so as to ensure that each fold is a good representative of the whole. For example, in a binary classification problem where each class comprises of 50% of the data, it is best to arrange the data such that in every fold, each class comprises of about half the instances.
+- we need to address this problem otherwise our model won't able to predict correctly. Most of the traditional classifiers assume dataset have balanced class distribution.
 
+- There are techniques available to overcome this class imbalance problem. Lets consider few of those techniques are:
+    + Oversampling: Re-sampling of data from positive class
+    
+    + Under-sampling: Randomly eliminate tuples from negative class
+    
+    + Threshold-moving: Move the decision threshold, so that the rare class tuples are easier to classify, and hence, less chance of costly false negative errors.
+    
+- We have used two library packages `DMwR` and `ROSE` which has `SMOTE` and `ROSE` functions
+
+    + SMOTE: The general idea of this method is to artificially generate new examples of the minority class using the nearest neighbors of these cases. Furthermore, the majority class examples are also under-sampled, leading to a more balanced dataset.
+    
+    + ROSE: ROSE (Random Over-Sampling Examples) aids the task of binary classification in the presence of rare classes. It produces a synthetic, possibly balanced, sample of data simulated according to a smoothed-bootstrap approach.
+    
+#### Train/Test data split
+
+- First split the dataset into train and test split using `createDataPartition` from `caret` package. The below r code splits the dataset with 70:30 ratio.
 
 ```{r}
-split<-createDataPartition(bank_df$y,p=0.8,list = FALSE)
+split<-createDataPartition(bank_df$y,p=0.7,list = FALSE)
 train<-bank_df[split,]
 test<-bank_df[-split,]
+```
 
+- Lets verify the class distribution in Training and Testing dataset. We see that our training and test dataset have same distribution of negative and positive classes.
+
+```{r}
+prop.table(table(train$y))
+prop.table(table(test$y))
+```
+
+- Lets apply the class imbalances improvement techniques which we discussed above and verify the results.
+
+```{r}
 smote_train <- SMOTE(y ~ ., data = train)                         
 rose_train <- ROSE(y ~ ., data = train)$data                   
 ```
 
+
 ```{r}
-prop.table(table(train$y))
 prop.table(table(smote_train$y))
 prop.table(table(rose_train$y))
-prop.table(table(test$y))
 ```
-
 
 
 ## Model Builing
@@ -558,4 +625,6 @@ kable(result)
 - Select best among 3 and why?
 ## Appendix
 
-UCI - citation
+- [Moro et al., 2014] S. Moro, P. Cortez and P. Rita. A Data-Driven Approach to Predict the Success of Bank Telemarketing. Decision Support Systems, Elsevier, 62:22-31, June 2014
+
+
