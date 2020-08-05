@@ -126,7 +126,7 @@ levels(bank_df$poutcome)
 ## ----pairs, fig.width=6.075, fig.height=6.075, fig.cap="Scatterplot lower triangular matrix and correlation upper triangular matrix for all the quantitative features presented in the Bank Marketing Dataset (BMD)."----
 
 ```{r}
-pairs_df = subset(bank_df, select = c(1:8, 13:20))
+pairs_df = subset(bank_df, select = c(1, 10, 11, 13:17))
 pairs(pairs_df, pch = 19, gap = .25, xaxt = "n", yaxt = "n"
       , col = c("#0080FF", "#F3953E")[bank_df$y]
       , label.pos = .5, oma = c(1, 1, 1, 1))
