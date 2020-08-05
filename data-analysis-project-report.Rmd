@@ -280,7 +280,7 @@ knitr::kable(result,format="markdown")
 <span style="color:Blue">  Based on the table above, AIC model's R^2 is almost highest after Full model. RSS of AIC model is also least after full model with very less difference. Misclassification rate is also small. But still it is not as good as full model. Can we improve it further by applying the transformation or interaction on AIC model? Let's check.</span>
 
 ```{r}
-train$durationl0g = log(train$duration)
+
 bank_lr_aic_twoway = glm(y ~ (job + education + default + contact + month + 
     day_of_week + duration + campaign + pdays + poutcome + emp.var.rate + 
     cons.price.idx + cons.conf.idx + euribor3m + nr.employed)^2, 
