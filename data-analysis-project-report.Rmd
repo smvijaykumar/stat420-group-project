@@ -136,21 +136,30 @@ bank_lr = glm(y ~ ., data = train, family = "binomial")
 summary(bank_lr)
 ```
 
-<span style="color:Blue"> Going through AIC and BIC forward search to find out the best model.</span>
+<span style="color:Blue"> Going through AIC and BIC backward search to find out the best model.</span>
 
 ```{r warning=FALSE}
+n=length(resid(bank_lr))
 bank_lr_aic = step(bank_lr, direction = "backward", trace = 0)
-bank_lr_bic = step(bank_lr, direction = "backward", trace = 0)
+bank_lr_bic = step(bank_lr, direction = "backward", trace = 0,k=log(n))
 bank_lr_aic
 bank_lr_bic
 ```
-<span style="color:Blue"> AIC and BIC both find s the same model. Let's do the anova test to compare it with full model. </span>
+<span style="color:Blue"> BIC comes with less number of parameters. Let's do the anova test to compare it with full model. </span>
 
 ```{r warning=FALSE}
 anova(bank_lr_aic,bank_lr,test="LRT")
 ```
 
-<span style="color:Blue">Based on Anova test, null hypothesis is failed to reject so smaller aic model is the better model. Let's check $R^2$ ,RSS and 5 fold missclassification rate to see which is a better model. </span>
+<span style="color:Blue">Based on Anova test, null hypothesis is failed to reject when we compare aic model with Full model.</span>
+
+```{r}
+anova(bank_lr_bic,bank_lr_aic,test="LRT")
+```
+
+<span style="color:Blue">Based on Anova test between bic and aic, null hypothesis is rejected so bic model is the preferred model.</span>
+
+<span style="color:Blue">Let's check $R^2$ ,RSS and 5 fold misclassification rate to see which is a better model. </span>
 
 
 ```{r warning=FALSE}
@@ -158,47 +167,51 @@ anova(bank_lr_aic,bank_lr,test="LRT")
 
 r2_bank_lr = with(summary(bank_lr), 1 - (deviance/null.deviance))
 r2_bank_lr_aic = with(summary(bank_lr_aic), 1 - (deviance/null.deviance))
+r2_bank_lr_bic = with(summary(bank_lr_bic), 1 - (deviance/null.deviance))
+
 rss_bank_lr=sum(resid(bank_lr)^2)
 rss_bank_lr_aic=sum(resid(bank_lr_aic)^2)
+rss_bank_lr_bic=sum(resid(bank_lr_bic)^2)
+
 mcRate_bank_lr = cv.glm(train,bank_lr,K=5)$delta[1]
 mcRate_bank_lr_aic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
+mcRate_bank_lr_bic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
 
 
 
 result = data.frame(
-  R2=c(r2_bank_lr,r2_bank_lr_aic),
-  RSS=c(rss_bank_lr,rss_bank_lr_aic),
-  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic),
-  row.names = c("Full Model","Model Selected with AIC/BIC")
+  R2=c(r2_bank_lr,r2_bank_lr_aic,r2_bank_lr_bic),
+  RSS=c(rss_bank_lr,rss_bank_lr_aic,rss_bank_lr_bic),
+  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,rss_bank_lr_bic),
+  row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC")
 )
 
 
 knitr::kable(result,format="markdown")
 
 ```
-<span style="color:Blue"> There is no major difference between both model's $R^2$ , RSS and Misclassification Rate. So full model is overfittig and Model searched with AIC/BIC forward search fits well with the result.** With Saying that, whether customer will do the term deposit or not does not depends on Age, Education and Marital status but more on below parameters.**
+<span style="color:Blue">  $R^2 is highest for full model and least for BIC model, but woth not a big difference. RSS is highest with BIC and least with full model which does not have a very high significant difference. Misclassification rate is least with BIC model.  RSS and Misclassification Rate. So full model is overfittig and Model searched with BIC forward search fits well with the result.** With Saying that, whether customer will do the term deposit or not does not depends on Age, Education and Marital status but more on below parameters.**
 
-1) Job type of the customer
-2) Customer's credit history  - default
-2) Any other debt/loan information - housing/personal loan.
-3) How frequent and when the customer was contacted by marketing team? - month, days of week, duration, pdays, previous
-4) output of the last campain - poutcome
-5) Market indicators - emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m
+
+1) Customer's credit history  - default
+2) How frequent and when the customer was contacted by marketing team? - month, days of week, duration, pdays, previous
+3) output of the last campain - poutcome
+4) Market indicators - emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m
 
 Let's run this model on test data to identify misclassification rate, false positives and negatives on Test data.
 
 </span>
 
 ```{r}
-predict_bank_lr_aic = ifelse(predict(bank_lr_aic, test, type = "response")> 0.5,1,0)
-misClassificationRate = mean(predict_bank_lr_aic!=test$y)
+predict_bank_lr_bic = ifelse(predict(bank_lr_bic, test, type = "response")> 0.5,1,0)
+misClassificationRate = mean(predict_bank_lr_bic!=test$y)
 misClassificationRate
 
 make_conf_mat = function(predicted, actual) {
   table(predicted = predicted, actual = actual)
 }
 
-confusion_matrix = table(predicted = predict_bank_lr_aic, actual = test$y)
+confusion_matrix = table(predicted = predict_bank_lr_bic, actual = test$y)
 sensitivity = confusion_matrix[2,2]/confusion_matrix[,2]
 specificity = confusion_matrix[1,1]/confusion_matrix[,1]
 
