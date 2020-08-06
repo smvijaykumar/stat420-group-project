@@ -1,6 +1,6 @@
 ---
 title: 'Bank Marketing Data Analysis - Project Report'
-author: "STAT 420, Summer 2020, Bhushan Bathani, Matthew Leung, Vijayakumar Sitha Mohan,"
+author: "STAT 420, Summer 2020, Bhushan Bhathani, Matthew Leung, Vijayakumar Sitha Mohan,"
 date: ''
 output:
   html_document: 
