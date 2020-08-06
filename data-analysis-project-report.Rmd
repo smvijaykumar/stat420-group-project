@@ -54,14 +54,14 @@ library(pROC)
 Our team selected a dataset of direct banking marketing of a Portuguese bank. The goal is to predict if the client subscribe to the bank term deposit. The dataset has client personal attributes, marketing campaign attributes, social and economic context attributes. The response variable (y) is binomial with value either 1 (subscribe) or 0 (not subscribe).
 </span>
 
-<span style="color:Blue">
-Our team is interested in various classification technique performance. We selected this dataset becasue it is a clean dataset for classification. It has been top ten most popular from the data repository that we download from. We can focus on analysing classification techniques rather then cleaning data. The URL to the dataset is http://archive.ics.uci.edu/ml/datasets/Bank+Marketing.
-</span>
+
+Our team is interested in various classification technique performance. We selected this dataset because it is a clean dataset for classification. It has been top ten most popular from the data repository that we download from. We can focus on analyzing classification techniques rather then cleaning data. The URL to the dataset is http://archive.ics.uci.edu/ml/datasets/Bank+Marketing.
+
 
 We pick the following three classification techniques for this project:
 - Logistic Regression (It is covered in this course STAT420)
 - Random Forest (Very popular technique in Ensemble learning with a number of weak classifier based on decision tree)
-- Adaptive Boosting (More sofisticated technique in Ensemble learning with a number of weak classifier based on decision tree)
+- Adaptive Boosting (More sophisticated technique in Ensemble learning with a number of weak classifier based on decision tree)
 
 
 ## Methods
@@ -73,8 +73,8 @@ bank_df1 = read.csv("data/bank-additional.csv")
 ### Understanding Data
 
 - The Bank-Marketing dataset is downloaded from UCI Machine Learning Repository and the same is available at http://archive.ics.uci.edu/ml/datasets/Bank+Marketing.
-- There were 4 datasets in it from which bank-additional-full.csv is used that has all examples (41188) and
-20 inputs ordered by date (from May 2008 to November 2010). There are 20 input variables and 1 output
+- There were 4 datasets in it from which bank-additional.csv is used that has subset of 4,119 observations out of all available observations of 41,188 in the full dataset.
+- 20 inputs ordered by date (from May 2008 to November 2010). There are 20 input variables and 1 output
 variable (desired target). 
 - The dataset has  customer data, socio-economic data, telemarketing data and some other data. Some attributes are numerical, and some are categorical. 
 
