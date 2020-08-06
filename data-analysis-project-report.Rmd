@@ -637,6 +637,10 @@ result = data.frame(rbind(acc,auc,metrics))
 colnames(result) = c("Train","Test")
 kable(result) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
+  
+# to be pulled by final result session
+test1_cm_rf = test1_cm
+auc_test1_rf = auc_test1
 ```
 
 
@@ -744,6 +748,10 @@ result = data.frame(rbind(acc,auc,metrics))
 colnames(result) = c("Train","Test")
 kable(result) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
+  
+# to be pull by final result session
+test1_cm_ab = test1_cm
+auc_test1_ab = auc_test1
 ```
 
 - Plot TPR vs FPR (SMOTED TRAIN vs TEST)
@@ -823,6 +831,26 @@ kable(result) %>%
 
 ### Compare Models (Test and Train Accuracy)
 
+```{r}
+# compare Accuracy and ROC
+compare <- data.frame(Method = c('Logistic Regression (cutoff = 0.5)', 'Random Forest (mtry = 5)', 'Adaptive boosting'), Accuracy = NA, Sensitivity = NA, Specificity = NA, Precision = NA, Recall = NA, FScore = NA, 'ROC AUC' = NA)
+
+compare$Accuracy <- c(test_con_mat_50$overall["Accuracy"], test1_cm_rf$overall['Accuracy'],test1_cm_ab$overall['Accuracy'])
+
+compare$Sensitivity <- c(test_con_mat_50$byClass["Sensitivity"], test1_cm_rf$byClass['Sensitivity'],test1_cm_ab$byClass['Sensitivity'])
+
+compare$Specificity <- c(test_con_mat_50$byClass["Specificity"], test1_cm_rf$byClass['Specificity'],test1_cm_ab$byClass['Specificity'])
+
+compare$Precision <- c(test_con_mat_50$byClass["Precision"], test1_cm_rf$byClass['Precision'],test1_cm_ab$byClass['Precision'])
+
+compare$Recall <- c(test_con_mat_50$byClass["Recall"], test1_cm_rf$byClass['Recall'],test1_cm_ab$byClass['Recall'])
+
+compare$FScore <- c(test_con_mat_50$byClass["F1"], test1_cm_rf$byClass['F1'],test1_cm_ab$byClass['F1'])
+
+compare$ROC.AUC <- c(0, auc_test1_rf@y.values, auc_test1_ab@y.values)
+
+kable_styling(kable(compare),c("striped","bordered"), full_width = F)
+```
 
 ## Discussion
 
