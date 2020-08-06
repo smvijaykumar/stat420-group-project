@@ -203,26 +203,115 @@ prop.table(table(rose_train$y))
 ## Model Builing
 ### Model 1: Logistic Regression
 ####  model using all predictors
+
+<span style="color:Blue"> There are 3 kinds of data in the dataset.
+1)Customer's data and  - age,job,marital,education,default,housing,loan
+2)Their financial data - default, hosing loan, personal loan
+3)Campaign and Marketing related data - contact,month,day_of_week,duration,campaign,pdays,previous,poutcome
+4) Overall market data which indicates how well the economy is - emp.var.rate,cons.price.idx,cons.conf.idx,euribor3m,nr.employed
+
+Let's analyze each dataset and see if we see any linearity between predictors and y using boxplot and pairs.
+
+</span>
+
+
 ```{r}
+pairs(train[c(1:4,21)])
+par(mfrow=c(2,2))
+bank_df$jobclass = as.numeric(factor(bank_df$job,levels=c("unknown","unemployed","housemaid", "student","retired","technician","blue-collar","admin.","services","self-employed","management","entrepreneur"),ordered=TRUE))
+
+bank_df$educationNum = as.numeric(factor(bank_df$education,levels=c("unknown","illiterate","basic.4y","basic.6y","basic.9y","high.school","professional.course", "university.degree"),ordered=TRUE))
+
+boxplot(age~y,data=bank_df,main="age vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(jobclass~y,data=bank_df,main="Job vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(marital)~y,data=bank_df,main="Marital status vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(educationNum~y,data=bank_df,main="Education vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+```
+<span style="color:Blue"> Based on a bar plot, we can see most of the people are between an age of 30 and 50 years who are a part of dataset and more number of people in that age group  subscribes for term deposit than not.Same amount of People with an education higher than high school takes the loan and subscribes for term deposit vs not.Most of the people are married and single who are in dataset and seems same amount of people who subscribes for term deposit vs not. Most of the people with jobclass as technician, blue-color, admin and services sector is in dataset and same amount fo people subscribes for term deposit vs not. So over all, seems age has some impact on term deposit but need to see which exact range between 30-50 in detail. Rest parameters does not have any significant effect based on plot.</span>
+
+```{r}
+levels(bank_df$education)
+pairs(train[c(5:7,21)])
+par(mfrow=c(1,3))
+boxplot(as.numeric(default)~y,data=bank_df,main="Default vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(housing)~y,data=bank_df,main="Housing Loan vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(loan)~y,data=bank_df,main="Personal loan vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+```
+<span style="color:Blue">People with the housing loan and personal loan has no impact on term deposit subscription. But whoever is default is certainly not subscribed for term deposit. So default can be a very good criteria.</span>
+```{r}
+pairs(train[c(8:15,21)])
+par(mfrow=c(2,2))
+
+levels(bank_df$contact)
+boxplot(as.numeric(contact)~y,data=bank_df,main="Contact Type vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(month)~y,data=bank_df,main="last contact month of year vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(day_of_week)~y,data=bank_df,main=" last contact day of the week vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(duration~y,data=bank_df,main="last contact duration, in seconds vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+```
+<span style="color:Blue">Based on plots, Customer with contact type cellular has more probability of subscribing for term deposit than telephone. People with recent contact made has more chance of subscribing for term deposit. Last contact day of the week does not have much ipact.Contact duraction has some impact on the term deposit subscription as well.</span>
+
+```{r}
+levels(bank_df$poutcome)
+par(mfrow=c(2,2))
+boxplot(campaign~y,data=bank_df,main="# of contacts in this campaign vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(pdays~y,data=bank_df,main="number of days that passed by after the client was last contacted vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(previous~y,data=bank_df,main="number of contacts performed before this campaign vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Previous Campain outcome vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+```
+<span style="color:Blue">Based on above plot, # of contact performed has some impact on Term deposit output else no other factor has significant impact.surprisingly # of contacts in this campaign decreases the probability to subscribe for term deposit.</span>
+```{r}
+pairs(train[c(16:20,21)])
+par(mfrow=c(3,2))
+boxplot(emp.var.rate~y,data=bank_df,main="employment variation rate  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(cons.price.idx~y,data=bank_df,main="consumer price index vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(cons.conf.idx~y,data=bank_df,main="consumer confidence index  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(euribor3m~y,data=bank_df,main="euribor 3 month rate  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(nr.employed~y,data=bank_df,main="number of employees vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+```
+
+<span style="color:Blue"> Based on plots all the market indicators has some impact on term deposit decision.</span>
+
+<span style="color:Blue"> So overall seems age, default, contact type, last contact time, duration, # of contacts and all market indicators has some impact on terms deposit. Let's create a additive model and run AIC and BIC search to identify the model it comes up with.</span>
+
+
+
+```{r}
+bank_lr_plotobs = glm(y~age+default+campaign+previous+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed, data = train, family = "binomial")
 bank_lr = glm(y ~ ., data = train, family = "binomial")
 summary(bank_lr)
 ```
 
-<span style="color:Blue"> Going through AIC and BIC forward search to find out the best model.</span>
+<span style="color:Blue"> Going through AIC and BIC backward search to find out the best model.</span>
 
 ```{r warning=FALSE}
+n=length(resid(bank_lr))
 bank_lr_aic = step(bank_lr, direction = "backward", trace = 0)
-bank_lr_bic = step(bank_lr, direction = "backward", trace = 0)
+bank_lr_bic = step(bank_lr, direction = "backward", trace = 0,k=log(n))
 bank_lr_aic
 bank_lr_bic
 ```
-<span style="color:Blue"> AIC and BIC both find s the same model. Let's do the anova test to compare it with full model. </span>
+<span style="color:Blue"> BIC comes with least number of parameters. Let's do the anova LRT test to find the preferred model. </span>
 
 ```{r warning=FALSE}
-anova(bank_lr_aic,bank_lr,test="LRT")
+result = data.frame(
+        pvalue = c((anova(bank_lr_bic,bank_lr,test="LRT")[2,5]<0.05),
+           (anova(bank_lr_aic,bank_lr,test="LRT")[2,5]<0.05),
+           (anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]<0.05),
+           (anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5]<0.05),
+           (anova(bank_lr_plotobs,bank_lr_bic,test="LRT")[2,5]<0.05),
+           (anova(bank_lr_plotobs,bank_lr_aic,test="LRT")[2,5]<0.05)),
+row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC","PlotObs vs Full Additive","PlotObs vs BIC", "PlotObs vs AIC")
+)
+
+
+
+knitr::kable(result,format="markdown")
+
 ```
 
-<span style="color:Blue">Based on Anova test, null hypothesis is failed to reject so smaller aic model is the better model. Let's check $R^2$ ,RSS and 5 fold missclassification rate to see which is a better model. </span>
+<span style="color:Blue">Based on Anova test above, only AIC model is the preferable model among all model.</span>
+
+<span style="color:Blue">Let's check $R^2$ ,RSS and 5 fold misclassification rate to see which is the better model. </span>
 
 
 ```{r warning=FALSE}
@@ -230,36 +319,60 @@ anova(bank_lr_aic,bank_lr,test="LRT")
 
 r2_bank_lr = with(summary(bank_lr), 1 - (deviance/null.deviance))
 r2_bank_lr_aic = with(summary(bank_lr_aic), 1 - (deviance/null.deviance))
+r2_bank_lr_bic = with(summary(bank_lr_bic), 1 - (deviance/null.deviance))
+r2_bank_lr_plotobs = with(summary(bank_lr_plotobs), 1 - (deviance/null.deviance))
+
 rss_bank_lr=sum(resid(bank_lr)^2)
 rss_bank_lr_aic=sum(resid(bank_lr_aic)^2)
+rss_bank_lr_bic=sum(resid(bank_lr_bic)^2)
+rss_bank_lr_plotobs = sum(resid(bank_lr_plotobs)^2)
+
 mcRate_bank_lr = cv.glm(train,bank_lr,K=5)$delta[1]
 mcRate_bank_lr_aic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
+mcRate_bank_lr_bic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
+mcRate_bank_lr_plotobs = cv.glm(train,bank_lr_plotobs,K=5)$delta[1]
 
 
 
 result = data.frame(
-  R2=c(r2_bank_lr,r2_bank_lr_aic),
-  RSS=c(rss_bank_lr,rss_bank_lr_aic),
-  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic),
-  row.names = c("Full Model","Model Selected with AIC/BIC")
+  R2=c(r2_bank_lr,r2_bank_lr_aic,r2_bank_lr_bic,r2_bank_lr_plotobs),
+  RSS=c(rss_bank_lr,rss_bank_lr_aic,rss_bank_lr_bic,rss_bank_lr_plotobs),
+  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,rss_bank_lr_bic,mcRate_bank_lr_plotobs),
+  row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC","Model built based on boxplot observation")
 )
 
 
 knitr::kable(result,format="markdown")
 
 ```
-<span style="color:Blue"> There is no major difference between both model's $R^2$ , RSS and Misclassification Rate. So full model is overfittig and Model searched with AIC/BIC forward search fits well with the result.** With Saying that, whether customer will do the term deposit or not does not depends on Age, Education and Marital status but more on below parameters.**
+<span style="color:Blue">  Based on the table above, AIC model's R^2 is almost highest after Full model. RSS of AIC model is also least after full model with very less difference. Misclassification rate is also small. But still it is not as good as full model. Can we improve it further by applying the transformation or interaction on AIC model? Let's check.</span>
 
-1) Job type of the customer
-2) Customer's credit history  - default
-2) Any other debt/loan information - housing/personal loan.
-3) How frequent and when the customer was contacted by marketing team? - month, days of week, duration, pdays, previous
-4) output of the last campain - poutcome
-5) Market indicators - emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m
+```{r}
+
+#bank_lr_aic_twoway = glm(y ~ (job + education + default + contact + month + 
+ #   day_of_week + duration + campaign + pdays + poutcome + emp.var.rate + 
+ #   cons.price.idx + cons.conf.idx + euribor3m + nr.employed)^2, 
+ #   family = binomial(link="logit"), data = bank_df)
+
+#anova(bank_lr_aic_twoway,bank_lr_aic,test="LRT")
+
+```
+
+
+
+
+
+<span style="color:Blue">
+** With Saying that, whether customer will do the term deposit or not does not depends on Age, Education and Marital status but more on below parameters.**
+</span>
+
+<span style="color:Blue">
+1) Customer's credit history  - default
+2) How frequent and when the customer was contacted by marketing team? - month, days of week, duration, pdays, previous
+3) output of the last campain - poutcome
+4) Market indicators - emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m
 
 Let's run this model on test data to identify misclassification rate, false positives and negatives on Test data.
-
-</span>
 
 ```{r}
 predict_bank_lr_aic = ifelse(predict(bank_lr_aic, test, type = "response")> 0.5,1,0)
@@ -280,65 +393,7 @@ specificity
 
 ```
 
-<span style="color:Blue">Based on Anova test, null hypothesis is failed to reject so smaller aic model is the better model. Let's check $R^2$ ,RSS and 5 fold missclassification rate to see which is a better model. </span>
-
-
-```{r warning=FALSE}
-
-
-r2_bank_lr = with(summary(bank_lr), 1 - (deviance/null.deviance))
-r2_bank_lr_aic = with(summary(bank_lr_aic), 1 - (deviance/null.deviance))
-rss_bank_lr=sum(resid(bank_lr)^2)
-rss_bank_lr_aic=sum(resid(bank_lr_aic)^2)
-mcRate_bank_lr = cv.glm(train,bank_lr,K=5)$delta[1]
-mcRate_bank_lr_aic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
-
-
-
-result = data.frame(
-  R2=c(r2_bank_lr,r2_bank_lr_aic),
-  RSS=c(rss_bank_lr,rss_bank_lr_aic),
-  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic),
-  row.names = c("Full Model","Model Selected with AIC/BIC")
-)
-
-
-knitr::kable(result,format="markdown")
-
-```
-<span style="color:Blue"> There is no major difference between both model's $R^2$ , RSS and Misclassification Rate. So full model is overfittig and Model searched with AIC/BIC forward search fits well with the result.** With Saying that, whether customer will do the term deposit or not does not depends on Age, Education and Marital status but more on below parameters.**
-
-1) Job type of the customer
-2) Customer's credit history  - default
-2) Any other debt/loan information - housing/personal loan.
-3) How frequent and when the customer was contacted by marketing team? - month, days of week, duration, pdays, previous
-4) output of the last campain - poutcome
-5) Market indicators - emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m
-
-Let's run this model on test data to identify misclassification rate, false positives and negatives on Test data.
-
-</span>
-
-```{r}
-predict_bank_lr_aic = ifelse(predict(bank_lr_aic, test, type = "response")> 0.5,1,0)
-misClassificationRate = mean(predict_bank_lr_aic!=test$y)
-misClassificationRate
-
-make_conf_mat = function(predicted, actual) {
-  table(predicted = predicted, actual = actual)
-}
-
-confusion_matrix = table(predicted = predict_bank_lr_aic, actual = test$y)
-sensitivity = confusion_matrix[2,2]/confusion_matrix[,2]
-specificity = confusion_matrix[1,1]/confusion_matrix[,1]
-
-confusion_matrix
-sensitivity
-specificity
-
-```
-
-<span style="color:Blue"> With cutoff of 0.5 probability , we see 365 false positives and 1069 false positives among 16000 observations which is less than 10%. We can try to identify cut off where this number goes down.</span>
+<span style="color:Blue"> With cutoff of 0.5 probability , we see `r confusion_matrix[2,1]` false positives and `r confusion_matrix[1,2]` false positives among 16000 observations which is less than 10%. We can try to identify cut off where this number goes down.</span>
 
 
 
@@ -443,44 +498,44 @@ kable(result) %>%
 bank_model_ada = ada(y ~ ., data=train,loss='exponential', type='discrete', iter = 50)
 ```
 
-```{r}
+```{r }
 bank_model_ada$confusion
 (bank_model_ada$confusion[2,2]/sum(bank_model_ada$confusion[,2]))
 ```
 
 - Below plot shows training error vs iteration where training error reduces and stabilizes as iteration grows
-```{r}
+```{r }
 plot(bank_model_ada)
 ```
 
 - Plot of variables ordered by the variable importance measure 
 
-```{r}
+```{r }
 varplot(bank_model_ada)
 ```
 
 - In the above training error plot the error rate reduced at minimal ~25 and then slightly increased. So lets try with lesser iterations and measure the metrics
 
-```{r message=FALSE, warning=FALSE}
+```{r ,message=FALSE, warning=FALSE}
 bank_model_ada25 = ada(y ~ ., data=train,loss='exponential', type='discrete', iter = 25)
 ```
 
-```{r}
+```{r }
 bank_model_ada25$confusion
 (bank_model_ada25$confusion[2,2]/sum(bank_model_ada25$confusion[,2]))
 ```
 
 
-```{r}
+```{r }
 bank_model_ada100 = ada(y ~ ., data=train,loss='exponential', type='discrete', iter = 100)
 ```
 
-```{r}
+```{r }
 bank_model_ada100$confusion
 (bank_model_ada100$confusion[2,2]/sum(bank_model_ada100$confusion[,2]))
 ```
 
-```{r}
+```{r }
 plot(bank_model_ada100)
 ```
 
@@ -503,7 +558,7 @@ model_ada_rose$confusion
 
 - Plot TPR VS FPR for Training and Test Dataset
 
-```{r}
+```{r }
 pred_train = predict(bank_model_ada100, train)
 train_cm = confusionMatrix(train$y,as.factor(pred_train))
 pred_test = predict(bank_model_ada100, test)
@@ -523,7 +578,7 @@ plot(prf_test1)
 
 - Metrics for Training VS Testing Dataset
 
-```{r}
+```{r }
 auc_train = performance(pr_train, measure = "auc")
 auc_test1 = performance(pr_test1, measure = "auc")
 
@@ -540,7 +595,7 @@ kable(result) %>%
 
 - Plot TPR vs FPR (SMOTED TRAIN vs TEST)
 
-```{r}
+```{r }
 pred_train = predict(model_ada_smote, smote_train)
 train_cm = confusionMatrix(smote_train$y,as.factor(pred_train))
 pred_test1 = predict(model_ada_smote, test)
@@ -558,7 +613,7 @@ plot(prf_test1)
 
 - Metrics for SMOTED TRAIN vs TEST
 
-```{r}
+```{r }
 auc_train = performance(pr_train, measure = "auc")
 auc_test1 = performance(pr_test1, measure = "auc")
 
@@ -576,7 +631,7 @@ kable(result) %>%
 
 - Plot TPR vs FPR (ROSE TRAIN vs TEST)
 
-```{r}
+```{r }
 pred_train = predict(model_ada_rose, rose_train)
 train_cm = confusionMatrix(rose_train$y,as.factor(pred_train))
 pred_test1 = predict(model_ada_rose, test)
@@ -595,7 +650,7 @@ plot(prf_test1)
 
 - Metrics for ROSE Train vs Test
 
-```{r}
+```{r }
 auc_train = performance(pr_train, measure = "auc")
 auc_test1 = performance(pr_test1, measure = "auc")
 
