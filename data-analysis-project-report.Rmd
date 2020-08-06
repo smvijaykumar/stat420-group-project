@@ -1,6 +1,6 @@
 ---
 title: 'Bank Marketing Data Analysis - Project Report'
-author: "STAT 420, Summer 2020, Bhushan Bhathani, Matthew Leung, Vijayakumar Sitha Mohan,"
+author: "STAT 420, Summer 2020, Bhushan Bathani, Matthew Leung, Vijayakumar Sitha Mohan,"
 date: ''
 output:
   html_document: 
@@ -114,13 +114,14 @@ paste("There are ", sum(duplicated(bank_df1)), "Duplicate Row(s)")
 ```
 
 **Remove Duplicates**
-```{r}
+
+```{r echo=TRUE}
 bank_df = bank_df1 %>% distinct
 ```
 
 **Recode categorical attributes as factor variables**
 
-```{r}
+```{r echo=TRUE}
 bank_df$y = ifelse(bank_df$y=='yes',1,0)
 bank_df$y = as.factor(bank_df$y)
 bank_df$job = as.factor(bank_df$job)
@@ -138,7 +139,7 @@ bank_df$default = as.factor(bank_df$default)
 
 **Verify Levels of Categorical attributes**
 
-```{r}
+```{r echo=TRUE}
 levels(bank_df$job)
 levels(bank_df$marital)
 levels(bank_df$education)
@@ -827,9 +828,9 @@ kable(result) %>%
 ```
 
 
-## Results
+### Results
 
-### Compare Models (Test and Train Accuracy)
+#### Compare Models (Test and Train Accuracy)
 
 ```{r}
 # compare Accuracy and ROC
@@ -858,11 +859,11 @@ kable_styling(kable(compare),c("striped","bordered"), full_width = F)
 
     + False Positive, means the client do NOT SUBSCRIBED to term deposit, but the model thinks he/she did. 
   
-**Type I error is more harmful because we might lose the customer and loss revenue by incorrectly considering the client was already subscribed.**
+        - Type I error is more harmful because we might lose the customer and loss revenue by incorrectly considering the client was already subscribed.
 
     + False Negative, means the client SUBSCRIBED to term deposit, but the model thinks otherwise.
     
-**Type II error is less harmful because we didn't lose the customer and no loss in revenue by incorrectly considering the client was not subscribed. We may be contacting the customer for the same campaign but it won't cause to lose a customer **
+        - Type II error is less harmful because we didn't lose the customer and no loss in revenue by incorrectly considering the client was not subscribed. We may be contacting the customer for the same campaign but it won't cause to lose a customer.
 
 
 - Flexibility vs Interpretability - what do we choose?
@@ -871,10 +872,11 @@ kable_styling(kable(compare),c("striped","bordered"), full_width = F)
     
     + Complex, flexible model (Random Forest, Adaptive Boosting) are less interpretable but with high accuracy.
     
-**In this study, we must go with complex and flexible model eventhough we lose interpretability in the expense for higher prediction since it involves revenue to the bank.**
+        - In this study, we must go with complex and flexible model eventhough we lose interpretability in the expense for higher prediction since it involves revenue to the bank.
 
+- Speed 
 
-- Speed - **We need to choose the model which performs better and run faster. Boosting models run in parallel compared to Logistic and Random Forest.**
+    + We need to choose the model which performs better and run faster. Boosting models run in parallel compared to Logistic and Random Forest.
 
 - With the above traits for model evaluation and selection techniques, we choose "Adaptive Boosting" from our study. 
 
@@ -882,16 +884,14 @@ kable_styling(kable(compare),c("striped","bordered"), full_width = F)
 
 - In this study, we have applied regression and advanced machine learning techniques on bank marketing data and explored the distribution of data, data curation and modeling techniques. The below are few key highlights.
 
-- Multiple Classification and Regression Algorithms have been evaluated.
-- Garbage in - Garbage out so we analyzed the data and curated data to further analysis.
-- Oversampling/undersampling has been implemented for class imbalanced data.
-- Cross Validation was used for parameter selection with logistic regression.
-- Random Forest used with default and best split and tree depth hyper parameters tuned to produce better result.
-- Adaptive Boosting is the best model for balanced sensitivities and interpretation of feature importance.
+    + Multiple Classification and Regression Algorithms have been evaluated.
+    + Garbage in - Garbage out so we analyzed the data and curated data to further analysis.
+    + Oversampling/undersampling has been implemented for class imbalanced data.
+    + Cross Validation was used for parameter selection with logistic regression.
+    + Random Forest used with default and best split and tree depth hyper parameters tuned to produce better result.
+    + Adaptive Boosting is the best model for balanced sensitivities and interpretation of feature importance.
 - Our study shows that simple and advanced machine learning techniques can add value to further a marketing campaign.
  
-
-
 ## Appendix
 
 ### Team members
