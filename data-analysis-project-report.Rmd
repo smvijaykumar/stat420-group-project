@@ -1,6 +1,6 @@
 ---
 title: 'Bank Marketing Data Analysis - Project Report'
-author: "STAT 420, Summer 2020, Bhushan Bhathani, Matthew Leung, Vijayakumar Sitha Mohan,"
+author: "STAT 420, Summer 2020, Bhushan Bathani, Matthew Leung, Vijayakumar Sitha Mohan,"
 date: ''
 output:
   html_document: 
@@ -38,6 +38,7 @@ library(ada)
 library(ROSE)
 library(DMwR)
 library(latticeExtra)
+library(pROC)
 ```
 
 ## Introduction
@@ -356,6 +357,12 @@ knitr::kable(result,format="markdown")
 
 #anova(bank_lr_aic_twoway,bank_lr_aic,test="LRT")
 
+qqnorm(resid(bank_lr_aic))
+qqline(resid(bank_lr_aic), col = "dodgerblue", lwd = 2)
+
+plot(fitted(bank_lr_aic), resid(bank_lr_aic), col = "grey", pch = 20,
+     xlab = "Fitted", ylab = "Residuals", main = "AIC Model Fitted vs Residuals")
+abline(h = 0, col = "darkorange", lwd = 2)
 ```
 
 
@@ -393,8 +400,57 @@ specificity
 
 ```
 
-<span style="color:Blue"> With cutoff of 0.5 probability , we see `r confusion_matrix[2,1]` false positives and `r confusion_matrix[1,2]` false positives among 16000 observations which is less than 10%. We can try to identify cut off where this number goes down.</span>
+<span style="color:Blue"> With cutoff of 0.5 probability , we see `r confusion_matrix[2,1]` false positives and `r confusion_matrix[1,2]` false positives among 16000 observations which is less than 10%. We can try to identify cut off where this number goes down. Let's draw ROC curve and identify AUC.</span>
 
+```{r}
+get_logistic_pred = function(mod, data, res = "y", pos = 1, neg = 0, cut = 0.5) {
+  probs = predict(mod, newdata = data, type = "response")
+  ifelse(probs > cut, pos, neg)
+}
+
+test_pred_10 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
+                                 pos = 1, neg = 0, cut = 0.1)
+test_pred_50 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
+                                 pos = 1, neg = 0, cut = 0.5)
+test_pred_90 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
+                                 pos = 1, neg = 0, cut = 0.9)
+
+test_tab_10 = table(predicted = test_pred_10, actual = test$y)
+test_tab_50 = table(predicted = test_pred_50, actual = test$y)
+test_tab_90 = table(predicted = test_pred_90, actual = test$y)
+
+test_con_mat_10 = confusionMatrix(test_tab_10, positive = "1")
+test_con_mat_50 = confusionMatrix(test_tab_50, positive = "1")
+test_con_mat_90 = confusionMatrix(test_tab_90, positive = "1")
+
+metrics = rbind(
+  
+  c(test_con_mat_10$overall["Accuracy"], 
+    test_con_mat_10$byClass["Sensitivity"], 
+    test_con_mat_10$byClass["Specificity"]),
+  
+  c(test_con_mat_50$overall["Accuracy"], 
+    test_con_mat_50$byClass["Sensitivity"], 
+    test_con_mat_50$byClass["Specificity"]),
+  
+  c(test_con_mat_90$overall["Accuracy"], 
+    test_con_mat_90$byClass["Sensitivity"], 
+    test_con_mat_90$byClass["Specificity"])
+
+)
+
+rownames(metrics) = c("c = 0.10", "c = 0.50", "c = 0.90")
+metrics
+```
+
+```{r}
+
+
+test_prob = predict(bank_lr_aic, newdata = test, type = "response")
+test_roc = roc(test$y ~ test_prob, plot = TRUE, print.auc = TRUE)
+
+```
+<span style="color:blue"> Getting higher AUC as 0.934 so that indicates higher specificity and sensitivity. That means selected model is a good model</span>
 
 
 ####  Attribute selection using backward/forward/subset selection
@@ -729,5 +785,4 @@ kable(result) %>%
 - [Bank Marketing Dataset Source](http://archive.ics.uci.edu/ml/datasets/Bank+Marketing)
 
 - [Moro et al., 2014] S. Moro, P. Cortez and P. Rita. A Data-Driven Approach to Predict the Success of Bank Telemarketing. Decision Support Systems, Elsevier, 62:22-31, June 2014
-
 
