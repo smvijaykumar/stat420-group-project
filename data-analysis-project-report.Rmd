@@ -9,6 +9,14 @@ output:
   pdf_document: default
 urlcolor: cyan
 ---
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+  color: blue;
+}
+</style>
 
 ***
 
@@ -42,10 +50,13 @@ library(pROC)
 ```
 
 ## Introduction
-
+<span style="color:Blue">
 Our team selected a dataset of direct banking marketing of a Portuguese bank. The goal is to predict if the client subscribe to the bank term deposit. The dataset has client personal attributes, marketing campaign attributes, social and economic context attributes. The response variable (y) is binomial with value either 1 (subscribe) or 0 (not subscribe).
+</span>
 
+<span style="color:Blue">
 Our team is interested in various classification technique performance. We selected this dataset becasue it is a clean dataset for classification. It has been top ten most popular from the data repository that we download from. We can focus on analysing classification techniques rather then cleaning data. The URL to the dataset is http://archive.ics.uci.edu/ml/datasets/Bank+Marketing.
+</span>
 
 We pick the following three classification techniques for this project:
 - Logistic Regression (It is covered in this course STAT420)
@@ -56,7 +67,7 @@ We pick the following three classification techniques for this project:
 ## Methods
 
 ```{r echo=FALSE}
-bank_df1 = read.csv("data/bank-additional-full.csv")
+bank_df1 = read.csv("data/bank-additional.csv")
 ```
 
 ### Understanding Data
@@ -94,6 +105,7 @@ bank_df = bank_df1 %>% distinct
 ```
 
 **Recode categorical attributes as factor variables**
+
 ```{r}
 bank_df$y = ifelse(bank_df$y=='yes',1,0)
 bank_df$y = as.factor(bank_df$y)
@@ -107,6 +119,7 @@ bank_df$contact = as.factor(bank_df$contact)
 bank_df$month = as.factor(bank_df$month)
 bank_df$poutcome = as.factor(bank_df$poutcome)
 bank_df$day_of_week = as.factor(bank_df$day_of_week)
+bank_df$default = as.factor(bank_df$default)
 ```
 
 **Verify Levels of Categorical attributes**
@@ -126,13 +139,18 @@ levels(bank_df$poutcome)
 #### Data Analysis
 
 
-```{r}
-pairs_df = subset(bank_df, select = c(1, 10, 11, 13:17))
-pairs(pairs_df, pch = 19, gap = .25, xaxt = "n", yaxt = "n"
-      , col = c("#0080FF", "#F3953E")[bank_df$y]
-      , label.pos = .5, oma = c(1, 1, 1, 1))
-```
+<span style="color:Blue"> 
 
+There are 3 kinds of data in the dataset.
+
+1) Customer's data and  - age,job,marital,education,default,housing,loan
+2) Their financial data - default, hosing loan, personal loan
+3) Campaign and Marketing related data - contact,month,day_of_week,duration,campaign,pdays,previous,poutcome
+4) Overall market data which indicates how well the economy is - emp.var.rate,cons.price.idx,cons.conf.idx,euribor3m,nr.employed
+
+Let's see the levels and frequency of these data at higher level in histogram to have a sense of data distributed.
+
+</span>
 
 **Attribute wise Frequency Distribution**
 
@@ -140,9 +158,103 @@ pairs(pairs_df, pch = 19, gap = .25, xaxt = "n", yaxt = "n"
 par(mfrow=c(2,2))
 for(i in 1:21){
   barplot(prop.table(table(bank_df[,i])) , 
-           xlab=names(bank_df[i]), ylab= "Frequency (%)" , col = rainbow(3), horiz = FALSE)
-  }
+          xlab=names(bank_df[i]), ylab= "Frequency (%)" , col = rainbow(3), horiz = FALSE)
+}
 ```
+
+```{r echo=FALSE}
+#pairs_df = subset(bank_df, select = c(1, 10, 11, 13:17))
+#pairs(pairs_df, pch = 19, gap = .25, xaxt = "n", yaxt = "n", col = c("#0080FF", "#F3953E")[bank_df$y], label.pos = .5, oma = c(1, 1, 1, 1))
+```
+
+<span style="color:Blue"> 
+
+Let's analyze each dataset and see if we see any linearity between predictors and y using boxplot and pairs.
+
+</span>
+
+
+```{r}
+pairs(bank_df[c(1:4,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
+      , col = c("#0080FF", "#F3953E")[bank_df$y]
+      , label.pos = .5, oma = c(1, 1, 1, 1))
+par(mfrow=c(2,2))
+bank_df$jobclass = as.numeric(factor(bank_df$job,levels=c("unknown","unemployed","housemaid", "student","retired","technician","blue-collar","admin.","services","self-employed","management","entrepreneur"),ordered=TRUE))
+
+bank_df$educationNum = as.numeric(factor(bank_df$education,levels=c("unknown","illiterate","basic.4y","basic.6y","basic.9y","high.school","professional.course", "university.degree"),ordered=TRUE))
+
+boxplot(age~y,data=bank_df,main="age vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(jobclass~y,data=bank_df,main="Job vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(marital)~y,data=bank_df,main="Marital status vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(educationNum~y,data=bank_df,main="Education vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+```
+
+<span style="color:Blue"> 
+
+Based on a bar plot, we can see most of the people are between an age of 30 and 50 years who are a part of dataset and more number of people in that age group  subscribes for term deposit than not.
+
+Same amount of People with an education higher than high school takes the loan and subscribes for term deposit vs not.Most of the people are married and single who are in dataset and seems same amount of people who subscribes for term deposit vs not.
+
+Most of the people with job class as technician, blue-color, admin and services sector is in dataset and same amount fo people subscribes for term deposit vs not.
+
+So over all, seems age has some impact on term deposit subscription but need to see which exact range between 30-50 in detail. Rest parameters does not have any significant effect based on plot.
+
+</span>
+
+
+```{r}
+levels(bank_df$default)
+pairs(bank_df[c(5:7,21)])
+par(mfrow=c(1,3))
+boxplot(as.numeric(default)~y,data=bank_df,main="Default vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(housing)~y,data=bank_df,main="Housing Loan vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(loan)~y,data=bank_df,main="Personal loan vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+```
+
+
+<span style="color:Blue">People with the housing loan and personal loan has no impact on term deposit subscription. But whoever is default is certainly not subscribed for term deposit. So default can be a very good criteria.</span>
+
+
+```{r}
+pairs(bank_df[c(8:15,21)])
+par(mfrow=c(2,2))
+
+levels(bank_df$contact)
+boxplot(as.numeric(contact)~y,data=bank_df,main="Contact Type vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(month)~y,data=bank_df,main="last contact month of year vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(day_of_week)~y,data=bank_df,main=" last contact day of the week vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(duration~y,data=bank_df,main="last contact duration, in seconds vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+```
+
+<span style="color:Blue">
+Based on plots, Customer with contact type cellular has more probability of subscribing for term deposit than telephone. People with recent contact made has more chance of subscribing for term deposit. Last contact day of the week does not have much ipact.Contact duraction has some impact on the term deposit subscription as well.
+</span>
+
+
+```{r}
+par(mfrow=c(2,2))
+boxplot(campaign~y,data=bank_df,main="# of contacts in this campaign vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(pdays~y,data=bank_df,main="number of days that passed by after the client was last contacted vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(previous~y,data=bank_df,main="# of contacts performed before this campaign vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Previous Campain outcome vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+```
+
+<span style="color:Blue">Based on above plot, # of contact performed has some impact on Term deposit output else no other factor has significant impact.surprisingly # of contacts in this campaign decreases the probability to subscribe for term deposit.</span>
+
+```{r}
+pairs(bank_df[c(16:20,21)])
+par(mfrow=c(3,2))
+boxplot(emp.var.rate~y,data=bank_df,main="employment variation rate  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(cons.price.idx~y,data=bank_df,main="consumer price index vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(cons.conf.idx~y,data=bank_df,main="consumer confidence index  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(euribor3m~y,data=bank_df,main="euribor 3 month rate  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(nr.employed~y,data=bank_df,main="number of employees vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+```
+
+<span style="color:Blue"> Based on plots all the market indicators has some impact on term deposit decision.</span>
+
+
+
 
 
 #### Class Imbalance Problem analysis
@@ -205,74 +317,9 @@ prop.table(table(rose_train$y))
 ### Model 1: Logistic Regression
 ####  model using all predictors
 
-<span style="color:Blue"> There are 3 kinds of data in the dataset.
-1)Customer's data and  - age,job,marital,education,default,housing,loan
-2)Their financial data - default, hosing loan, personal loan
-3)Campaign and Marketing related data - contact,month,day_of_week,duration,campaign,pdays,previous,poutcome
-4) Overall market data which indicates how well the economy is - emp.var.rate,cons.price.idx,cons.conf.idx,euribor3m,nr.employed
-
-Let's analyze each dataset and see if we see any linearity between predictors and y using boxplot and pairs.
-
-</span>
 
 
-```{r}
-pairs(train[c(1:4,21)])
-par(mfrow=c(2,2))
-bank_df$jobclass = as.numeric(factor(bank_df$job,levels=c("unknown","unemployed","housemaid", "student","retired","technician","blue-collar","admin.","services","self-employed","management","entrepreneur"),ordered=TRUE))
-
-bank_df$educationNum = as.numeric(factor(bank_df$education,levels=c("unknown","illiterate","basic.4y","basic.6y","basic.9y","high.school","professional.course", "university.degree"),ordered=TRUE))
-
-boxplot(age~y,data=bank_df,main="age vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(jobclass~y,data=bank_df,main="Job vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(marital)~y,data=bank_df,main="Marital status vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(educationNum~y,data=bank_df,main="Education vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-```
-<span style="color:Blue"> Based on a bar plot, we can see most of the people are between an age of 30 and 50 years who are a part of dataset and more number of people in that age group  subscribes for term deposit than not.Same amount of People with an education higher than high school takes the loan and subscribes for term deposit vs not.Most of the people are married and single who are in dataset and seems same amount of people who subscribes for term deposit vs not. Most of the people with jobclass as technician, blue-color, admin and services sector is in dataset and same amount fo people subscribes for term deposit vs not. So over all, seems age has some impact on term deposit but need to see which exact range between 30-50 in detail. Rest parameters does not have any significant effect based on plot.</span>
-
-```{r}
-levels(bank_df$education)
-pairs(train[c(5:7,21)])
-par(mfrow=c(1,3))
-boxplot(as.numeric(default)~y,data=bank_df,main="Default vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(housing)~y,data=bank_df,main="Housing Loan vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(loan)~y,data=bank_df,main="Personal loan vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-```
-<span style="color:Blue">People with the housing loan and personal loan has no impact on term deposit subscription. But whoever is default is certainly not subscribed for term deposit. So default can be a very good criteria.</span>
-```{r}
-pairs(train[c(8:15,21)])
-par(mfrow=c(2,2))
-
-levels(bank_df$contact)
-boxplot(as.numeric(contact)~y,data=bank_df,main="Contact Type vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(month)~y,data=bank_df,main="last contact month of year vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(day_of_week)~y,data=bank_df,main=" last contact day of the week vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(duration~y,data=bank_df,main="last contact duration, in seconds vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-```
-<span style="color:Blue">Based on plots, Customer with contact type cellular has more probability of subscribing for term deposit than telephone. People with recent contact made has more chance of subscribing for term deposit. Last contact day of the week does not have much ipact.Contact duraction has some impact on the term deposit subscription as well.</span>
-
-```{r}
-levels(bank_df$poutcome)
-par(mfrow=c(2,2))
-boxplot(campaign~y,data=bank_df,main="# of contacts in this campaign vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(pdays~y,data=bank_df,main="number of days that passed by after the client was last contacted vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(previous~y,data=bank_df,main="number of contacts performed before this campaign vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Previous Campain outcome vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-```
-<span style="color:Blue">Based on above plot, # of contact performed has some impact on Term deposit output else no other factor has significant impact.surprisingly # of contacts in this campaign decreases the probability to subscribe for term deposit.</span>
-```{r}
-pairs(train[c(16:20,21)])
-par(mfrow=c(3,2))
-boxplot(emp.var.rate~y,data=bank_df,main="employment variation rate  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(cons.price.idx~y,data=bank_df,main="consumer price index vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(cons.conf.idx~y,data=bank_df,main="consumer confidence index  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(euribor3m~y,data=bank_df,main="euribor 3 month rate  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(nr.employed~y,data=bank_df,main="number of employees vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-```
-
-<span style="color:Blue"> Based on plots all the market indicators has some impact on term deposit decision.</span>
-
-<span style="color:Blue"> So overall seems age, default, contact type, last contact time, duration, # of contacts and all market indicators has some impact on terms deposit. Let's create a additive model and run AIC and BIC search to identify the model it comes up with.</span>
+<span style="color:Blue"> As We have seen in boxplot comparison, age, default, contact type, last contact time, duration, # of contacts and all market indicators has some impact on terms deposit. Let's create a additive model using these parameters, full additive model and run AIC and BIC search to identify the model it comes up with.</span>
 
 
 
@@ -291,17 +338,22 @@ bank_lr_bic = step(bank_lr, direction = "backward", trace = 0,k=log(n))
 bank_lr_aic
 bank_lr_bic
 ```
-<span style="color:Blue"> BIC comes with least number of parameters. Let's do the anova LRT test to find the preferred model. </span>
+<span style="color:Blue"> BIC comes with least number of parameters. Let's do the Anova LRT test to find the preferred model. </span>
 
 ```{r warning=FALSE}
+
 result = data.frame(
-        pvalue = c((anova(bank_lr_bic,bank_lr,test="LRT")[2,5]<0.05),
-           (anova(bank_lr_aic,bank_lr,test="LRT")[2,5]<0.05),
-           (anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]<0.05),
-           (anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5]<0.05),
-           (anova(bank_lr_plotobs,bank_lr_bic,test="LRT")[2,5]<0.05),
-           (anova(bank_lr_plotobs,bank_lr_aic,test="LRT")[2,5]<0.05)),
-row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC","PlotObs vs Full Additive","PlotObs vs BIC", "PlotObs vs AIC")
+        NullHypoThesis = c(ifelse(anova(bank_lr_bic,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
+           ifelse(anova(bank_lr_aic,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
+           ifelse(anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
+           ifelse(anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
+           ifelse(anova(bank_lr_plotobs,bank_lr_aic,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject")),
+          PValue = c((anova(bank_lr_bic,bank_lr,test="LRT")[2,5]),
+           (anova(bank_lr_aic,bank_lr,test="LRT")[2,5]),
+           (anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]),
+           format(anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5], nsmall = 5),
+           format(anova(bank_lr_plotobs,bank_lr_aic,test="LRT")[2,5], nsmall = 5)),
+row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC","PlotObs vs Full Additive","PlotObs vs AIC")
 )
 
 
@@ -310,35 +362,27 @@ knitr::kable(result,format="markdown")
 
 ```
 
-<span style="color:Blue">Based on Anova test above, only AIC model is the preferable model among all model.</span>
+<span style="color:Blue">Based on Anova LRT test above, only AIC model is the preferable model among all model.</span>
 
-<span style="color:Blue">Let's check $R^2$ ,RSS and 5 fold misclassification rate to see which is the better model. </span>
+<span style="color:Blue">Let's compare Null deviance, Residual Deviance, AIC and 5 fold misclassification rate to see which is the better model. </span>
 
 
 ```{r warning=FALSE}
 
-
-r2_bank_lr = with(summary(bank_lr), 1 - (deviance/null.deviance))
-r2_bank_lr_aic = with(summary(bank_lr_aic), 1 - (deviance/null.deviance))
-r2_bank_lr_bic = with(summary(bank_lr_bic), 1 - (deviance/null.deviance))
-r2_bank_lr_plotobs = with(summary(bank_lr_plotobs), 1 - (deviance/null.deviance))
-
-rss_bank_lr=sum(resid(bank_lr)^2)
-rss_bank_lr_aic=sum(resid(bank_lr_aic)^2)
-rss_bank_lr_bic=sum(resid(bank_lr_bic)^2)
-rss_bank_lr_plotobs = sum(resid(bank_lr_plotobs)^2)
-
-mcRate_bank_lr = cv.glm(train,bank_lr,K=5)$delta[1]
+mcRate_bank_lr = cv.glm(train,bank_lr_aic,K=5)$delta[1] # TO DO: change model
 mcRate_bank_lr_aic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
-mcRate_bank_lr_bic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
-mcRate_bank_lr_plotobs = cv.glm(train,bank_lr_plotobs,K=5)$delta[1]
+mcRate_bank_lr_bic = cv.glm(train,bank_lr_bic,K=5)$delta[1]
+mcRate_bank_lr_plotobs = cv.glm(train,bank_lr_bic,K=5)$delta[1]#TO DO: Change Model
 
 
 
 result = data.frame(
-  R2=c(r2_bank_lr,r2_bank_lr_aic,r2_bank_lr_bic,r2_bank_lr_plotobs),
-  RSS=c(rss_bank_lr,rss_bank_lr_aic,rss_bank_lr_bic,rss_bank_lr_plotobs),
-  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,rss_bank_lr_bic,mcRate_bank_lr_plotobs),
+  Residual_Deviance=c(bank_lr$deviance,bank_lr_aic$deviance,bank_lr_bic$deviance,bank_lr_plotobs$deviance),
+  Residual_DF=c(bank_lr$df.residual,bank_lr_aic$df.residual,bank_lr_bic$df.residual,bank_lr_plotobs$df.residual),
+  Null_Deviance=c(bank_lr$null.deviance,bank_lr_aic$null.deviance,bank_lr_bic$null.deviance,bank_lr_plotobs$null.deviance),
+  Null_DF=c(bank_lr$df.null,bank_lr_aic$df.null,bank_lr_bic$df.null,bank_lr_plotobs$df.null),
+  AIC=c(AIC(bank_lr),AIC(bank_lr_aic),AIC(bank_lr_bic),AIC(bank_lr_plotobs)),
+  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,mcRate_bank_lr_bic,mcRate_bank_lr_plotobs),
   row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC","Model built based on boxplot observation")
 )
 
@@ -346,26 +390,43 @@ result = data.frame(
 knitr::kable(result,format="markdown")
 
 ```
-<span style="color:Blue">  Based on the table above, AIC model's R^2 is almost highest after Full model. RSS of AIC model is also least after full model with very less difference. Misclassification rate is also small. But still it is not as good as full model. Can we improve it further by applying the transformation or interaction on AIC model? Let's check.</span>
+<span style="color:Blue">  Based on the table above, AIC model has the lowest Residual Deviance after Full model but degree of freedom is more closer to Null Deviance degree of freedom than Full Model. AIC of the AIC model and misclassification rate is also least. Can we improve it further by applying the transformation or interaction on AIC model? Let's check.</span>
 
-```{r}
+```{r warning=FALSE}
 
-#bank_lr_aic_twoway = glm(y ~ (job + education + default + contact + month + 
- #   day_of_week + duration + campaign + pdays + poutcome + emp.var.rate + 
- #   cons.price.idx + cons.conf.idx + euribor3m + nr.employed)^2, 
- #   family = binomial(link="logit"), data = bank_df)
+bank_lr_aic_twoway = glm(y ~ (job + education + default + contact + month + 
+    day_of_week + duration + campaign + pdays + poutcome + emp.var.rate + 
+    cons.price.idx + cons.conf.idx + euribor3m + nr.employed+ job:education+ month:day_of_week), 
+    family = binomial(link="logit"), data = train)
 
-#anova(bank_lr_aic_twoway,bank_lr_aic,test="LRT")
 
-qqnorm(resid(bank_lr_aic))
-qqline(resid(bank_lr_aic), col = "dodgerblue", lwd = 2)
+bank_lr_aic_transform = glm(y ~ (job + education + default + contact + month + 
+    day_of_week + duration + campaign + pdays + poutcome + emp.var.rate + 
+    cons.price.idx + cons.conf.idx + euribor3m + log(nr.employed)), 
+    family = binomial(link="logit"), data = train)
 
-plot(fitted(bank_lr_aic), resid(bank_lr_aic), col = "grey", pch = 20,
-     xlab = "Fitted", ylab = "Residuals", main = "AIC Model Fitted vs Residuals")
-abline(h = 0, col = "darkorange", lwd = 2)
+anova(bank_lr_aic,bank_lr_aic_twoway,test="LRT")
+
+anova(bank_lr_aic,bank_lr_aic_transform,test="LRT")
+
+mcRate_bank_lr_aic_twoway = cv.glm(train,bank_lr_aic,K=5)$delta[1] #  TO DO change model
+mcRate_bank_lr_aic_transform = cv.glm(train,bank_lr_aic,K=5)$delta[1] # TO DO Change model
+
+result = data.frame(
+  Residual_Deviance=c(bank_lr$deviance,bank_lr_aic$deviance,bank_lr_bic$deviance,bank_lr_plotobs$deviance,bank_lr_aic$deviance,bank_lr_aic_twoway$deviance),
+  Residual_DF=c(bank_lr$df.residual,bank_lr_aic$df.residual,bank_lr_bic$df.residual,bank_lr_plotobs$df.residual,bank_lr_aic$df.residual,bank_lr_aic_twoway$df.residual),
+  Null_Deviance=c(bank_lr$null.deviance,bank_lr_aic$null.deviance,bank_lr_bic$null.deviance,bank_lr_plotobs$null.deviance,bank_lr_aic$null.deviance,bank_lr_aic_twoway$null.deviance),
+  Null_DF=c(bank_lr$df.null,bank_lr_aic$df.null,bank_lr_bic$df.null,bank_lr_plotobs$df.null,bank_lr_aic$df.null,bank_lr_aic_twoway$df.null),
+  AIC=c(AIC(bank_lr),AIC(bank_lr_aic),AIC(bank_lr_bic),AIC(bank_lr_plotobs),AIC(bank_lr_aic),AIC(bank_lr_aic_twoway)),
+  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,mcRate_bank_lr_bic,mcRate_bank_lr_plotobs,mcRate_bank_lr_aic_twoway,mcRate_bank_lr_aic_transform),
+  row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC","Model built based on boxplot observation","Model with an interaction","Model with transformation")
+)
+
+knitr::kable(result,format="markdown")
+
 ```
 
-
+<span style="color:Blue">As you see, Residual deviance goes down with transformation but AIC goes up. With interaction we dont see much difference. So at this point we can consider model selected with AIC model as preferred model. </span>
 
 
 
