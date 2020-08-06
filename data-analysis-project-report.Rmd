@@ -440,7 +440,9 @@ metrics = rbind(
 
 rownames(metrics) = c("c = 0.10", "c = 0.50", "c = 0.90")
 metrics
+```
 
+```{r}
 library(pROC)
 
 test_prob = predict(bank_lr_aic, newdata = test, type = "response")
