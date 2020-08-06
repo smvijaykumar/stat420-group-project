@@ -726,31 +726,31 @@ kable(result) %>%
 ### Compare Models (Test and Train Accuracy)
 
 
-
 ## Discussion
 
-In general, we can apply the below criterions to evaluate and select the model. Let's analyze the model which we worked on in this study.
+- Do we accept False Positive or False Negative in the context of the problem statement?
 
-Accuracy vs Sensitivity: 
+    + False Positive, means the client do NOT SUBSCRIBED to term deposit, but the model thinks he/she did. 
+  
+**Type I error is more harmful because we might lose the customer and loss revenue by incorrectly considering the client was already subscribed.**
 
-Speed:
-
-Robustness:
-
-Scalability: 
-
-Interpretability:
+    + False Negative, means the client SUBSCRIBED to term deposit, but the model thinks otherwise.
+    
+**Type II error is less harmful because we didn't lose the customer and no loss in revenue by incorrectly considering the client was not subscribed. We may be contacting the customer for the same campaign but it won't cause to lose a customer **
 
 
-- Precision: What percentage of tuples labeled as positively is actually positive?
+- Flexibility vs Interpretability - what do we choose?
 
-- Recall: What percentage of positve tuples are labeled as positive?
+    + Smaller model(Logistic Regression) are easily interpretable with decent accuracy in prediction.
+    
+    + Complex, flexible model (Random Forest, Adaptive Boosting) are less interpretable but with high accuracy.
+    
+**In this study, we must go with complex and flexible model eventhough we lose interpretability in the expense for higher prediction since it involves revenue to the bank.**
 
-- AUC: The area under the curve is a measure of the accuracy of the model
 
-- Misclassification rate
-- Thresold
-- Select best among 3 and why?
+- Speed - **We need to choose the model which performs better and run faster. Boosting models run in parallel compared to Logistic and Random Forest.**
+
+- With the above traits for model evaluation and selection techniques, we choose "Adaptive Boosting" from our study. 
 
 ## Conclusion
 
