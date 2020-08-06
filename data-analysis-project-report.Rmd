@@ -38,6 +38,7 @@ library(ada)
 library(ROSE)
 library(DMwR)
 library(latticeExtra)
+library(pROC)
 ```
 
 ## Introduction
@@ -443,7 +444,7 @@ metrics
 ```
 
 ```{r}
-library(pROC)
+
 
 test_prob = predict(bank_lr_aic, newdata = test, type = "response")
 test_roc = roc(test$y ~ test_prob, plot = TRUE, print.auc = TRUE)
