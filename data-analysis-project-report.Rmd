@@ -241,7 +241,6 @@ boxplot(as.numeric(housing)~y,data=bank_df,main="Housing Loan vs Term Deposit",p
 boxplot(as.numeric(loan)~y,data=bank_df,main="Personal loan vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
-
 <span style="color:Blue">
 - Customers with the housing loan and personal loan has no impact on term deposit subscription. 
 - Customers already in default certainly did not subscribed to the term deposit. So default can be a very good predictor.
