@@ -56,7 +56,7 @@ We pick the following three classification techniques for this project:
 ## Methods
 
 ```{r echo=FALSE}
-bank_df1 = read.csv("data/bank-additional-full.csv")
+bank_df1 = read.csv("data/bank-additional.csv")
 ```
 
 ### Understanding Data
