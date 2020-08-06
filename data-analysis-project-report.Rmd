@@ -285,15 +285,11 @@ boxplot(nr.employed~y,data=bank_df,main="number of employees vs Term Deposit",pc
 
 <span style="color:Blue"> Based on plots all the market indicators has some impact on term deposit decision.</span>
 
-
-
-
-
 #### Class Imbalance Problem analysis
 
 - We say that the dataset have the class imbalance problem, where the main class of interest
 is rare. That is, the data set distribution reflects a significant majority of the
-negative class and a minority positive class. Below table investigation shows that. we have `88.8%` negative classes and `11.2%` positive classes.
+negative class and a minority positive class. Below table investigation shows that. we have `89` positive classes and `11%` negative classes.
 
 ```{r}
 prop.table(table(bank_df$y))
@@ -302,6 +298,7 @@ prop.table(table(bank_df$y))
 - we need to address this problem otherwise our model won't able to predict correctly. Most of the traditional classifiers assume dataset have balanced class distribution.
 
 - There are techniques available to overcome this class imbalance problem. Lets consider few of those techniques are:
+
     + Oversampling: Re-sampling of data from positive class
     
     + Under-sampling: Randomly eliminate tuples from negative class
@@ -344,16 +341,18 @@ prop.table(table(smote_train$y))
 prop.table(table(rose_train$y))
 ```
 
+### Model Builing
 
-## Model Builing
+- In this study, we will be considering one regression model (Logistic Regression), one Ensemble model (Random Forest) and one Boosting model (Adaptive Boosting). We will be applying the techniques which we learnt in this course as well as others to better predict the chosen dataset.
+
 ### Model 1: Logistic Regression
-####  model using all predictors
 
+<span style="color:Blue">
 
+- As We have seen in boxplot comparison, age, default, contact type, last contact time, duration, # of contacts and all market indicators has some impact on terms deposit. Let's create a additive model using these parameters, full additive model and run AIC and BIC search to identify the model it comes up with.
+</span>
 
-<span style="color:Blue"> As We have seen in boxplot comparison, age, default, contact type, last contact time, duration, # of contacts and all market indicators has some impact on terms deposit. Let's create a additive model using these parameters, full additive model and run AIC and BIC search to identify the model it comes up with.</span>
-
-
+#### Base model using Logistic Regression
 
 ```{r}
 bank_lr_plotobs = glm(y~age+default+campaign+previous+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed, data = train, family = "binomial")
@@ -361,7 +360,12 @@ bank_lr = glm(y ~ ., data = train, family = "binomial")
 summary(bank_lr)
 ```
 
-<span style="color:Blue"> Going through AIC and BIC backward search to find out the best model.</span>
+
+#### Attribute selection
+
+<span style="color:Blue">
+We will be using step function to search  forward and backward directions and use AIC and BIC as metric to find out the best model.
+</span>
 
 ```{r warning=FALSE}
 n=length(resid(bank_lr))
