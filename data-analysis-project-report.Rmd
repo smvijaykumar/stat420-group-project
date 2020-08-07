@@ -640,6 +640,7 @@ confusionMatrix(test$y,pred_test1)
 
 
 ####  Plot ROC curve (TPR vs FPR)
+
 ```{r }
 par(mfrow = c(1,2))
 pr_train = prediction(as.numeric(pred_train),train$y)
@@ -651,9 +652,13 @@ prf_test1 = performance(pr_test1, measure = "tpr",x.measure = "fpr")
 plot(prf_test1)
 
 mtext("ROC curve (TPR vs FPR) for Train Vs Test", side = 3, line = -1, outer = TRUE)
-      
+```
+
+
+```{r}
 auc_train = performance(pr_train, measure = "auc")
 auc_test1 = performance(pr_test1, measure = "auc")
+
 ```
 
 ####  Tuning Random Forest Model
@@ -877,9 +882,7 @@ plot(prf_train)
 pr_test1 = prediction(as.numeric(pred_test1),test$y)
 prf_test1 = performance(pr_test1, measure = "tpr",x.measure = "fpr")
 plot(prf_test1)
-
 mtext("ROC curve (TPR vs FPR) for Train Vs Test", side = 3, line = -1, outer = TRUE)
-
 ```
 
 - Metrics for ROSE Train vs Test
