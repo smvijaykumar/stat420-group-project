@@ -3,10 +3,10 @@ title: "Bank Marketing Data Analysis - Project Report"
 author: "STAT 420, Summer 2020, Bhushan Bathani, Matthew Leung, Vijayakumar Sitha Mohan,"
 date: ''
 output:
-  pdf_document:
-    toc: yes
   html_document:
     theme: readable
+    toc: yes
+  pdf_document:
     toc: yes
 urlcolor: cyan
 ---
@@ -37,7 +37,7 @@ knitr::opts_chunk$set(
 
 
 ```{r message=FALSE, warning=FALSE}
-#install.packages("e1071")
+#tinytex::install_tinytex()
 library(knitr)      # web widget
 library(tidyverse)  # data manipulation
 library(caret)      # rocr analysis
@@ -100,7 +100,7 @@ variable (desired target).
     
     + Customer's financial data - default, hosing loan, personal loan
     
-    + Campaign and Marketing related data - contact,month,day_of_week,duration,campaign,pdays,previous,poutcome
+    + Campaign and Marketing data - contact,month,day_of_week,duration,campaign,pdays,previous,poutcome
     
     + Overall market and economic indicators - emp.var.rate,cons.price.idx,cons.conf.idx,euribor3m,nr.employed
 
@@ -203,15 +203,22 @@ par(mfrow=c(2,2))
 
 #--- Factorizing the jobclass and education from lower to higher order
 
-bank_df$jobclass = as.numeric(factor(bank_df$job,levels=c("unknown","unemployed","housemaid", "student","retired","technician","blue-collar","admin.","services","self-employed","management","entrepreneur"),ordered=TRUE))
+bank_df$jobclass = as.numeric(factor(bank_df$job,levels=c("unknown","unemployed","housemaid", "student","retired","technician","blue-collar","admin.","services",
+"self-employed","management","entrepreneur"),ordered=TRUE))
 
-bank_df$educationNum = as.numeric(factor(bank_df$education,levels=c("unknown","illiterate","basic.4y","basic.6y","basic.9y","high.school","professional.course", "university.degree"),ordered=TRUE))
+bank_df$educationNum = as.numeric(factor(bank_df$education,                                         levels=c("unknown","illiterate","basic.4y","basic.6y","basic.9y","high.school",
+         "professional.course", "university.degree"),ordered=TRUE))
 
 
-boxplot(age~y,data=bank_df,main="age vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(jobclass~y,data=bank_df,main="Job vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(marital)~y,data=bank_df,main="Marital status vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(educationNum~y,data=bank_df,main="Education vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(age~y,data=bank_df,main="age vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(jobclass~y,data=bank_df,main="Job vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(marital)~y,data=bank_df,
+        main="Marital status vs Term Deposit",pch=20,cex=2,
+        col="darkorange",border = "dodgerblue")
+boxplot(educationNum~y,data=bank_df,main="Education vs Term Deposit"
+        ,pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
  
@@ -236,9 +243,12 @@ pairs(bank_df[c(5:7,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
 
 ```{r}
 par(mfrow=c(1,3))
-boxplot(as.numeric(default)~y,data=bank_df,main="Default vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(housing)~y,data=bank_df,main="Housing Loan vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(loan)~y,data=bank_df,main="Personal loan vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(default)~y,data=bank_df,main="Default vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(housing)~y,data=bank_df,main="Housing Loan vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(loan)~y,data=bank_df,main="Personal loan vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
 
@@ -254,10 +264,19 @@ pairs(bank_df[c(8:15,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
 par(mfrow=c(2,2))
 
 levels(bank_df$contact)
-boxplot(as.numeric(contact)~y,data=bank_df,main="Contact Type vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(month)~y,data=bank_df,main="last contact month of year vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(day_of_week)~y,data=bank_df,main=" last contact day of the week vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(duration~y,data=bank_df,main="last contact duration vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(contact)~y,data=bank_df,
+        main="Contact Type vs Term Deposit",pch=20,cex=2,col="darkorange"
+        ,border = "dodgerblue")
+
+boxplot(as.numeric(month)~y,data=bank_df,
+        main="Contact month of year vs Term Deposit",pch=20,cex=2,col="darkorange",
+        border = "dodgerblue")
+
+boxplot(as.numeric(day_of_week)~y,data=bank_df
+        ,main=" Contact Weekday vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(duration~y,data=bank_df,main="contact duration vs Term Deposit"
+        ,pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
 - Based on plots, Customer with contact type cellular has more probability of subscribing for term deposit than telephone. People who was recently contacted has more chance of subscribing for term deposit. Last contact day of the week does not have much impact.Contact duraction has some impact on the term deposit subscription as well.
@@ -265,10 +284,13 @@ boxplot(duration~y,data=bank_df,main="last contact duration vs Term Deposit",pch
 
 ```{r}
 par(mfrow=c(2,2))
-boxplot(campaign~y,data=bank_df,main="# of contacts in this campaign vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(pdays~y,data=bank_df,main="number of days that passed by after the client was last contacted vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(previous~y,data=bank_df,main="# of contacts performed before this campaign vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Previous Campain outcome vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(campaign~y,data=bank_df,main="# of contacts last campaign vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(pdays~y,data=bank_df,main="# of days since last contacted vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(previous~y,data=bank_df,main="# of contacts this campaign vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Previous Campain outcome vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
 - Based on above plot, # of contact performed has some impact on Term deposit output else no other factor has significant impact.surprisingly # of contacts in this campaign decreases the probability to subscribe for term deposit.
@@ -278,11 +300,16 @@ pairs(bank_df[c(16:20,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
       , col = c("#0080FF", "#F3953E")[bank_df$y]
       , label.pos = .5, oma = c(1, 1, 1, 1))
 par(mfrow=c(3,2))
-boxplot(emp.var.rate~y,data=bank_df,main="employment variation rate  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(cons.price.idx~y,data=bank_df,main="consumer price index vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(cons.conf.idx~y,data=bank_df,main="consumer confidence index  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(euribor3m~y,data=bank_df,main="euribor 3 month rate  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(nr.employed~y,data=bank_df,main="number of employees vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(emp.var.rate~y,data=bank_df,main="employment variation rate  vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(cons.price.idx~y,data=bank_df,main="consumer price index vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(cons.conf.idx~y,data=bank_df,main="consumer confidence index  vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(euribor3m~y,data=bank_df,main="euribor 3 month rate  vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(nr.employed~y,data=bank_df,main="number of employees vs Term Deposit",
+        pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
 - Based on plots all the market indicators has some impact on term deposit decision.
@@ -397,7 +424,8 @@ bank_lr_bic
 ```{r warning=FALSE}
 
 result = data.frame(
-        NullHypoThesis = c(ifelse(anova(bank_lr_bic,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
+        NullHypoThesis = c(ifelse(anova(bank_lr_bic,bank_lr,test="LRT")[2,5]<0.05
+                                  ,"Rejected","Fail To Reject"),
            ifelse(anova(bank_lr_aic,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
            ifelse(anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
            ifelse(anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
@@ -435,16 +463,22 @@ mcRate_bank_lr_plotobs = cv.glm(train,bank_lr_plotobs,K=5)$delta[1]
 
 
 result = data.frame(
-  Residual_Deviance=c(bank_lr$deviance,bank_lr_aic$deviance,bank_lr_bic$deviance,bank_lr_plotobs$deviance),
-  Residual_DF=c(bank_lr$df.residual,bank_lr_aic$df.residual,bank_lr_bic$df.residual,bank_lr_plotobs$df.residual),
-  Null_Deviance=c(bank_lr$null.deviance,bank_lr_aic$null.deviance,bank_lr_bic$null.deviance,bank_lr_plotobs$null.deviance),
+  Residual_Deviance=c(bank_lr$deviance,bank_lr_aic$deviance,bank_lr_bic$deviance
+                      ,bank_lr_plotobs$deviance),
+  Residual_DF=c(bank_lr$df.residual,bank_lr_aic$df.residual,bank_lr_bic$df.residual
+                  ,bank_lr_plotobs$df.residual),
+  Null_Deviance=c(bank_lr$null.deviance,bank_lr_aic$null.deviance,bank_lr_bic$null.deviance
+                  ,bank_lr_plotobs$null.deviance),
   Null_DF=c(bank_lr$df.null,bank_lr_aic$df.null,bank_lr_bic$df.null,bank_lr_plotobs$df.null),
   AIC=c(AIC(bank_lr),AIC(bank_lr_aic),AIC(bank_lr_bic),AIC(bank_lr_plotobs)),
-  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,mcRate_bank_lr_bic,mcRate_bank_lr_plotobs),
-  row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC","Model built based on boxplot observation")
+  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,mcRate_bank_lr_bic
+                          ,mcRate_bank_lr_plotobs),
+  row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC"
+                ,"Model built based on boxplot observation")
 )
 
-colnames(result) = c("Residual Deviance","Residual DF","Null Deviance","Null DF","AIC ","Misclassification Rate")
+colnames(result) = c("Residual Deviance","Residual DF","Null Deviance","Null DF","AIC "
+                     ,"Misclassification Rate")
 
 kable(result) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
@@ -504,35 +538,53 @@ mcRate_bank_lr_aic_int = cv.glm(train,bank_lr_aic_int,K=5)$delta[1]
 mcRate_bank_lr_aic_transform = cv.glm(train,bank_lr_aic_transform,K=5)$delta[1] 
 
 result = data.frame(
-  Residual_Deviance=c(bank_lr$deviance,bank_lr_aic$deviance,bank_lr_bic$deviance,bank_lr_plotobs$deviance,bank_lr_aic_int$deviance,bank_lr_aic_transform$deviance),
-  Residual_DF=c(bank_lr$df.residual,bank_lr_aic$df.residual,bank_lr_bic$df.residual,bank_lr_plotobs$df.residual,bank_lr_aic_int$df.residual,bank_lr_aic_transform$df.residual),
-  Null_Deviance=c(bank_lr$null.deviance,bank_lr_aic$null.deviance,bank_lr_bic$null.deviance,bank_lr_plotobs$null.deviance,bank_lr_aic_int$null.deviance,bank_lr_aic_transform$null.deviance),
-  Null_DF=c(bank_lr$df.null,bank_lr_aic$df.null,bank_lr_bic$df.null,bank_lr_plotobs$df.null,bank_lr_aic_int$df.null,bank_lr_aic_transform$df.null),
-  AIC=c(AIC(bank_lr),AIC(bank_lr_aic),AIC(bank_lr_bic),AIC(bank_lr_plotobs),AIC(bank_lr_aic_int),AIC(bank_lr_aic_transform)),
-  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,mcRate_bank_lr_bic,mcRate_bank_lr_plotobs,mcRate_bank_lr_aic_int,mcRate_bank_lr_aic_transform),
-  row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC","Model built based on boxplot observation","Model with an interaction","Model with transformation")
+  Residual_Deviance=c(bank_lr$deviance,bank_lr_aic$deviance,bank_lr_bic$deviance
+                      ,bank_lr_plotobs$deviance,bank_lr_aic_int$deviance
+                      ,bank_lr_aic_transform$deviance),
+  
+  Residual_DF=c(bank_lr$df.residual,bank_lr_aic$df.residual,bank_lr_bic$df.residual
+                ,bank_lr_plotobs$df.residual,bank_lr_aic_int$df.residual
+                ,bank_lr_aic_transform$df.residual),
+  
+  Null_Deviance=c(bank_lr$null.deviance,bank_lr_aic$null.deviance,bank_lr_bic$null.deviance
+                  ,bank_lr_plotobs$null.deviance,bank_lr_aic_int$null.deviance
+                  ,bank_lr_aic_transform$null.deviance),
+  
+  Null_DF=c(bank_lr$df.null,bank_lr_aic$df.null,bank_lr_bic$df.null,bank_lr_plotobs$df.null
+            ,bank_lr_aic_int$df.null,bank_lr_aic_transform$df.null),
+  
+  AIC=c(AIC(bank_lr),AIC(bank_lr_aic),AIC(bank_lr_bic),AIC(bank_lr_plotobs)
+        ,AIC(bank_lr_aic_int),AIC(bank_lr_aic_transform)),
+  
+  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,mcRate_bank_lr_bic
+        ,mcRate_bank_lr_plotobs,mcRate_bank_lr_aic_int,mcRate_bank_lr_aic_transform),
+  
+  row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC"
+                ,"Model built based on boxplot observation","Model with an interaction"
+                ,"Model with transformation")
 )
 
-colnames(result) = c("Residual Deviance","Residual DF","Null Deviance","Null DF","AIC ","Misclassification Rate")
+colnames(result) = c("Residual Deviance","Residual DF","Null Deviance","Null DF"
+                     ,"AIC ","Misclassification Rate")
 
 kable(result) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
-- As you see, Residual deviance goes down with integration but AIC goes up and degrees of freedom goes down.Misclassification rate is marginally changed with transformation. But we dont see any major difference which can be considered but residual deviance and AIC has gone down with gaining a degrre of freedom.
+- As you see, Residual deviance goes down with integration but AIC goes up and degrees of freedom goes down.Misclassification rate is marginally changed with transformation. But we dont see any major difference which can be considered but residual deviance and AIC has gone down with gaining a degree of freedom.
 
-- Let's consider  model selected with AIC with tranformation on test data to identify misclassification rate, false positives and negatives on Test data.
+- Let's consider  model selected with AIC on test data to identify misclassification rate, false positives and negatives on Test data.
 
 ```{r}
-predict_bank_lr_aic_transform = ifelse(predict(bank_lr_aic_transform, test, type = "response")> 0.5,1,0)
-misClassificationRate = mean(predict_bank_lr_aic_transform!=test$y)
+predict_bank_lr_aic = ifelse(predict(bank_lr_aic, test, type = "response")> 0.5,1,0)
+misClassificationRate = mean(predict_bank_lr_aic!=test$y)
 misClassificationRate
 
 make_conf_mat = function(predicted, actual) {
   table(predicted = predicted, actual = actual)
 }
 
-confusion_matrix = table(predicted = predict_bank_lr_aic_transform, actual = test$y)
+confusion_matrix = table(predicted = predict_bank_lr_aic, actual = test$y)
 sensitivity = confusion_matrix[2,2]/confusion_matrix[,2]
 specificity = confusion_matrix[1,1]/confusion_matrix[,1]
 
@@ -549,17 +601,17 @@ get_logistic_pred = function(mod, data, res = "y", pos = 1, neg = 0, cut = 0.5) 
   ifelse(probs > cut, pos, neg)
 }
 
-test_pred_10 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
+test_pred_10 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.1)
-test_pred_30 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
+test_pred_30 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.3)
-test_pred_40 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
+test_pred_40 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.4)
-test_pred_50 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
+test_pred_50 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.5)
-test_pred_60 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
+test_pred_60 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.6)
-test_pred_90 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
+test_pred_90 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.9)
 
 test_tab_10 = table(predicted = test_pred_10, actual = test$y)
@@ -578,11 +630,17 @@ test_con_mat_90 = confusionMatrix(test_tab_90, positive = "1")
 
 metrics = data.frame(
   
-  Accuracy = c(test_con_mat_10$overall["Accuracy"], test_con_mat_30$overall["Accuracy"],test_con_mat_40$overall["Accuracy"], test_con_mat_50$overall["Accuracy"],test_con_mat_60$overall["Accuracy"], test_con_mat_90$overall["Accuracy"]),
+  Accuracy = c(test_con_mat_10$overall["Accuracy"], test_con_mat_30$overall["Accuracy"]
+               ,test_con_mat_40$overall["Accuracy"], test_con_mat_50$overall["Accuracy"]
+               ,test_con_mat_60$overall["Accuracy"], test_con_mat_90$overall["Accuracy"]),
   
-  Sensitivity = c(test_con_mat_10$byClass["Sensitivity"],test_con_mat_30$byClass["Sensitivity"],test_con_mat_40$byClass["Sensitivity"],test_con_mat_50$byClass["Sensitivity"], test_con_mat_60$byClass["Sensitivity"], test_con_mat_90$byClass["Sensitivity"]),
+  Sensitivity = c(test_con_mat_10$byClass["Sensitivity"],test_con_mat_30$byClass["Sensitivity"]
+                ,test_con_mat_40$byClass["Sensitivity"],test_con_mat_50$byClass["Sensitivity"]
+                , test_con_mat_60$byClass["Sensitivity"], test_con_mat_90$byClass["Sensitivity"]),
   
-  Specificity = c(test_con_mat_10$byClass["Specificity"],test_con_mat_30$byClass["Specificity"],test_con_mat_40$byClass["Specificity"],test_con_mat_50$byClass["Specificity"],test_con_mat_60$byClass["Specificity"],test_con_mat_90$byClass["Specificity"])
+  Specificity = c(test_con_mat_10$byClass["Specificity"],test_con_mat_30$byClass["Specificity"]
+                ,test_con_mat_40$byClass["Specificity"],test_con_mat_50$byClass["Specificity"]
+                ,test_con_mat_60$byClass["Specificity"],test_con_mat_90$byClass["Specificity"])
   
 )
 
@@ -597,9 +655,9 @@ kable(metrics) %>%
 ```
 
 ```{r}
-test_prob = predict(bank_lr_aic_transform, newdata = test, type = "response")
+test_prob = predict(bank_lr_aic, newdata = test, type = "response")
 test_roc = roc(test$y ~ test_prob, plot = TRUE, print.auc = TRUE)
-class(auc(test_roc))
+auc(test_roc)
 ```
 
 - With the best chosen model from logistic regression, we have AUC above 0.9 and the ratio of Sensitivity and Specificity is good as well. But as you can see sensitivity is decreasing as cut-off is increasing from 0.10 onward. Unlike sensitivity, specificity and accuracy is increasing as cut-off is increasing from 0.10 onward. But at cut-of 0.10, all 3 have the best numbers possible. 
@@ -906,24 +964,33 @@ kable(result) %>%
 
 The following is a table to compare the various metrics against the test data set from the three different methods: logistic regression, random forest and adaptive boosting after model tuning. 
 
-For logistic regression, we pick backward search AIC with predictor transformation at cutoff 0.1. For random forest, we pick decision tree with 5 predictors and 500 trees. For adaptive boosting, we pick iteration of 100.
+For logistic regression, we pick backward search AIC at cutoff 0.1. For random forest, we pick decision tree with 5 predictors and 500 trees. For adaptive boosting, we pick iteration of 100.
 
 
 ```{r}
 # compare Accuracy and ROC
-compare <- data.frame(Method = c('Logistic Regression (AIC w/ transform cutoff = 0.1)', 'Random Forest (mtry = 5, ntree = 500)', 'Adaptive boosting (iter = 100)'), Accuracy = NA, Sensitivity = NA, Specificity = NA, Precision = NA, Recall = NA, FScore = NA, 'ROC AUC' = NA)
+compare <- data.frame(Method = c('Logistic Regression (AIC backward search cutoff = 0.1)'
+                , 'Random Forest (mtry = 5, ntree = 500)', 'Adaptive boosting (iter = 100)')
+                , Accuracy = NA, Sensitivity = NA, Specificity = NA, Precision = NA
+                , Recall = NA, FScore = NA, 'ROC AUC' = NA)
 
-compare$Accuracy <- c(test_con_mat_10$overall["Accuracy"], test1_cm_rf$overall['Accuracy'],test1_cm_ab$overall['Accuracy'])
+compare$Accuracy <- c(test_con_mat_10$overall["Accuracy"], test1_cm_rf$overall['Accuracy']
+                      ,test1_cm_ab$overall['Accuracy'])
 
-compare$Sensitivity <- c(test_con_mat_10$byClass["Sensitivity"], test1_cm_rf$byClass['Sensitivity'],test1_cm_ab$byClass['Sensitivity'])
+compare$Sensitivity <- c(test_con_mat_10$byClass["Sensitivity"], test1_cm_rf$byClass['Sensitivity']
+                         ,test1_cm_ab$byClass['Sensitivity'])
 
-compare$Specificity <- c(test_con_mat_10$byClass["Specificity"], test1_cm_rf$byClass['Specificity'],test1_cm_ab$byClass['Specificity'])
+compare$Specificity <- c(test_con_mat_10$byClass["Specificity"], test1_cm_rf$byClass['Specificity']
+                         ,test1_cm_ab$byClass['Specificity'])
 
-compare$Precision <- c(test_con_mat_10$byClass["Precision"], test1_cm_rf$byClass['Precision'],test1_cm_ab$byClass['Precision'])
+compare$Precision <- c(test_con_mat_10$byClass["Precision"], test1_cm_rf$byClass['Precision']
+                       ,test1_cm_ab$byClass['Precision'])
 
-compare$Recall <- c(test_con_mat_10$byClass["Recall"], test1_cm_rf$byClass['Recall'],test1_cm_ab$byClass['Recall'])
+compare$Recall <- c(test_con_mat_10$byClass["Recall"], test1_cm_rf$byClass['Recall']
+                    ,test1_cm_ab$byClass['Recall'])
 
-compare$FScore <- c(test_con_mat_10$byClass["F1"], test1_cm_rf$byClass['F1'],test1_cm_ab$byClass['F1'])
+compare$FScore <- c(test_con_mat_10$byClass["F1"], test1_cm_rf$byClass['F1']
+                    ,test1_cm_ab$byClass['F1'])
 
 compare$ROC.AUC <- c(auc(test_roc), auc_test1_rf@y.values, auc_test1_ab@y.values)
 
