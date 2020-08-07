@@ -509,7 +509,8 @@ Can we improve it further by applying the transformation or interaction on AIC m
 ```{r warning=FALSE}
 
 bank_lr_aic_int = glm(y ~ (contact + month + duration + campaign 
-                           + poutcome + cons.conf.idx + nr.employed+contact:month+campaign:poutcome)
+                           + poutcome + cons.conf.idx + nr.employed
+                           +contact:month+campaign:poutcome)
                       , family = binomial(link="logit"), data = train)
 ```
 
@@ -525,7 +526,7 @@ range(bank_df$nr.employed)
 
 ```{r}
 bank_lr_aic_transform = glm(y ~ (contact + month + duration + campaign 
-                                 + poutcome + cons.conf.idx + log(nr.employed)), 
+    + poutcome + cons.conf.idx + log(nr.employed)), 
     family = binomial(link="logit"), data = train)
 ```
 
