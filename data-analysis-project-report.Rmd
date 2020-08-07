@@ -26,8 +26,8 @@ font-size:16px
 
 ***
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
@@ -431,7 +431,7 @@ Let's compare Null deviance, Residual Deviance, AIC and 5 fold misclassification
 #train = na.omit(train)
 #train = train[complete.cases(train), ]
 #train = train[,-5]
-set.seed(1250)
+set.seed(1983)
 mcRate_bank_lr = cv.glm(train,bank_lr,K=5)$delta[1] # TO DO: change model
 mcRate_bank_lr_aic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
 mcRate_bank_lr_bic = cv.glm(train,bank_lr_bic,K=5)$delta[1]
@@ -469,7 +469,7 @@ anova(bank_lr_aic,bank_lr_aic_int,test="LRT")
 
 anova(bank_lr_aic,bank_lr_aic_transform,test="LRT")
 
-set.seed(1)
+set.seed(1250)
 
 mcRate_bank_lr_aic_int = cv.glm(train,bank_lr_aic_int,K=5)$delta[1] #  TO DO change model
 mcRate_bank_lr_aic_transform = cv.glm(train,bank_lr_aic_transform,K=5)$delta[1] # TO DO Change model
@@ -521,17 +521,29 @@ get_logistic_pred = function(mod, data, res = "y", pos = 1, neg = 0, cut = 0.5) 
 
 test_pred_10 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.1)
+test_pred_30 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
+                                 pos = 1, neg = 0, cut = 0.3)
+test_pred_40 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
+                                 pos = 1, neg = 0, cut = 0.4)
 test_pred_50 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.5)
+test_pred_60 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
+                                 pos = 1, neg = 0, cut = 0.6)
 test_pred_90 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.9)
 
 test_tab_10 = table(predicted = test_pred_10, actual = test$y)
+test_tab_30 = table(predicted = test_pred_30, actual = test$y)
+test_tab_40 = table(predicted = test_pred_40, actual = test$y)
 test_tab_50 = table(predicted = test_pred_50, actual = test$y)
+test_tab_60 = table(predicted = test_pred_60, actual = test$y)
 test_tab_90 = table(predicted = test_pred_90, actual = test$y)
 
 test_con_mat_10 = confusionMatrix(test_tab_10, positive = "1")
+test_con_mat_30 = confusionMatrix(test_tab_30, positive = "1")
+test_con_mat_40 = confusionMatrix(test_tab_40, positive = "1")
 test_con_mat_50 = confusionMatrix(test_tab_50, positive = "1")
+test_con_mat_60 = confusionMatrix(test_tab_60, positive = "1")
 test_con_mat_90 = confusionMatrix(test_tab_90, positive = "1")
 
 metrics = rbind(
@@ -539,10 +551,19 @@ metrics = rbind(
   c(test_con_mat_10$overall["Accuracy"], 
     test_con_mat_10$byClass["Sensitivity"], 
     test_con_mat_10$byClass["Specificity"]),
+   c(test_con_mat_30$overall["Accuracy"], 
+    test_con_mat_30$byClass["Sensitivity"], 
+    test_con_mat_30$byClass["Specificity"]),
+   c(test_con_mat_40$overall["Accuracy"], 
+    test_con_mat_40$byClass["Sensitivity"], 
+    test_con_mat_40$byClass["Specificity"]),
   
   c(test_con_mat_50$overall["Accuracy"], 
     test_con_mat_50$byClass["Sensitivity"], 
     test_con_mat_50$byClass["Specificity"]),
+   c(test_con_mat_60$overall["Accuracy"], 
+    test_con_mat_60$byClass["Sensitivity"], 
+    test_con_mat_60$byClass["Specificity"]),
   
   c(test_con_mat_90$overall["Accuracy"], 
     test_con_mat_90$byClass["Sensitivity"], 
@@ -550,7 +571,7 @@ metrics = rbind(
 
 )
 
-rownames(metrics) = c("c = 0.10", "c = 0.50", "c = 0.90")
+rownames(metrics) = c("c = 0.10", "c = 0.30","c = 0.40","c = 0.50","c = 0.60", "c = 0.90")
 metrics
 ```
 
@@ -559,7 +580,7 @@ metrics
 
 test_prob = predict(bank_lr_aic_transform, newdata = test, type = "response")
 test_roc = roc(test$y ~ test_prob, plot = TRUE, print.auc = TRUE)
-auc(test_roc)
+class(auc(test_roc))
 ```
 
  Getting higher AUC above 0.9 as above so that indicates higher specificity and sensitivity. That means selected model is a good model. Let's run random forest algorithm and see how it behaves.
@@ -864,21 +885,21 @@ kable(result) %>%
 
 ```{r}
 # compare Accuracy and ROC
-compare <- data.frame(Method = c('Logistic Regression (cutoff = 0.5)', 'Random Forest (mtry = 5)', 'Adaptive boosting'), Accuracy = NA, Sensitivity = NA, Specificity = NA, Precision = NA, Recall = NA, FScore = NA, 'ROC AUC' = NA)
+compare <- data.frame(Method = c('Logistic Regression (cutoff = 0.1)', 'Random Forest (mtry = 5)', 'Adaptive boosting'), Accuracy = NA, Sensitivity = NA, Specificity = NA, Precision = NA, Recall = NA, FScore = NA, 'ROC AUC' = NA)
 
-compare$Accuracy <- c(test_con_mat_50$overall["Accuracy"], test1_cm_rf$overall['Accuracy'],test1_cm_ab$overall['Accuracy'])
+compare$Accuracy <- c(test_con_mat_10$overall["Accuracy"], test1_cm_rf$overall['Accuracy'],test1_cm_ab$overall['Accuracy'])
 
-compare$Sensitivity <- c(test_con_mat_50$byClass["Sensitivity"], test1_cm_rf$byClass['Sensitivity'],test1_cm_ab$byClass['Sensitivity'])
+compare$Sensitivity <- c(test_con_mat_10$byClass["Sensitivity"], test1_cm_rf$byClass['Sensitivity'],test1_cm_ab$byClass['Sensitivity'])
 
-compare$Specificity <- c(test_con_mat_50$byClass["Specificity"], test1_cm_rf$byClass['Specificity'],test1_cm_ab$byClass['Specificity'])
+compare$Specificity <- c(test_con_mat_10$byClass["Specificity"], test1_cm_rf$byClass['Specificity'],test1_cm_ab$byClass['Specificity'])
 
-compare$Precision <- c(test_con_mat_50$byClass["Precision"], test1_cm_rf$byClass['Precision'],test1_cm_ab$byClass['Precision'])
+compare$Precision <- c(test_con_mat_10$byClass["Precision"], test1_cm_rf$byClass['Precision'],test1_cm_ab$byClass['Precision'])
 
-compare$Recall <- c(test_con_mat_50$byClass["Recall"], test1_cm_rf$byClass['Recall'],test1_cm_ab$byClass['Recall'])
+compare$Recall <- c(test_con_mat_10$byClass["Recall"], test1_cm_rf$byClass['Recall'],test1_cm_ab$byClass['Recall'])
 
-compare$FScore <- c(test_con_mat_50$byClass["F1"], test1_cm_rf$byClass['F1'],test1_cm_ab$byClass['F1'])
+compare$FScore <- c(test_con_mat_10$byClass["F1"], test1_cm_rf$byClass['F1'],test1_cm_ab$byClass['F1'])
 
-compare$ROC.AUC <- c(0, auc_test1_rf@y.values, auc_test1_ab@y.values)
+compare$ROC.AUC <- c(auc(test_roc), auc_test1_rf@y.values, auc_test1_ab@y.values)
 
 kable_styling(kable(compare),c("striped","bordered"), full_width = F)
 ```
