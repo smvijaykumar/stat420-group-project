@@ -109,7 +109,7 @@ variable (desired target).
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 columns = read.csv("data/col_names.csv")
 kable(columns) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 ```
 
 - Output variable (desired target) is **Term Deposit** which is categorical binary variable.
@@ -413,7 +413,7 @@ row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC","PlotObs vs Addi
 colnames(result) = c("Null Hypothesis","P-Value")
 
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 
 ```
 
@@ -447,7 +447,7 @@ result = data.frame(
 colnames(result) = c("Residual Deviance","Residual DF","Null Deviance","Null DF","AIC ","Misclassification Rate")
 
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 
 ```
 
@@ -516,7 +516,7 @@ result = data.frame(
 colnames(result) = c("Residual Deviance","Residual DF","Null Deviance","Null DF","AIC ","Misclassification Rate")
 
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 ```
 
 - As you see, Residual deviance goes down with integration but AIC goes up and degrees of freedom goes down.Misclassification rate is marginally changed with transformation. But we dont see any major difference which can be considered but residual deviance and AIC has gone down with gaining a degrre of freedom.
@@ -592,7 +592,7 @@ rownames(metrics) = c("c = 0.10", "c = 0.30","c = 0.40","c = 0.50","c = 0.60", "
 colnames(metrics) = c("Accuracy","Sensitivity","Specificity")
 
 kable(metrics) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 
 ```
 
@@ -695,7 +695,7 @@ result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
   
 # to be pulled by final result session
 test1_cm_rf = test1_cm
@@ -815,7 +815,7 @@ result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
   
 # to be pull by final result session
 test1_cm_ab = test1_cm
@@ -857,7 +857,7 @@ result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 
 ```
 
@@ -896,7 +896,7 @@ result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 ```
 
 
@@ -927,7 +927,7 @@ compare$FScore <- c(test_con_mat_10$byClass["F1"], test1_cm_rf$byClass['F1'],tes
 
 compare$ROC.AUC <- c(auc(test_roc), auc_test1_rf@y.values, auc_test1_ab@y.values)
 
-kable_styling(kable(compare),c("striped","bordered"), full_width = F)
+kable_styling(kable(compare),c("striped","bordered"), full_width = F, latex_options = "scale_down")
 ```
 
 ## Discussion
