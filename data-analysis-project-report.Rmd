@@ -3,8 +3,7 @@ title: 'Bank Marketing Data Analysis - Project Report'
 author: "STAT 420, Summer 2020, Bhushan Bathani, Matthew Leung, Vijayakumar Sitha Mohan,"
 date: ''
 output:
-  pdf_document: default
-  html_document: 
+  html_document:
     theme: readable
     toc: yes  
 urlcolor: cyan
@@ -405,7 +404,7 @@ result = data.frame(
            (anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]),
            anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5],
            anova(bank_lr_aic,bank_lr_plotobs,test="LRT")[2,5]),
-row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC","PlotObs vs Full Additive","AIC vs PlotObs")
+row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC","PlotObs vs Additive","AIC vs PlotObs")
 )
 
 colnames(result) = c("Null Hypothesis","P-Value")
@@ -495,7 +494,7 @@ anova(bank_lr_aic,bank_lr_aic_transform,test="LRT")
 
 **Let's do 5 fold cross validation and calculate misclassification rate to compare and select the model**
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 set.seed(1250)
 
 mcRate_bank_lr_aic_int = cv.glm(train,bank_lr_aic_int,K=5)$delta[1] #  TO DO change model
@@ -954,7 +953,7 @@ kable_styling(kable(compare),c("striped","bordered"), full_width = F)
 
     + We need to choose the model which performs better and run faster. Boosting models run in parallel compared to Logistic and Random Forest.
 
-- With the above traits for model evaluation and selection techniques, we choose "Adaptive Boosting" from our study. 
+**With the above traits for model evaluation and selection techniques, we choose "Adaptive Boosting" from our study.** 
 
 ## Conclusion
 
@@ -966,7 +965,8 @@ kable_styling(kable(compare),c("striped","bordered"), full_width = F)
     + Cross Validation was used for parameter selection with logistic regression.
     + Random Forest used with default and best split and tree depth hyper parameters tuned to produce better result.
     + Adaptive Boosting is the best model for balanced sensitivities and interpretation of feature importance.
-- Our study shows that simple and advanced machine learning techniques can add value to further a marketing campaign.
+    
+**Our study shows that simple and advanced machine learning techniques can add value to further a marketing campaign.**
  
 ## Appendix
 
