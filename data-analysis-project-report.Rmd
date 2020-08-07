@@ -13,7 +13,7 @@ urlcolor: cyan
 
 <style type="text/css">
 .main-container {
-  max-width: 1800px;
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
   color: #1E90FF;
@@ -109,7 +109,7 @@ variable (desired target).
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 columns = read.csv("data/col_names.csv")
 kable(columns) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 ```
 
 - Output variable (desired target) is **Term Deposit** which is categorical binary variable.
@@ -441,7 +441,7 @@ row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC","PlotObs vs Addi
 colnames(result) = c("Null Hypothesis","P-Value")
 
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 
 ```
 
@@ -481,7 +481,7 @@ colnames(result) = c("Residual Deviance","Residual DF","Null Deviance","Null DF"
                      ,"Misclassification Rate")
 
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 
 ```
 
@@ -568,7 +568,7 @@ colnames(result) = c("Residual Deviance","Residual DF","Null Deviance","Null DF"
                      ,"AIC ","Misclassification Rate")
 
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 ```
 
 - As you see, Residual deviance goes down with integration but AIC goes up and degrees of freedom goes down.Misclassification rate is marginally changed with transformation. But we dont see any major difference which can be considered but residual deviance and AIC has gone down with gaining a degree of freedom.
@@ -650,7 +650,7 @@ rownames(metrics) = c("c = 0.10", "c = 0.30","c = 0.40","c = 0.50","c = 0.60", "
 colnames(metrics) = c("Accuracy","Sensitivity","Specificity")
 
 kable(metrics) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 
 ```
 
@@ -698,6 +698,7 @@ confusionMatrix(test$y,pred_test1)
 
 
 ####  Plot ROC curve (TPR vs FPR)
+
 ```{r }
 par(mfrow = c(1,2))
 pr_train = prediction(as.numeric(pred_train),train$y)
@@ -709,9 +710,13 @@ prf_test1 = performance(pr_test1, measure = "tpr",x.measure = "fpr")
 plot(prf_test1)
 
 mtext("ROC curve (TPR vs FPR) for Train Vs Test", side = 3, line = -1, outer = TRUE)
-      
+```
+
+
+```{r}
 auc_train = performance(pr_train, measure = "auc")
 auc_test1 = performance(pr_test1, measure = "auc")
+
 ```
 
 ####  Tuning Random Forest Model
@@ -753,7 +758,7 @@ result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
   
 # to be pulled by final result session
 test1_cm_rf = test1_cm
@@ -873,7 +878,7 @@ result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
   
 # to be pull by final result session
 test1_cm_ab = test1_cm
@@ -915,7 +920,7 @@ result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 
 ```
 
@@ -935,9 +940,7 @@ plot(prf_train)
 pr_test1 = prediction(as.numeric(pred_test1),test$y)
 prf_test1 = performance(pr_test1, measure = "tpr",x.measure = "fpr")
 plot(prf_test1)
-
 mtext("ROC curve (TPR vs FPR) for Train Vs Test", side = 3, line = -1, outer = TRUE)
-
 ```
 
 - Metrics for ROSE Train vs Test
@@ -954,7 +957,7 @@ result = data.frame(rbind(acc,auc,metrics))
 
 colnames(result) = c("Train","Test")
 kable(result) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"),latex_options = "scale_down")
 ```
 
 
@@ -994,7 +997,7 @@ compare$FScore <- c(test_con_mat_10$byClass["F1"], test1_cm_rf$byClass['F1']
 
 compare$ROC.AUC <- c(auc(test_roc), auc_test1_rf@y.values, auc_test1_ab@y.values)
 
-kable_styling(kable(compare),c("striped","bordered"), full_width = F)
+kable_styling(kable(compare),c("striped","bordered"), full_width = F, latex_options = "scale_down")
 ```
 
 ## Discussion
@@ -1036,7 +1039,7 @@ kable_styling(kable(compare),c("striped","bordered"), full_width = F)
     + Oversampling/undersampling has been implemented for class imbalanced data.
     + Cross Validation was used for parameter selection with logistic regression.
     + Random Forest used with default and best split and tree depth hyper parameters tuned to produce better result.
-    + Adaptive Boosting is the best model for balanced sensitivities and interpretation of feature importance.
+    + Random Forest is the best model for balanced sensitivities and interpretation of feature importance.
 
 - Our recommendation to the manager of the bank marketing campaign would be to use random forest which has the highest sensitivity so actual positives are not overlooked.  Logistic regression is useful as well to understand what are significant variables and allocate resources accordingly. For example, number of client contacts performed before this campaign is significant variable to subscribe term deposit, then contact client with the optimal number of times to maximize the chance but prevent wasting resources. 
 
