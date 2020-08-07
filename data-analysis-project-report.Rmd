@@ -524,7 +524,8 @@ range(bank_df$nr.employed)
 
 
 ```{r}
-bank_lr_aic_transform = glm(y ~ (contact + month + duration + campaign + poutcome + cons.conf.idx + log(nr.employed)), 
+bank_lr_aic_transform = glm(y ~ (contact + month + duration + campaign 
+                                 + poutcome + cons.conf.idx + log(nr.employed)), 
     family = binomial(link="logit"), data = train)
 ```
 
@@ -684,7 +685,8 @@ auc(test_roc)
 
 - We have chosen Random Forest model (ensemble) to do binary classification to predict whether customer will subscribe to term deposit or not.
 
-####  model using all predictors
+### model using all predictors
+
 ```{r }
 model_rf<-randomForest(y ~ .  , data=train, mtry=3)
 ```
@@ -714,9 +716,9 @@ confusionMatrix(test$y,pred_test1)
 ```
 
 
-####  Plot ROC curve (TPR vs FPR)
+**Plot ROC curve (TPR vs FPR)**
 
-```{r }
+```{r}
 par(mfrow = c(1,2))
 pr_train = prediction(as.numeric(pred_train),train$y)
 prf_train = performance(pr_train, measure = "tpr", x.measure = "fpr")
