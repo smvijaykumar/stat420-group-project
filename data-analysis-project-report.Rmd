@@ -1,11 +1,13 @@
 ---
-title: 'Bank Marketing Data Analysis - Project Report'
+title: "Bank Marketing Data Analysis - Project Report"
 author: "STAT 420, Summer 2020, Bhushan Bathani, Matthew Leung, Vijayakumar Sitha Mohan,"
 date: ''
 output:
+  pdf_document:
+    toc: yes
   html_document:
     theme: readable
-    toc: yes  
+    toc: yes
 urlcolor: cyan
 ---
 
@@ -471,7 +473,7 @@ range(bank_df$nr.employed)
 
 
 ```{r}
-bank_lr_aic_transform = glm(y ~ (contact + month + log(duration) + campaign + poutcome + cons.conf.idx + log(nr.employed)), 
+bank_lr_aic_transform = glm(y ~ (contact + month + duration + campaign + poutcome + cons.conf.idx + log(nr.employed)), 
     family = binomial(link="logit"), data = train)
 ```
 
