@@ -162,11 +162,7 @@ levels(bank_df$poutcome)
 
 #### Data Analysis
 
-
- 
 Let's see the levels and frequency of these data at higher level in histogram to have a sense of data distributed.
-
-
 
 **Attribute wise Frequency Distributions**
 
@@ -232,9 +228,6 @@ Based on the above bar plots of individual predictors against `Term Deposit`,
 
 - So over all, It seems that age have some impact on term deposit subscription but need to see which exact range between 30-50 in detail. Rest parameters does not have any significant effect based on plot.
 
-
-
-
 ```{r}
 pairs(bank_df[c(5:7,21)])
 ```
@@ -264,9 +257,7 @@ boxplot(as.numeric(day_of_week)~y,data=bank_df,main=" last contact day of the we
 boxplot(duration~y,data=bank_df,main="last contact duration, in seconds vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
-
-Based on plots, Customer with contact type cellular has more probability of subscribing for term deposit than telephone. People who was recently contacted has more chance of subscribing for term deposit. Last contact day of the week does not have much impact.Contact duraction has some impact on the term deposit subscription as well.
-
+- Based on plots, Customer with contact type cellular has more probability of subscribing for term deposit than telephone. People who was recently contacted has more chance of subscribing for term deposit. Last contact day of the week does not have much impact.Contact duraction has some impact on the term deposit subscription as well.
 
 
 ```{r}
@@ -277,7 +268,7 @@ boxplot(previous~y,data=bank_df,main="# of contacts performed before this campai
 boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Previous Campain outcome vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
-Based on above plot, # of contact performed has some impact on Term deposit output else no other factor has significant impact.surprisingly # of contacts in this campaign decreases the probability to subscribe for term deposit.
+- Based on above plot, # of contact performed has some impact on Term deposit output else no other factor has significant impact.surprisingly # of contacts in this campaign decreases the probability to subscribe for term deposit.
 
 ```{r}
 pairs(bank_df[c(16:20,21)])
@@ -289,7 +280,7 @@ boxplot(euribor3m~y,data=bank_df,main="euribor 3 month rate  vs Term Deposit",pc
 boxplot(nr.employed~y,data=bank_df,main="number of employees vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
- Based on plots all the market indicators has some impact on term deposit decision.
+- Based on plots all the market indicators has some impact on term deposit decision.
 
 #### Class Imbalance Problem analysis
 
@@ -353,40 +344,35 @@ prop.table(table(rose_train$y))
 
 ### Model 1: Logistic Regression
 
-
 - As We have seen in boxplot comparison, age, default, contact type, last contact time, duration, # of contacts and all market indicators has some impact on terms deposit. Let's create a additive model using these parameters, full additive model and run AIC and BIC search to identify the model it comes up with.
 
 
-#### Base model using Logistic Regression
 
-###Full addivite model
+#### Full addivite model
 ```{r}
 bank_lr = glm(y ~ ., data = train, family = "binomial")
 summary(bank_lr)
-
 ```
 
-###Model based on data analysis from boxplot
+#### Model based on data analysis from boxplot
 ```{r}
 bank_lr_plotobs = glm(y~age+job+default+campaign+previous+contact + month+duration+ pdays+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed, data = train, family = "binomial")
 summary(bank_lr_plotobs)
-
 
 ```
 
 
 #### Attribute selection
 
-
 We will be using step function to search  forward and backward directions and use AIC and BIC as metric to find out the best model.
 
-###Model using AIC Search
+#### Model using AIC Search
 ```{r warning=FALSE}
 bank_lr_aic = step(bank_lr, direction = "backward", trace = 0)
 summary(bank_lr_aic)
 ```
 
-###Model using BIC search
+#### Model using BIC search
 ```{r}
 n=length(resid(bank_lr))
 bank_lr_bic = step(bank_lr, direction = "backward", trace = 0,k=log(n))
@@ -394,7 +380,7 @@ bank_lr_bic
 
 ```
 
-BIC comes with least number of parameters. Let's do the Anova LRT test to find the preferred model. 
+- BIC comes with least number of parameters. Let's do the Anova LRT test to find the preferred model. 
 
 ```{r warning=FALSE}
 
@@ -417,14 +403,11 @@ colnames(result) = c("Null Hypothesis","P-Value")
 kable(result) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
-
-
-
 ```
 
-Based on Anova LRT test above, only AIC model is the preferable model among all model.
+- Based on Anova LRT test above, only AIC model is the preferable model among all model.
 
-Let's compare Null deviance, Residual Deviance, AIC and 5 fold misclassification rate to see which is the better model. 
+- Let's compare Null deviance, Residual Deviance, AIC and 5 fold misclassification rate to see which is the better model. 
 
 
 ```{r warning=FALSE}
@@ -455,7 +438,8 @@ kable(result) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
 ```
-Based on the table above, AIC model has the lowest Residual Deviance after Full model but degree of freedom is more closer to Null Deviance degree of freedom than Full Model. AIC of the AIC model and misclassification rate is also least. Can we improve it further by applying the transformation or interaction on AIC model? Let's check.
+
+- Based on the table above, AIC model has the lowest Residual Deviance after Full model but degree of freedom is more closer to Null Deviance degree of freedom than Full Model. AIC of the AIC model and misclassification rate is also least. Can we improve it further by applying the transformation or interaction on AIC model? Let's check.
 
 ```{r warning=FALSE}
 
@@ -485,12 +469,11 @@ result = data.frame(
 )
 
 knitr::kable(result,format="markdown")
-
 ```
 
-As you see, Residual deviance goes down with integration but AIC goes up and degrees of freedom goes down.Misclassification rate is marginally up with interaction. With transformation,we see marginally better results with Residual , AIC and misclassification rate.
+- As you see, Residual deviance goes down with integration but AIC goes up and degrees of freedom goes down.Misclassification rate is marginally up with interaction. With transformation,we see marginally better results with Residual , AIC and misclassification rate.
 
-Let's consider transformation model on test data to identify misclassification rate, false positives and negatives on Test data.
+- Let's consider transformation model on test data to identify misclassification rate, false positives and negatives on Test data.
 
 ```{r}
 predict_bank_lr_aic_transform = ifelse(predict(bank_lr_aic_transform, test, type = "response")> 0.5,1,0)
@@ -508,10 +491,9 @@ specificity = confusion_matrix[1,1]/confusion_matrix[,1]
 confusion_matrix
 sensitivity
 specificity
-
 ```
 
- With cutoff of 0.5 probability , we see `r confusion_matrix[2,1]` false positives and `r confusion_matrix[1,2]` false negatives among `r nrow(test)` observations which is less than 10%. We can try to identify cut off where this number goes down. Let's draw ROC curve and identify AUC.
+- With cutoff of 0.5 probability , we see `r confusion_matrix[2,1]` false positives and `r confusion_matrix[1,2]` false negatives among `r nrow(test)` observations which is less than 10%. We can try to identify cut off where this number goes down. Let's draw ROC curve and identify AUC.
 
 ```{r}
 get_logistic_pred = function(mod, data, res = "y", pos = 1, neg = 0, cut = 0.5) {
@@ -576,17 +558,17 @@ metrics
 ```
 
 ```{r}
-
-
 test_prob = predict(bank_lr_aic_transform, newdata = test, type = "response")
 test_roc = roc(test$y ~ test_prob, plot = TRUE, print.auc = TRUE)
 class(auc(test_roc))
 ```
 
- Getting higher AUC above 0.9 as above so that indicates higher specificity and sensitivity. That means selected model is a good model. Let's run random forest algorithm and see how it behaves.
+- With the best chosen model from logistic regresion, we have AUC above 0.9 and the ratio of Sensitity and Specificity is good as well.
 
 
 ### Model 2: Random Forest
+
+- We have chosen Random Forest model (ensemble) to do binary classification to predict whether customer will subscribe to term deposit or not.
 
 ####  model using all predictors
 ```{r }
