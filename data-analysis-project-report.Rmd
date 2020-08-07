@@ -26,7 +26,11 @@ font-size:16px
 ***
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
 ```
 
 
@@ -34,7 +38,6 @@ knitr::opts_chunk$set(echo = TRUE)
 #install.packages("e1071")
 library(knitr)      # web widget
 library(tidyverse)  # data manipulation
-library(data.table) # fast file reading
 library(caret)      # rocr analysis
 library(ROCR)       # rocr analysis
 library(kableExtra) # nice table html formating 
@@ -75,7 +78,7 @@ We picked the following three classification techniques for this project:
 
 ## Methods
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 bank_df1 = read.csv("data/bank-additional.csv")
 bank_df1 = na.omit(bank_df1)
 bank_df1 = bank_df1[complete.cases(bank_df1), ]
@@ -167,7 +170,7 @@ levels(bank_df$poutcome)
 
 Let's see the levels and frequency of these data at higher level in histogram to have a sense of data distributed.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 par(mfrow=c(2,2))
 for(i in 1:21){
   barplot(prop.table(table(bank_df[,i])) , 
