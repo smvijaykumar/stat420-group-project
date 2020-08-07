@@ -471,7 +471,7 @@ range(bank_df$nr.employed)
 
 
 ```{r}
-bank_lr_aic_transform = glm(y ~ (contact + month + duration + campaign + poutcome + cons.conf.idx + log(nr.employed)), 
+bank_lr_aic_transform = glm(y ~ (contact + month + log(duration) + campaign + poutcome + cons.conf.idx + log(nr.employed)), 
     family = binomial(link="logit"), data = train)
 ```
 
@@ -511,23 +511,26 @@ result = data.frame(
   row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC","Model built based on boxplot observation","Model with an interaction","Model with transformation")
 )
 
-knitr::kable(result,format="markdown")
+colnames(result) = c("Residual Deviance","Residual DF","Null Deviance","Null DF","AIC ","Misclassification Rate")
+
+kable(result) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
-- As you see, Residual deviance goes down with integration but AIC goes up and degrees of freedom goes down.Misclassification rate is marginally up with interaction. With transformation,we see marginally better results with Residual , AIC and misclassification rate.
+- As you see, Residual deviance goes down with integration but AIC goes up and degrees of freedom goes down.Misclassification rate is marginally changed with transformation. But we dont see any major difference which can be considered but residual deviance and AIC has gone down with gaining a degrre of freedom.
 
-- Let's consider  model selected with AIC  on test data to identify misclassification rate, false positives and negatives on Test data.
+- Let's consider  model selected with AIC with tranformation on test data to identify misclassification rate, false positives and negatives on Test data.
 
 ```{r}
-predict_bank_lr_aic = ifelse(predict(bank_lr_aic_transform, test, type = "response")> 0.5,1,0)
-misClassificationRate = mean(predict_bank_lr_aic!=test$y)
+predict_bank_lr_aic_transform = ifelse(predict(bank_lr_aic_transform, test, type = "response")> 0.5,1,0)
+misClassificationRate = mean(predict_bank_lr_aic_transform!=test$y)
 misClassificationRate
 
 make_conf_mat = function(predicted, actual) {
   table(predicted = predicted, actual = actual)
 }
 
-confusion_matrix = table(predicted = predict_bank_lr_aic, actual = test$y)
+confusion_matrix = table(predicted = predict_bank_lr_aic_transform, actual = test$y)
 sensitivity = confusion_matrix[2,2]/confusion_matrix[,2]
 specificity = confusion_matrix[1,1]/confusion_matrix[,1]
 
@@ -571,33 +574,24 @@ test_con_mat_50 = confusionMatrix(test_tab_50, positive = "1")
 test_con_mat_60 = confusionMatrix(test_tab_60, positive = "1")
 test_con_mat_90 = confusionMatrix(test_tab_90, positive = "1")
 
-metrics = rbind(
+metrics = data.frame(
   
-  c(test_con_mat_10$overall["Accuracy"], 
-    test_con_mat_10$byClass["Sensitivity"], 
-    test_con_mat_10$byClass["Specificity"]),
-   c(test_con_mat_30$overall["Accuracy"], 
-    test_con_mat_30$byClass["Sensitivity"], 
-    test_con_mat_30$byClass["Specificity"]),
-   c(test_con_mat_40$overall["Accuracy"], 
-    test_con_mat_40$byClass["Sensitivity"], 
-    test_con_mat_40$byClass["Specificity"]),
+  Accuracy = c(test_con_mat_10$overall["Accuracy"], test_con_mat_30$overall["Accuracy"],test_con_mat_40$overall["Accuracy"], test_con_mat_50$overall["Accuracy"],test_con_mat_60$overall["Accuracy"], test_con_mat_90$overall["Accuracy"]),
   
-  c(test_con_mat_50$overall["Accuracy"], 
-    test_con_mat_50$byClass["Sensitivity"], 
-    test_con_mat_50$byClass["Specificity"]),
-   c(test_con_mat_60$overall["Accuracy"], 
-    test_con_mat_60$byClass["Sensitivity"], 
-    test_con_mat_60$byClass["Specificity"]),
+  Sensitivity = c(test_con_mat_10$byClass["Sensitivity"],test_con_mat_30$byClass["Sensitivity"],test_con_mat_40$byClass["Sensitivity"],test_con_mat_50$byClass["Sensitivity"], test_con_mat_60$byClass["Sensitivity"], test_con_mat_90$byClass["Sensitivity"]),
   
-  c(test_con_mat_90$overall["Accuracy"], 
-    test_con_mat_90$byClass["Sensitivity"], 
-    test_con_mat_90$byClass["Specificity"])
-
+  Specificity = c(test_con_mat_10$byClass["Specificity"],test_con_mat_30$byClass["Specificity"],test_con_mat_40$byClass["Specificity"],test_con_mat_50$byClass["Specificity"],test_con_mat_60$byClass["Specificity"],test_con_mat_90$byClass["Specificity"])
+  
 )
 
 rownames(metrics) = c("c = 0.10", "c = 0.30","c = 0.40","c = 0.50","c = 0.60", "c = 0.90")
-metrics
+
+
+colnames(metrics) = c("Accuracy","Sensitivity","Specificity")
+
+kable(metrics) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
 ```
 
 ```{r}
@@ -606,7 +600,7 @@ test_roc = roc(test$y ~ test_prob, plot = TRUE, print.auc = TRUE)
 class(auc(test_roc))
 ```
 
-- With the best chosen model from logistic regresion, we have AUC above 0.9 and the ratio of Sensitity and Specificity is good as well.
+- With the best chosen model from logistic regression, we have AUC above 0.9 and the ratio of Sensitivity and Specificity is good as well. But as you can see sensitivity is decreasing as cut-off is increasing from 0.10 onward. Unlike sensitivity, specificity and accuracy is increasing as cut-off is increasing from 0.10 onward. But at cut-of 0.10, all 3 have the best numbers possible. 
 
 
 ### Model 2: Random Forest
