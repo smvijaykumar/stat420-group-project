@@ -37,7 +37,6 @@ knitr::opts_chunk$set(
 
 
 ```{r message=FALSE, warning=FALSE}
-#tinytex::install_tinytex()
 library(knitr)      # web widget
 library(tidyverse)  # data manipulation
 library(caret)      # rocr analysis
@@ -284,12 +283,12 @@ boxplot(duration~y,data=bank_df,main="contact duration vs Term Deposit"
 
 ```{r}
 par(mfrow=c(2,2))
-boxplot(campaign~y,data=bank_df,main="# of contacts last campaign vs Term Deposit",
+boxplot(campaign~y,data=bank_df,main="# of contacts(last camp) vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(pdays~y,data=bank_df,main="# of days since last contacted vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(previous~y,data=bank_df,main="# of contacts this campaign vs Term Deposit",
+boxplot(pdays~y,data=bank_df,main="# of days since contacted vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(previous~y,data=bank_df,main="# of contacts(this camp) vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Previous Campain outcome vs Term Deposit",
+boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Prev Campaign outcome vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
