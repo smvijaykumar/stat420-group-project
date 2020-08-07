@@ -181,13 +181,6 @@ for(i in 1:21){
 - The above barplots show frequency distribution of each attribute in the dataset.
 
 
-```{r echo=FALSE}
-#pairs_df = subset(bank_df, select = c(1, 10, 11, 13:17))
-#pairs(pairs_df, pch = 19, gap = .25, xaxt = "n", yaxt = "n", col = c("#0080FF", "#F3953E")[bank_df$y], label.pos = .5, oma = c(1, 1, 1, 1))
-
-```
-
- 
 - Let's analyze the dataset for any linearity between predictors and y using boxplot and pairs.
 
 ```{r}
@@ -206,13 +199,12 @@ pairs(bank_df[c(1:4,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
 ```{r}
 par(mfrow=c(2,2))
 
-#--- This is duplicate code. already we factorized this attributes.
+#--- Factorizing the jobclass and education from lower to higher order
 
 bank_df$jobclass = as.numeric(factor(bank_df$job,levels=c("unknown","unemployed","housemaid", "student","retired","technician","blue-collar","admin.","services","self-employed","management","entrepreneur"),ordered=TRUE))
 
 bank_df$educationNum = as.numeric(factor(bank_df$education,levels=c("unknown","illiterate","basic.4y","basic.6y","basic.9y","high.school","professional.course", "university.degree"),ordered=TRUE))
 
-#---
 
 boxplot(age~y,data=bank_df,main="age vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 boxplot(jobclass~y,data=bank_df,main="Job vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
@@ -225,16 +217,18 @@ Based on the above bar plots of individual predictors against `Term Deposit`,
 
 - It is evident that the Customers in the age group between 30 and 50 years subscribes to the term deposit than other age groups in the dataset.
 
-- Customers with an education higher than high school takes the loan and subscribes to the term deposit vs not.
+- Customers with an education higher than high school takes the loan and subscribes to the term deposit vs not, but there is not a major difference between the subscription number.
 
-- Customers who are married subscribes to the term deposit more compared to others.
+- Customers who are married are considered in dataset more than others and they have similar numbers who subscribes vs not.
 
 - Customers with job title as technician, blue-color, admin and work in services sector subscribes to the term deposit than others.
 
-- So over all, It seems that age have some impact on term deposit subscription but need to see which exact range between 30-50 in detail. Rest parameters does not have any significant effect based on plot.
+- So over all, It seems that age have some impact on term deposit subscription but need to see which exact range between 30-50 in detail. Also job class has some impact on Term deposit as well. Rest parameters does not have any significant effect based on plot.
 
 ```{r}
-pairs(bank_df[c(5:7,21)])
+pairs(bank_df[c(5:7,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
+      , col = c("#0080FF", "#F3953E")[bank_df$y]
+      , label.pos = .5, oma = c(1, 1, 1, 1))
 ```
 
 
@@ -252,14 +246,16 @@ boxplot(as.numeric(loan)~y,data=bank_df,main="Personal loan vs Term Deposit",pch
 
 
 ```{r}
-pairs(bank_df[c(8:15,21)])
+pairs(bank_df[c(8:15,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
+      , col = c("#0080FF", "#F3953E")[bank_df$y]
+      , label.pos = .5, oma = c(1, 1, 1, 1))
 par(mfrow=c(2,2))
 
 levels(bank_df$contact)
 boxplot(as.numeric(contact)~y,data=bank_df,main="Contact Type vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 boxplot(as.numeric(month)~y,data=bank_df,main="last contact month of year vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 boxplot(as.numeric(day_of_week)~y,data=bank_df,main=" last contact day of the week vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(duration~y,data=bank_df,main="last contact duration, in seconds vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(duration~y,data=bank_df,main="last contact duration vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
 - Based on plots, Customer with contact type cellular has more probability of subscribing for term deposit than telephone. People who was recently contacted has more chance of subscribing for term deposit. Last contact day of the week does not have much impact.Contact duraction has some impact on the term deposit subscription as well.
@@ -276,7 +272,9 @@ boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Previous Campain outcome vs T
 - Based on above plot, # of contact performed has some impact on Term deposit output else no other factor has significant impact.surprisingly # of contacts in this campaign decreases the probability to subscribe for term deposit.
 
 ```{r}
-pairs(bank_df[c(16:20,21)])
+pairs(bank_df[c(16:20,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
+      , col = c("#0080FF", "#F3953E")[bank_df$y]
+      , label.pos = .5, oma = c(1, 1, 1, 1))
 par(mfrow=c(3,2))
 boxplot(emp.var.rate~y,data=bank_df,main="employment variation rate  vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 boxplot(cons.price.idx~y,data=bank_df,main="consumer price index vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
@@ -518,18 +516,18 @@ knitr::kable(result,format="markdown")
 
 - As you see, Residual deviance goes down with integration but AIC goes up and degrees of freedom goes down.Misclassification rate is marginally up with interaction. With transformation,we see marginally better results with Residual , AIC and misclassification rate.
 
-- Let's consider transformation model on test data to identify misclassification rate, false positives and negatives on Test data.
+- Let's consider  model selected with AIC  on test data to identify misclassification rate, false positives and negatives on Test data.
 
 ```{r}
-predict_bank_lr_aic_transform = ifelse(predict(bank_lr_aic_transform, test, type = "response")> 0.5,1,0)
-misClassificationRate = mean(predict_bank_lr_aic_transform!=test$y)
+predict_bank_lr_aic = ifelse(predict(bank_lr_aic_transform, test, type = "response")> 0.5,1,0)
+misClassificationRate = mean(predict_bank_lr_aic!=test$y)
 misClassificationRate
 
 make_conf_mat = function(predicted, actual) {
   table(predicted = predicted, actual = actual)
 }
 
-confusion_matrix = table(predicted = predict_bank_lr_aic_transform, actual = test$y)
+confusion_matrix = table(predicted = predict_bank_lr_aic, actual = test$y)
 sensitivity = confusion_matrix[2,2]/confusion_matrix[,2]
 specificity = confusion_matrix[1,1]/confusion_matrix[,1]
 
