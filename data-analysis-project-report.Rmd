@@ -207,9 +207,9 @@ bank_df$jobclass = as.numeric(factor(bank_df$job
           ,"retired","technician","blue-collar","admin.","services",
 "self-employed","management","entrepreneur"),ordered=TRUE))
 
-bank_df$educationNum = as.numeric(factor(bank_df$education,                                         levels=c("unknown","illiterate","basic.4y","basic.6y","basic.9y"
-          ,"high.school",
-         "professional.course", "university.degree"),ordered=TRUE))
+bank_df$educationNum = as.numeric(factor(bank_df$education
+,levels=c("unknown","illiterate","basic.4y","basic.6y","basic.9y"
+,"high.school","professional.course", "university.degree"),ordered=TRUE))
 
 
 boxplot(age~y,data=bank_df,main="age vs Term Deposit",
