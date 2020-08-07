@@ -110,7 +110,7 @@ kable(columns) %>%
 #### Data Validation
 
 **Checking for Missing value**
-```{r}
+```{r echo=TRUE}
 any(is.na(bank_df1))
 ```
 
@@ -118,7 +118,7 @@ any(is.na(bank_df1))
 
 #### Data Curation  (cleaning , missing data, duplicate)
 
-```{r}
+```{r echo=TRUE}
 paste("There are ", sum(duplicated(bank_df1)), "Duplicate Row(s)")
 ```
 
@@ -189,9 +189,6 @@ for(i in 1:21){
  
 Let's analyze the dataset for any linearity between predictors and y using boxplot and pairs.
 
-
-
-
 ```{r}
 pairs(bank_df[c(1:4,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
       , col = c("#0080FF", "#F3953E")[bank_df$y]
@@ -223,7 +220,6 @@ boxplot(educationNum~y,data=bank_df,main="Education vs Term Deposit",pch=20,cex=
 ```
 
  
-
 Based on the above bar plots of individual predictors against `Term Deposit`, 
 
 - It is evident that the Customers in the age group between 30 and 50 years subscribes to the term deposit than other age groups in the dataset.
@@ -358,7 +354,6 @@ prop.table(table(rose_train$y))
 ### Model 1: Logistic Regression
 
 
-
 - As We have seen in boxplot comparison, age, default, contact type, last contact time, duration, # of contacts and all market indicators has some impact on terms deposit. Let's create a additive model using these parameters, full additive model and run AIC and BIC search to identify the model it comes up with.
 
 
@@ -436,7 +431,7 @@ Let's compare Null deviance, Residual Deviance, AIC and 5 fold misclassification
 #train = na.omit(train)
 #train = train[complete.cases(train), ]
 #train = train[,-5]
-set.seed(1)
+set.seed(1250)
 mcRate_bank_lr = cv.glm(train,bank_lr,K=5)$delta[1] # TO DO: change model
 mcRate_bank_lr_aic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
 mcRate_bank_lr_bic = cv.glm(train,bank_lr_bic,K=5)$delta[1]
@@ -571,29 +566,36 @@ auc(test_roc)
 
 
 ### Model 2: Random Forest
+
 ####  model using all predictors
 ```{r }
 model_rf<-randomForest(y ~ .  , data=train, mtry=3)
 ```
 
+- Fitted model details
+
 ```{r }
 model_rf
 ```
+
+- Dotchart of variable importance as measured by a Random Forest
 
 ```{r }
 varImpPlot(model_rf)
 ```
 
-####  Attribute selection using backward/forward/subset selection
-####  Calculate missclassification Rate (confusion matrix)
+- Confusion Matrix for Training Dataset
 ```{r }
 pred_train<-predict(model_rf,train)
 confusionMatrix(train$y,pred_train)
+```
 
+- Confusion Matrix for Test Dataset
+```{r}
 pred_test1<-predict(model_rf,test)
 confusionMatrix(test$y,pred_test1)
-
 ```
+
 
 ####  Plot ROC curve (TPR vs FPR)
 ```{r }
@@ -606,18 +608,21 @@ pr_test1 = prediction(as.numeric(pred_test1),test$y)
 prf_test1 = performance(pr_test1, measure = "tpr",x.measure = "fpr")
 plot(prf_test1)
 
+mtext("ROC curve (TPR vs FPR) for Train Vs Test", side = 3, line = -1, outer = TRUE)
+      
 auc_train = performance(pr_train, measure = "auc")
 auc_test1 = performance(pr_test1, measure = "auc")
-
-
 ```
 
 ####  Tuning Random Forest Model
+
+- Need to find out optimum varible split for each decision tree by running cross validation. In general, `mtry` value is $\sqrt(p)$ where p is total number of predictors. We would use train function from caret library to find out the optimum split.
+
 ```{r }
 oob = trainControl(method = "oob")
 cv_5 = trainControl(method = "cv", number = 5)
 
-rf_mtry = ceiling(sqrt(21))
+rf_mtry = ceiling(sqrt(20))
 rf_grid =  expand.grid(mtry = 1:rf_mtry)
 set.seed(1)
 bank_rf_tune = train(y ~ . , data = train,
@@ -628,12 +633,10 @@ bank_rf_tune = train(y ~ . , data = train,
 bank_rf_tune
 ```
 
-####  Report Accuracy
+#### Metrics for best Random Forest Model
 
 ```{r }
-
 model_rf_best<-randomForest(y ~ .  , data=train, mtry=bank_rf_tune$bestTune$mtry[[1]])
-
 ```
 
 ```{r }
@@ -658,7 +661,7 @@ auc_test1_rf = auc_test1
 ```
 
 
-### Model 3: ADAPTIVE BOOSTING
+### Model 3: Adaptive Boosting
 
 - AdaBoost is an ensemble learning method (also known as “meta-learning”) which was initially created to increase the efficiency of binary classifiers. AdaBoost uses an iterative approach to learn from the mistakes of weak classifiers, and turn them into strong ones. We will be using the library `ada` for the same. This model have built in feature selection.
 
@@ -691,20 +694,27 @@ varplot(bank_model_ada)
 bank_model_ada25 = ada(y ~ ., data=train,loss='exponential', type='discrete', iter = 25)
 ```
 
+- Confustion Matrix for a Ada Model with 25 iterations
+
 ```{r }
 bank_model_ada25$confusion
 (bank_model_ada25$confusion[2,2]/sum(bank_model_ada25$confusion[,2]))
 ```
 
+- Build model with 100 iterations
 
 ```{r }
 bank_model_ada100 = ada(y ~ ., data=train,loss='exponential', type='discrete', iter = 100)
 ```
 
+- Confustion Matrix for a Ada Model with 100 iterations
+
 ```{r }
 bank_model_ada100$confusion
 (bank_model_ada100$confusion[2,2]/sum(bank_model_ada100$confusion[,2]))
 ```
+
+- Below plot shows training error vs iteration where training error reduces and stabilizes as iteration grows
 
 ```{r }
 plot(bank_model_ada100)
@@ -743,6 +753,8 @@ plot(prf_train)
 pr_test1 = prediction(as.numeric(pred_test),test$y)
 prf_test1 = performance(pr_test1, measure = "tpr",x.measure = "fpr")
 plot(prf_test1)
+
+mtext("ROC curve (TPR vs FPR) for Train Vs Test", side = 3, line = -1, outer = TRUE)
 
 ```
 
@@ -784,6 +796,9 @@ plot(prf_train)
 pr_test1 = prediction(as.numeric(pred_test1),test$y)
 prf_test1 = performance(pr_test1, measure = "tpr",x.measure = "fpr")
 plot(prf_test1)
+
+mtext("ROC curve (TPR vs FPR) for Train Vs Test", side = 3, line = -1, outer = TRUE)
+
 ```
 
 - Metrics for SMOTED TRAIN vs TEST
@@ -820,6 +835,8 @@ plot(prf_train)
 pr_test1 = prediction(as.numeric(pred_test1),test$y)
 prf_test1 = performance(pr_test1, measure = "tpr",x.measure = "fpr")
 plot(prf_test1)
+
+mtext("ROC curve (TPR vs FPR) for Train Vs Test", side = 3, line = -1, outer = TRUE)
 
 ```
 
