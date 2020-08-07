@@ -3,10 +3,10 @@ title: 'Bank Marketing Data Analysis - Project Report'
 author: "STAT 420, Summer 2020, Bhushan Bathani, Matthew Leung, Vijayakumar Sitha Mohan,"
 date: ''
 output:
+  pdf_document: default
   html_document: 
     theme: readable
     toc: yes  
-  pdf_document: default
 urlcolor: cyan
 ---
 
@@ -26,7 +26,7 @@ font-size:16px
 
 ***
 
-```{r setup, include=TRUE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -90,11 +90,14 @@ bank_df1 = bank_df1[complete.cases(bank_df1), ]
 variable (desired target). 
 - The dataset has  customer data, socio-economic data, telemarketing data and some other data. Some attributes are numerical, and some are categorical.
 
-There are 4 categories of data in the dataset.
+- There are 4 categories of data in the dataset.
 
     + Customer's demographic information   - age,job,marital,education,default,housing,loan
+    
     + Customer's financial data - default, hosing loan, personal loan
+    
     + Campaign and Marketing related data - contact,month,day_of_week,duration,campaign,pdays,previous,poutcome
+    
     + Overall market and economic indicators - emp.var.rate,cons.price.idx,cons.conf.idx,euribor3m,nr.employed
 
 **Attribute Information:**
@@ -110,6 +113,7 @@ kable(columns) %>%
 #### Data Validation
 
 **Checking for Missing value**
+
 ```{r echo=TRUE}
 any(is.na(bank_df1))
 ```
@@ -164,8 +168,6 @@ levels(bank_df$poutcome)
 
 Let's see the levels and frequency of these data at higher level in histogram to have a sense of data distributed.
 
-**Attribute wise Frequency Distributions**
-
 ```{r}
 par(mfrow=c(2,2))
 for(i in 1:21){
@@ -174,6 +176,7 @@ for(i in 1:21){
 }
 ```
 
+- The above barplots show frequency distribution of each attribute in the dataset.
 
 
 ```{r echo=FALSE}
@@ -183,7 +186,7 @@ for(i in 1:21){
 ```
 
  
-Let's analyze the dataset for any linearity between predictors and y using boxplot and pairs.
+- Let's analyze the dataset for any linearity between predictors and y using boxplot and pairs.
 
 ```{r}
 pairs(bank_df[c(1:4,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
@@ -356,7 +359,8 @@ summary(bank_lr)
 
 #### Model based on data analysis from boxplot
 ```{r}
-bank_lr_plotobs = glm(y~age+job+default+campaign+previous+contact + month+duration+ pdays+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed, data = train, family = "binomial")
+bank_lr_plotobs = glm(y~age+job+default+campaign+previous+contact + month+duration+ pdays+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed, data = train,
+                      family = "binomial")
 summary(bank_lr_plotobs)
 
 ```
@@ -367,20 +371,26 @@ summary(bank_lr_plotobs)
 We will be using step function to search  forward and backward directions and use AIC and BIC as metric to find out the best model.
 
 #### Model using AIC Search
+
 ```{r warning=FALSE}
 bank_lr_aic = step(bank_lr, direction = "backward", trace = 0)
 summary(bank_lr_aic)
 ```
 
+- The *best model based on AIC* include `contact`,  `month`, `duration`, `campaign`, `poutcome`, `emp.var.rate`, `cons.price.idx`, `cons.conf.idx`
+
+
 #### Model using BIC search
+
 ```{r}
 n=length(resid(bank_lr))
 bank_lr_bic = step(bank_lr, direction = "backward", trace = 0,k=log(n))
 bank_lr_bic
-
 ```
 
-- BIC comes with least number of parameters. Let's do the Anova LRT test to find the preferred model. 
+- The *best model based on BIC* include `contact`, `duration`, `poutcome`, `emp.var.rate`, `cons.price.idx`, `cons.conf.idx`
+
+- The BIC model have lesser number of parameters compared to best AIC model. Let's do the Anova LRT test to find the preferred model. 
 
 ```{r warning=FALSE}
 
