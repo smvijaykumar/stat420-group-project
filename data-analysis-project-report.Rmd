@@ -957,7 +957,6 @@ kable_styling(kable(compare),c("striped","bordered"), full_width = F)
 
     + We need to choose the model which performs better and run faster. Boosting models run in parallel compared to Logistic and Random Forest.
 
-**With the above traits for model evaluation and selection techniques, we choose "Adaptive Boosting" from our study.** 
 
 ## Conclusion
 
@@ -970,11 +969,10 @@ kable_styling(kable(compare),c("striped","bordered"), full_width = F)
     + Random Forest used with default and best split and tree depth hyper parameters tuned to produce better result.
     + Adaptive Boosting is the best model for balanced sensitivities and interpretation of feature importance.
 
-- Our recommendation to the manager of the bank marketing campaign would be to use adaptive boosting which has high sensitivity so actual positives are not overlooked.  Logistic regression is useful as well to understand what are significant variables and allocate resources accordingly. For example, number of client contacts performed before this campaign is significant variable to subscribe term deposit, then contact client with the optimal number of times to maximize the chance but prevent wasting resources. 
+- Our recommendation to the manager of the bank marketing campaign would be to use random forest which has the highest sensitivity so actual positives are not overlooked.  Logistic regression is useful as well to understand what are significant variables and allocate resources accordingly. For example, number of client contacts performed before this campaign is significant variable to subscribe term deposit, then contact client with the optimal number of times to maximize the chance but prevent wasting resources. 
 
  
-**Our study shows that simple and advanced machine learning techniques can add value to further a marketing campaign.**
- 
+
 ## Appendix
 
 ### Team members
