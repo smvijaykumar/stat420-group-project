@@ -449,20 +449,53 @@ kable(result) %>%
 
 ```
 
-- Based on the table above, AIC model has the lowest Residual Deviance after Full model but degree of freedom is more closer to Null Deviance degree of freedom than Full Model. AIC of the AIC model and misclassification rate is also least. Can we improve it further by applying the transformation or interaction on AIC model? Let's check.
+- Based on the table above, AIC model has the lowest Residual Deviance after Full model but degree of freedom is more closer to Null Deviance degree of freedom than Full Model. AIC of the AIC model and misclassification rate is also least. 
+
+Can we improve it further by applying the transformation or interaction on AIC model? Let's check.
+
+##### Apply two way interaction
 
 ```{r warning=FALSE}
 
 bank_lr_aic_int = glm(y ~ (contact + month + duration + campaign + poutcome + cons.conf.idx + nr.employed+contact:month+campaign:poutcome), family = binomial(link="logit"), data = train)
+```
 
 
+##### Apply Log Transformation on one of the predictor
+
+- We have chosen the predictor `nr.employed` since it is numerical attribute varying from small to large numbers.
+
+```{r}
+range(bank_df$nr.employed)
+```
+
+
+```{r}
 bank_lr_aic_transform = glm(y ~ (contact + month + duration + campaign + poutcome + cons.conf.idx + log(nr.employed)), 
     family = binomial(link="logit"), data = train)
+```
 
+
+**Use Anova LRT test to compare the aic additive model vs aic interaction model**
+
+```{r}
 anova(bank_lr_aic,bank_lr_aic_int,test="LRT")
+```
 
+-  Since p-value is very large so we fail to reject the null hypothesis and we stick with our AIC additive model
+
+
+**Use Anova LRT test to compare the aic additive model vs aic log model**
+
+```{r}
 anova(bank_lr_aic,bank_lr_aic_transform,test="LRT")
+```
 
+-  At significant level `0.01`, so we fail to reject the null hypothesis and we stick with our AIC additive model
+
+**Let's do 5 fold cross validation and calculate misclassification rate to compare and select the model**
+
+```{r}
 set.seed(1250)
 
 mcRate_bank_lr_aic_int = cv.glm(train,bank_lr_aic_int,K=5)$delta[1] #  TO DO change model
