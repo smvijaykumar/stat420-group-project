@@ -425,10 +425,10 @@ kable(result) %>%
 #train = train[complete.cases(train), ]
 #train = train[,-5]
 set.seed(1983)
-mcRate_bank_lr = cv.glm(train,bank_lr,K=5)$delta[1] # TO DO: change model
+mcRate_bank_lr = cv.glm(train,bank_lr,K=5)$delta[1] 
 mcRate_bank_lr_aic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
 mcRate_bank_lr_bic = cv.glm(train,bank_lr_bic,K=5)$delta[1]
-mcRate_bank_lr_plotobs = cv.glm(train,bank_lr_plotobs,K=5)$delta[1]#TO DO: Change Model
+mcRate_bank_lr_plotobs = cv.glm(train,bank_lr_plotobs,K=5)$delta[1]
 
 
 
@@ -498,8 +498,8 @@ anova(bank_lr_aic,bank_lr_aic_transform,test="LRT")
 ```{r message=FALSE, warning=FALSE}
 set.seed(1250)
 
-mcRate_bank_lr_aic_int = cv.glm(train,bank_lr_aic_int,K=5)$delta[1] #  TO DO change model
-mcRate_bank_lr_aic_transform = cv.glm(train,bank_lr_aic_transform,K=5)$delta[1] # TO DO Change model
+mcRate_bank_lr_aic_int = cv.glm(train,bank_lr_aic_int,K=5)$delta[1] 
+mcRate_bank_lr_aic_transform = cv.glm(train,bank_lr_aic_transform,K=5)$delta[1] 
 
 result = data.frame(
   Residual_Deviance=c(bank_lr$deviance,bank_lr_aic$deviance,bank_lr_bic$deviance,bank_lr_plotobs$deviance,bank_lr_aic_int$deviance,bank_lr_aic_transform$deviance),
