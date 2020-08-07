@@ -202,20 +202,26 @@ par(mfrow=c(2,2))
 
 #--- Factorizing the jobclass and education from lower to higher order
 
-bank_df$jobclass = as.numeric(factor(bank_df$job,levels=c("unknown","unemployed","housemaid", "student","retired","technician","blue-collar","admin.","services",
+bank_df$jobclass = as.numeric(factor(bank_df$job
+,levels=c("unknown","unemployed","housemaid", "student"
+          ,"retired","technician","blue-collar","admin.","services",
 "self-employed","management","entrepreneur"),ordered=TRUE))
 
-bank_df$educationNum = as.numeric(factor(bank_df$education,                                         levels=c("unknown","illiterate","basic.4y","basic.6y","basic.9y","high.school",
+bank_df$educationNum = as.numeric(factor(bank_df$education,                                         levels=c("unknown","illiterate","basic.4y","basic.6y","basic.9y"
+          ,"high.school",
          "professional.course", "university.degree"),ordered=TRUE))
 
 
 boxplot(age~y,data=bank_df,main="age vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
+
 boxplot(jobclass~y,data=bank_df,main="Job vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
+
 boxplot(as.numeric(marital)~y,data=bank_df,
         main="Marital status vs Term Deposit",pch=20,cex=2,
         col="darkorange",border = "dodgerblue")
+
 boxplot(educationNum~y,data=bank_df,main="Education vs Term Deposit"
         ,pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
@@ -244,9 +250,11 @@ pairs(bank_df[c(5:7,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
 par(mfrow=c(1,3))
 boxplot(as.numeric(default)~y,data=bank_df,main="Default vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(housing)~y,data=bank_df,main="Housing Loan vs Term Deposit",
+
+boxplot(as.numeric(housing)~y,data=bank_df,main="HousingLoan vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(loan)~y,data=bank_df,main="Personal loan vs Term Deposit",
+
+boxplot(as.numeric(loan)~y,data=bank_df,main="PersonalLoan vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
@@ -274,6 +282,7 @@ boxplot(as.numeric(month)~y,data=bank_df,
 boxplot(as.numeric(day_of_week)~y,data=bank_df
         ,main=" Contact Weekday vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
+
 boxplot(duration~y,data=bank_df,main="contact duration vs Term Deposit"
         ,pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
@@ -283,12 +292,16 @@ boxplot(duration~y,data=bank_df,main="contact duration vs Term Deposit"
 
 ```{r}
 par(mfrow=c(2,2))
-boxplot(campaign~y,data=bank_df,main="# of contacts(last camp) vs Term Deposit",
+
+boxplot(campaign~y,data=bank_df,main="Last camp contacts# vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(pdays~y,data=bank_df,main="# of days since contacted vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(previous~y,data=bank_df,main="# of contacts(this camp) vs Term Deposit",
+
+boxplot(pdays~y,data=bank_df,main="Days since contacted vs Term Deposit"
+        ,pch=20,cex=2,col="darkorange",border = "dodgerblue")
+boxplot(previous~y,data=bank_df,main="This camp contacts# vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
-boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Prev Campaign outcome vs Term Deposit",
+boxplot(as.numeric(poutcome)~y,data=bank_df
+        ,main=" Prev Camp. outcome vs Term Deposit",
         pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
@@ -387,7 +400,9 @@ summary(bank_lr)
 
 #### Model based on data analysis from boxplot
 ```{r}
-bank_lr_plotobs = glm(y~age+job+default+campaign+previous+contact + month+duration+ pdays+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed, data = train,
+bank_lr_plotobs = glm(y~age+job+default+campaign+previous+contact 
+                      + month+duration+ pdays+emp.var.rate+cons.price.idx
+                      +cons.conf.idx+euribor3m+nr.employed, data = train,
                       family = "binomial")
 summary(bank_lr_plotobs)
 
@@ -423,18 +438,19 @@ bank_lr_bic
 ```{r warning=FALSE}
 
 result = data.frame(
-        NullHypoThesis = c(ifelse(anova(bank_lr_bic,bank_lr,test="LRT")[2,5]<0.05
-                                  ,"Rejected","Fail To Reject"),
-           ifelse(anova(bank_lr_aic,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
-           ifelse(anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
-           ifelse(anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
-           ifelse(anova(bank_lr_aic,bank_lr_plotobs,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject")),
+        NullHypoThesis = c(
+ifelse(anova(bank_lr_bic,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
+ifelse(anova(bank_lr_aic,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
+ifelse(anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
+ifelse(anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
+ifelse(anova(bank_lr_aic,bank_lr_plotobs,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject")),
           PValue = c((anova(bank_lr_bic,bank_lr,test="LRT")[2,5]),
            (anova(bank_lr_aic,bank_lr,test="LRT")[2,5]),
            (anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]),
            anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5],
            anova(bank_lr_aic,bank_lr_plotobs,test="LRT")[2,5]),
-row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC","PlotObs vs Additive","AIC vs PlotObs")
+row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC",
+              "PlotObs vs Additive","AIC vs PlotObs")
 )
 
 colnames(result) = c("Null Hypothesis","P-Value")
@@ -492,7 +508,9 @@ Can we improve it further by applying the transformation or interaction on AIC m
 
 ```{r warning=FALSE}
 
-bank_lr_aic_int = glm(y ~ (contact + month + duration + campaign + poutcome + cons.conf.idx + nr.employed+contact:month+campaign:poutcome), family = binomial(link="logit"), data = train)
+bank_lr_aic_int = glm(y ~ (contact + month + duration + campaign 
+                           + poutcome + cons.conf.idx + nr.employed+contact:month+campaign:poutcome)
+                      , family = binomial(link="logit"), data = train)
 ```
 
 
