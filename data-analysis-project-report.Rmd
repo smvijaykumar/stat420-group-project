@@ -933,6 +933,10 @@ kable_styling(kable(compare),c("striped","bordered"), full_width = F)
 
 ## Discussion
 
+- Do we need to select model with high accuracy?
+
+    + Accuracy may not be a good measure if the dataset is not balanced and that is the case for our dataset. F1 score becomes high only when both precision and recall are high. F1 score is the harmonic mean of precision and recall and is a better measure than accuracy.
+
 - Do we accept False Positive or False Negative in the context of the problem statement?
 
     + False Positive, means the client do NOT SUBSCRIBED to term deposit, but the model thinks he/she did. 
