@@ -15,7 +15,12 @@ urlcolor: cyan
   max-width: 1800px;
   margin-left: auto;
   margin-right: auto;
-  color: blue;
+  color: #1E90FF;
+}
+
+.header {
+color:orange,
+font-size:16px
 }
 </style>
 
@@ -50,8 +55,10 @@ library(latticeExtra)
 library(pROC)
 ```
 
+<div class="header">
 ## Introduction
-<span style="color:Blue">
+</div>
+
 
 Our team selected a dataset of direct banking marketing of a Portuguese bank. The goal is to predict if the client subscribe to the bank term deposit. The dataset has client personal attributes, marketing campaign attributes, social and economic context attributes. The response variable (y) is binomial with value either 1 (subscribe) or 0 (not subscribe).
 
@@ -65,12 +72,14 @@ We picked the following three classification techniques for this project:
 - Random Forest (Very popular technique in Ensemble learning with a number of weak classifier based on decision tree)
 
 - Adaptive Boosting (More sophisticated technique in Ensemble learning with a number of weak classifier based on decision tree)
-</span>
+
 
 ## Methods
 
 ```{r echo=FALSE}
 bank_df1 = read.csv("data/bank-additional.csv")
+bank_df1 = na.omit(bank_df1)
+bank_df1 = bank_df1[complete.cases(bank_df1), ]
 ```
 
 ### Understanding Data
@@ -153,10 +162,10 @@ levels(bank_df$poutcome)
 #### Data Analysis
 
 
-<span style="color:Blue"> 
+ 
 Let's see the levels and frequency of these data at higher level in histogram to have a sense of data distributed.
 
-</span>
+
 
 **Attribute wise Frequency Distributions**
 
@@ -176,9 +185,9 @@ for(i in 1:21){
 
 ```
 
-<span style="color:Blue"> 
+ 
 Let's analyze the dataset for any linearity between predictors and y using boxplot and pairs.
-</span>
+
 
 
 
@@ -188,11 +197,11 @@ pairs(bank_df[c(1:4,21)], pch = 19, gap = .25, xaxt = "n", yaxt = "n"
       , label.pos = .5, oma = c(1, 1, 1, 1))
 ```
 
-<span style="color:Blue">
+
 - pairs() function, which plots all possible scatterplots between pairs of variables in the dataset.
 
 - There are no obvious colinearity between predictors `age`,`job`,`education` and `marital`.
-</span>
+
 
 
 ```{r}
@@ -212,7 +221,7 @@ boxplot(as.numeric(marital)~y,data=bank_df,main="Marital status vs Term Deposit"
 boxplot(educationNum~y,data=bank_df,main="Education vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
-<span style="color:Blue"> 
+ 
 
 Based on the above bar plots of individual predictors against `Term Deposit`, 
 
@@ -226,7 +235,7 @@ Based on the above bar plots of individual predictors against `Term Deposit`,
 
 - So over all, It seems that age have some impact on term deposit subscription but need to see which exact range between 30-50 in detail. Rest parameters does not have any significant effect based on plot.
 
-</span>
+
 
 
 ```{r}
@@ -241,10 +250,10 @@ boxplot(as.numeric(housing)~y,data=bank_df,main="Housing Loan vs Term Deposit",p
 boxplot(as.numeric(loan)~y,data=bank_df,main="Personal loan vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
-<span style="color:Blue">
+
 - Customers with the housing loan and personal loan has no impact on term deposit subscription. 
 - Customers already in default certainly did not subscribed to the term deposit. So default can be a very good predictor.
-</span>
+
 
 
 ```{r}
@@ -258,9 +267,9 @@ boxplot(as.numeric(day_of_week)~y,data=bank_df,main=" last contact day of the we
 boxplot(duration~y,data=bank_df,main="last contact duration, in seconds vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
-<span style="color:Blue">
-Based on plots, Customer with contact type cellular has more probability of subscribing for term deposit than telephone. People with recent contact made has more chance of subscribing for term deposit. Last contact day of the week does not have much ipact.Contact duraction has some impact on the term deposit subscription as well.
-</span>
+
+Based on plots, Customer with contact type cellular has more probability of subscribing for term deposit than telephone. People who was recently contacted has more chance of subscribing for term deposit. Last contact day of the week does not have much impact.Contact duraction has some impact on the term deposit subscription as well.
+
 
 
 ```{r}
@@ -271,7 +280,7 @@ boxplot(previous~y,data=bank_df,main="# of contacts performed before this campai
 boxplot(as.numeric(poutcome)~y,data=bank_df,main=" Previous Campain outcome vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
-<span style="color:Blue">Based on above plot, # of contact performed has some impact on Term deposit output else no other factor has significant impact.surprisingly # of contacts in this campaign decreases the probability to subscribe for term deposit.</span>
+Based on above plot, # of contact performed has some impact on Term deposit output else no other factor has significant impact.surprisingly # of contacts in this campaign decreases the probability to subscribe for term deposit.
 
 ```{r}
 pairs(bank_df[c(16:20,21)])
@@ -283,7 +292,7 @@ boxplot(euribor3m~y,data=bank_df,main="euribor 3 month rate  vs Term Deposit",pc
 boxplot(nr.employed~y,data=bank_df,main="number of employees vs Term Deposit",pch=20,cex=2,col="darkorange",border = "dodgerblue")
 ```
 
-<span style="color:Blue"> Based on plots all the market indicators has some impact on term deposit decision.</span>
+ Based on plots all the market indicators has some impact on term deposit decision.
 
 #### Class Imbalance Problem analysis
 
@@ -347,34 +356,49 @@ prop.table(table(rose_train$y))
 
 ### Model 1: Logistic Regression
 
-<span style="color:Blue">
+
 
 - As We have seen in boxplot comparison, age, default, contact type, last contact time, duration, # of contacts and all market indicators has some impact on terms deposit. Let's create a additive model using these parameters, full additive model and run AIC and BIC search to identify the model it comes up with.
-</span>
+
 
 #### Base model using Logistic Regression
 
+###Full addivite model
 ```{r}
-bank_lr_plotobs = glm(y~age+default+campaign+previous+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed, data = train, family = "binomial")
 bank_lr = glm(y ~ ., data = train, family = "binomial")
 summary(bank_lr)
+
+```
+
+###Model based on data analysis from boxplot
+```{r}
+bank_lr_plotobs = glm(y~age+job+default+campaign+previous+contact + month+duration+ pdays+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed, data = train, family = "binomial")
+summary(bank_lr_plotobs)
+
+
 ```
 
 
 #### Attribute selection
 
-<span style="color:Blue">
-We will be using step function to search  forward and backward directions and use AIC and BIC as metric to find out the best model.
-</span>
 
+We will be using step function to search  forward and backward directions and use AIC and BIC as metric to find out the best model.
+
+###Model using AIC Search
 ```{r warning=FALSE}
-n=length(resid(bank_lr))
 bank_lr_aic = step(bank_lr, direction = "backward", trace = 0)
-bank_lr_bic = step(bank_lr, direction = "backward", trace = 0,k=log(n))
-bank_lr_aic
-bank_lr_bic
+summary(bank_lr_aic)
 ```
-<span style="color:Blue"> BIC comes with least number of parameters. Let's do the Anova LRT test to find the preferred model. </span>
+
+###Model using BIC search
+```{r}
+n=length(resid(bank_lr))
+bank_lr_bic = step(bank_lr, direction = "backward", trace = 0,k=log(n))
+bank_lr_bic
+
+```
+
+BIC comes with least number of parameters. Let's do the Anova LRT test to find the preferred model. 
 
 ```{r warning=FALSE}
 
@@ -383,32 +407,39 @@ result = data.frame(
            ifelse(anova(bank_lr_aic,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
            ifelse(anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
            ifelse(anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject"),
-           ifelse(anova(bank_lr_plotobs,bank_lr_aic,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject")),
+           ifelse(anova(bank_lr_aic,bank_lr_plotobs,test="LRT")[2,5]<0.05,"Rejected","Fail To Reject")),
           PValue = c((anova(bank_lr_bic,bank_lr,test="LRT")[2,5]),
            (anova(bank_lr_aic,bank_lr,test="LRT")[2,5]),
            (anova(bank_lr_bic,bank_lr_aic,test="LRT")[2,5]),
-           format(anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5], nsmall = 5),
-           format(anova(bank_lr_plotobs,bank_lr_aic,test="LRT")[2,5], nsmall = 5)),
-row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC","PlotObs vs Full Additive","PlotObs vs AIC")
+           anova(bank_lr_plotobs,bank_lr,test="LRT")[2,5],
+           anova(bank_lr_aic,bank_lr_plotobs,test="LRT")[2,5]),
+row.names = c("BIC vs Additive","AIC vs Additive ","BIC vs AIC","PlotObs vs Full Additive","AIC vs PlotObs")
 )
 
+colnames(result) = c("Null Hypothesis","P-Value")
+
+kable(result) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 
-knitr::kable(result,format="markdown")
+
 
 ```
 
-<span style="color:Blue">Based on Anova LRT test above, only AIC model is the preferable model among all model.</span>
+Based on Anova LRT test above, only AIC model is the preferable model among all model.
 
-<span style="color:Blue">Let's compare Null deviance, Residual Deviance, AIC and 5 fold misclassification rate to see which is the better model. </span>
+Let's compare Null deviance, Residual Deviance, AIC and 5 fold misclassification rate to see which is the better model. 
 
 
 ```{r warning=FALSE}
-
-mcRate_bank_lr = cv.glm(train,bank_lr_aic,K=5)$delta[1] # TO DO: change model
+#train = na.omit(train)
+#train = train[complete.cases(train), ]
+#train = train[,-5]
+set.seed(1)
+mcRate_bank_lr = cv.glm(train,bank_lr,K=5)$delta[1] # TO DO: change model
 mcRate_bank_lr_aic = cv.glm(train,bank_lr_aic,K=5)$delta[1]
 mcRate_bank_lr_bic = cv.glm(train,bank_lr_bic,K=5)$delta[1]
-mcRate_bank_lr_plotobs = cv.glm(train,bank_lr_bic,K=5)$delta[1]#TO DO: Change Model
+mcRate_bank_lr_plotobs = cv.glm(train,bank_lr_plotobs,K=5)$delta[1]#TO DO: Change Model
 
 
 
@@ -422,39 +453,38 @@ result = data.frame(
   row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC","Model built based on boxplot observation")
 )
 
+colnames(result) = c("Residual Deviance","Residual DF","Null Deviance","Null DF","AIC ","Misclassification Rate")
 
-knitr::kable(result,format="markdown")
+kable(result) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 ```
-<span style="color:Blue">  Based on the table above, AIC model has the lowest Residual Deviance after Full model but degree of freedom is more closer to Null Deviance degree of freedom than Full Model. AIC of the AIC model and misclassification rate is also least. Can we improve it further by applying the transformation or interaction on AIC model? Let's check.</span>
+Based on the table above, AIC model has the lowest Residual Deviance after Full model but degree of freedom is more closer to Null Deviance degree of freedom than Full Model. AIC of the AIC model and misclassification rate is also least. Can we improve it further by applying the transformation or interaction on AIC model? Let's check.
 
 ```{r warning=FALSE}
 
-bank_lr_aic_twoway = glm(y ~ (job + education + default + contact + month + 
-    day_of_week + duration + campaign + pdays + poutcome + emp.var.rate + 
-    cons.price.idx + cons.conf.idx + euribor3m + nr.employed+ job:education+ month:day_of_week), 
+bank_lr_aic_int = glm(y ~ (contact + month + duration + campaign + poutcome + cons.conf.idx + nr.employed+contact:month+campaign:poutcome), family = binomial(link="logit"), data = train)
+
+
+bank_lr_aic_transform = glm(y ~ (contact + month + duration + campaign + poutcome + cons.conf.idx + log(nr.employed)), 
     family = binomial(link="logit"), data = train)
 
-
-bank_lr_aic_transform = glm(y ~ (job + education + default + contact + month + 
-    day_of_week + duration + campaign + pdays + poutcome + emp.var.rate + 
-    cons.price.idx + cons.conf.idx + euribor3m + log(nr.employed)), 
-    family = binomial(link="logit"), data = train)
-
-anova(bank_lr_aic,bank_lr_aic_twoway,test="LRT")
+anova(bank_lr_aic,bank_lr_aic_int,test="LRT")
 
 anova(bank_lr_aic,bank_lr_aic_transform,test="LRT")
 
-mcRate_bank_lr_aic_twoway = cv.glm(train,bank_lr_aic,K=5)$delta[1] #  TO DO change model
-mcRate_bank_lr_aic_transform = cv.glm(train,bank_lr_aic,K=5)$delta[1] # TO DO Change model
+set.seed(1)
+
+mcRate_bank_lr_aic_int = cv.glm(train,bank_lr_aic_int,K=5)$delta[1] #  TO DO change model
+mcRate_bank_lr_aic_transform = cv.glm(train,bank_lr_aic_transform,K=5)$delta[1] # TO DO Change model
 
 result = data.frame(
-  Residual_Deviance=c(bank_lr$deviance,bank_lr_aic$deviance,bank_lr_bic$deviance,bank_lr_plotobs$deviance,bank_lr_aic$deviance,bank_lr_aic_twoway$deviance),
-  Residual_DF=c(bank_lr$df.residual,bank_lr_aic$df.residual,bank_lr_bic$df.residual,bank_lr_plotobs$df.residual,bank_lr_aic$df.residual,bank_lr_aic_twoway$df.residual),
-  Null_Deviance=c(bank_lr$null.deviance,bank_lr_aic$null.deviance,bank_lr_bic$null.deviance,bank_lr_plotobs$null.deviance,bank_lr_aic$null.deviance,bank_lr_aic_twoway$null.deviance),
-  Null_DF=c(bank_lr$df.null,bank_lr_aic$df.null,bank_lr_bic$df.null,bank_lr_plotobs$df.null,bank_lr_aic$df.null,bank_lr_aic_twoway$df.null),
-  AIC=c(AIC(bank_lr),AIC(bank_lr_aic),AIC(bank_lr_bic),AIC(bank_lr_plotobs),AIC(bank_lr_aic),AIC(bank_lr_aic_twoway)),
-  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,mcRate_bank_lr_bic,mcRate_bank_lr_plotobs,mcRate_bank_lr_aic_twoway,mcRate_bank_lr_aic_transform),
+  Residual_Deviance=c(bank_lr$deviance,bank_lr_aic$deviance,bank_lr_bic$deviance,bank_lr_plotobs$deviance,bank_lr_aic_int$deviance,bank_lr_aic_transform$deviance),
+  Residual_DF=c(bank_lr$df.residual,bank_lr_aic$df.residual,bank_lr_bic$df.residual,bank_lr_plotobs$df.residual,bank_lr_aic_int$df.residual,bank_lr_aic_transform$df.residual),
+  Null_Deviance=c(bank_lr$null.deviance,bank_lr_aic$null.deviance,bank_lr_bic$null.deviance,bank_lr_plotobs$null.deviance,bank_lr_aic_int$null.deviance,bank_lr_aic_transform$null.deviance),
+  Null_DF=c(bank_lr$df.null,bank_lr_aic$df.null,bank_lr_bic$df.null,bank_lr_plotobs$df.null,bank_lr_aic_int$df.null,bank_lr_aic_transform$df.null),
+  AIC=c(AIC(bank_lr),AIC(bank_lr_aic),AIC(bank_lr_bic),AIC(bank_lr_plotobs),AIC(bank_lr_aic_int),AIC(bank_lr_aic_transform)),
+  MisclassificationRate=c(mcRate_bank_lr,mcRate_bank_lr_aic,mcRate_bank_lr_bic,mcRate_bank_lr_plotobs,mcRate_bank_lr_aic_int,mcRate_bank_lr_aic_transform),
   row.names = c("Full Model","Model Selected with AIC","Model Selected with BIC","Model built based on boxplot observation","Model with an interaction","Model with transformation")
 )
 
@@ -462,32 +492,20 @@ knitr::kable(result,format="markdown")
 
 ```
 
-<span style="color:Blue">As you see, Residual deviance goes down with transformation but AIC goes up. With interaction we dont see much difference. So at this point we can consider model selected with AIC model as preferred model. </span>
+As you see, Residual deviance goes down with integration but AIC goes up and degrees of freedom goes down.Misclassification rate is marginally up with interaction. With transformation,we see marginally better results with Residual , AIC and misclassification rate.
 
-
-
-<span style="color:Blue">
-** With Saying that, whether customer will do the term deposit or not does not depends on Age, Education and Marital status but more on below parameters.**
-</span>
-
-<span style="color:Blue">
-1) Customer's credit history  - default
-2) How frequent and when the customer was contacted by marketing team? - month, days of week, duration, pdays, previous
-3) output of the last campain - poutcome
-4) Market indicators - emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m
-
-Let's run this model on test data to identify misclassification rate, false positives and negatives on Test data.
+Let's consider transformation model on test data to identify misclassification rate, false positives and negatives on Test data.
 
 ```{r}
-predict_bank_lr_aic = ifelse(predict(bank_lr_aic, test, type = "response")> 0.5,1,0)
-misClassificationRate = mean(predict_bank_lr_aic!=test$y)
+predict_bank_lr_aic_transform = ifelse(predict(bank_lr_aic_transform, test, type = "response")> 0.5,1,0)
+misClassificationRate = mean(predict_bank_lr_aic_transform!=test$y)
 misClassificationRate
 
 make_conf_mat = function(predicted, actual) {
   table(predicted = predicted, actual = actual)
 }
 
-confusion_matrix = table(predicted = predict_bank_lr_aic, actual = test$y)
+confusion_matrix = table(predicted = predict_bank_lr_aic_transform, actual = test$y)
 sensitivity = confusion_matrix[2,2]/confusion_matrix[,2]
 specificity = confusion_matrix[1,1]/confusion_matrix[,1]
 
@@ -497,7 +515,7 @@ specificity
 
 ```
 
-<span style="color:Blue"> With cutoff of 0.5 probability , we see `r confusion_matrix[2,1]` false positives and `r confusion_matrix[1,2]` false positives among 16000 observations which is less than 10%. We can try to identify cut off where this number goes down. Let's draw ROC curve and identify AUC.</span>
+ With cutoff of 0.5 probability , we see `r confusion_matrix[2,1]` false positives and `r confusion_matrix[1,2]` false negatives among `r nrow(test)` observations which is less than 10%. We can try to identify cut off where this number goes down. Let's draw ROC curve and identify AUC.
 
 ```{r}
 get_logistic_pred = function(mod, data, res = "y", pos = 1, neg = 0, cut = 0.5) {
@@ -505,11 +523,11 @@ get_logistic_pred = function(mod, data, res = "y", pos = 1, neg = 0, cut = 0.5) 
   ifelse(probs > cut, pos, neg)
 }
 
-test_pred_10 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
+test_pred_10 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.1)
-test_pred_50 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
+test_pred_50 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.5)
-test_pred_90 = get_logistic_pred(bank_lr_aic, data = test, res = "default", 
+test_pred_90 = get_logistic_pred(bank_lr_aic_transform, data = test, res = "default", 
                                  pos = 1, neg = 0, cut = 0.9)
 
 test_tab_10 = table(predicted = test_pred_10, actual = test$y)
@@ -543,18 +561,13 @@ metrics
 ```{r}
 
 
-test_prob = predict(bank_lr_aic, newdata = test, type = "response")
+test_prob = predict(bank_lr_aic_transform, newdata = test, type = "response")
 test_roc = roc(test$y ~ test_prob, plot = TRUE, print.auc = TRUE)
-
+auc(test_roc)
 ```
-<span style="color:blue"> Getting higher AUC as 0.934 so that indicates higher specificity and sensitivity. That means selected model is a good model</span>
 
+ Getting higher AUC above 0.9 as above so that indicates higher specificity and sensitivity. That means selected model is a good model. Let's run random forest algorithm and see how it behaves.
 
-####  Attribute selection using backward/forward/subset selection
-####  Calculate missclassification Rate (confusion matrix)
-####  Plot ROC curve (TPR vs FPR), AIC plot, RMSE, adjr2
-####  Pick best using AIC,BIC, RSS, RMSE, and anova Test
-####  Report Accuracy
 
 ### Model 2: Random Forest
 ####  model using all predictors
